@@ -1,0 +1,21 @@
+version: '3'
+
+services:
+
+  db:
+    image: postgres:alpine
+    volumes:
+      - ./volumes/postgresql:/var/lib/postgresql/data
+    environment:
+      - PGDATA=/var/lib/postgresql/data/pgdata
+      - POSTGRES_PASSWORD=secret
+
+  app:
+    build: .
+    ports:
+      - 80:5000
+    volumes:
+      - ./app:/app
+    depends_on:
+      - db
+    entrypoint: ["python", "-m", "flask", "run", "--host=0.0.0.0"]
