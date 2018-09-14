@@ -11,6 +11,7 @@ setup(
         "itsdangerous==0.24",
         "Jinja2==2.10",
         "MarkupSafe==1.0",
+        "psycopg2==2.7.5",
         "Werkzeug==0.14.1",
     ],
 )
