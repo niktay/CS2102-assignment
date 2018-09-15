@@ -5,23 +5,23 @@
     <body>
 
         <h1>{{table_name}}</h1>
-		<table class="table table-bordered">
-			<thead>
-				<tr>
-					{% for heading in headings %}
-						<th scope="col">{{heading[0]}}</th>
-					{% endfor %}
-				</tr>
-			</thead>
-			<tbody>
-			{% for result in results %}
-				<tr>
-					{% for field in result %}
-						<td>{{field}}</td>
-					{% endfor %}
-				</tr>
-			{% endfor %}
-			</tbody>
-		</table>
+        <table class="table table-bordered">
+            <thead>
+                <tr>
+                    {% for heading in headings %}
+                        <th scope="col">{{heading[0]}}</th>
+                    {% endfor %}
+                </tr>
+            </thead>
+            <tbody>
+            {% for result in results %}
+                <tr>
+                    {% for field in result %}
+                        <td>{{field}}</td>
+                    {% endfor %}
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
     </body>
 </html>
