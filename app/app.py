@@ -1,11 +1,13 @@
 import psycopg2
 from flask import Flask
+from flask import render_template
 
 app = Flask(__name__)
 
 
 @app.route('/')
 def view_records():
+    view_table = 'test'
     try:
         # TODO(Nik): Secrets management
         conn = psycopg2.connect(
@@ -18,9 +20,15 @@ def view_records():
         print(e)
 
     cur = conn.cursor()
+    headings = []
     results = []
     try:
-        cur.execute('SELECT * FROM test;')
+        cur.execute(
+            'select column_name from information_schema.columns'
+            f" where table_name='{view_table}'",
+        )
+        headings = cur.fetchall()
+        cur.execute(f'SELECT * FROM {view_table};')
         results = cur.fetchall()
     except Exception as e:
         # TODO(Nik): Error handling/logging
@@ -28,7 +36,10 @@ def view_records():
 
     conn.close()
     cur.close()
-    return f'Results: {results}'
+    return render_template(
+        'display.tpl', table_name=view_table,
+        headings=headings, results=results,
+    )
 
 
 def run():
