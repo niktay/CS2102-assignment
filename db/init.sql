@@ -12,6 +12,3 @@ INSERT INTO Account VALUES ('MARY', 'TAN', 0, 'mt1993@gmail.com');
 INSERT INTO Account VALUES ('SUSASSANE', 'LIM', 0, 'suzzlim99@gmail.com');
 INSERT INTO Account VALUES ('FABIAN', 'KOH', 0, 'fabiancool@gmail.com');
 INSERT INTO Account VALUES ('JASMINE', 'JEE', 1, 'jasjee91@gmail.com');
-
-
-
