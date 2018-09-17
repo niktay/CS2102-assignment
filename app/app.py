@@ -1,3 +1,4 @@
+import psycopg2
 from flask import Flask
 from flask import render_template
 
@@ -5,8 +6,40 @@ app = Flask(__name__)
 
 
 @app.route('/')
-def hello_world():
-    return render_template('index.html')
+def view_records():
+    view_table = 'Account'
+    try:
+        # TODO(Nik): Secrets management
+        conn = psycopg2.connect(
+            dbname='admin', user='admin',
+            password='secret', host='db',
+            port='5432',
+        )
+    except Exception as e:
+        # TODO(Nik): Error handling/logging
+        print(e)
+
+    cur = conn.cursor()
+    headings = []
+    results = []
+    try:
+        cur.execute(
+            'select column_name from information_schema.columns'
+            f" where table_name='{view_table}'",
+        )
+        headings = cur.fetchall()
+        cur.execute(f'SELECT * FROM {view_table};')
+        results = cur.fetchall()
+    except Exception as e:
+        # TODO(Nik): Error handling/logging
+        print(e)
+
+    conn.close()
+    cur.close()
+    return render_template(
+        'display.tpl', table_name=view_table,
+        headings=headings, results=results,
+    )
 
 
 def run():

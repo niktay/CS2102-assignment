@@ -8,6 +8,8 @@ flask = "*"
 tox = "*"
 pytest = "*"
 pre-commit = "*"
+"psycopg2" = "*"
+"psycopg2-binary" = "*"
 
 [dev-packages]
 

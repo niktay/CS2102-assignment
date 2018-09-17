@@ -1,14 +1,18 @@
-version: '3'
+version: '3.1'
 
 services:
 
   db:
-    image: postgres:alpine
+    build: ./db
+    ports:
+      - 5432:5432
     volumes:
       - ./volumes/postgresql:/var/lib/postgresql/data
     environment:
-      - PGDATA=/var/lib/postgresql/data/pgdata
-      - POSTGRES_PASSWORD=secret
+        PGDATA: /var/lib/postgresql/data/pgdata
+        POSTGRES_USER: admin
+        POSTGRES_PASSWORD: secret
+        POSTGRES_DB: admin
 
   app:
     build: .
