@@ -7,7 +7,7 @@ app = Flask(__name__)
 
 @app.route('/')
 def view_records():
-    view_table = 'test'
+    view_table = 'Account'
     try:
         # TODO(Nik): Secrets management
         conn = psycopg2.connect(
