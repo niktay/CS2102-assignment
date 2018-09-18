@@ -37,7 +37,7 @@ def view_records():
     conn.close()
     cur.close()
     return render_template(
-        'display.tpl', table_name=view_table,
+        'dashboard.tpl', table_name=view_table,
         headings=headings, results=results,
     )
 
