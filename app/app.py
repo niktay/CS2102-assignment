@@ -1,11 +1,12 @@
 import psycopg2
 from flask import Flask
 from flask import render_template
+from flask import request
 
 app = Flask(__name__)
 
 
-@app.route('/')
+@app.route('/', methods=['GET', 'POST'])
 def view_records():
     view_table = 'Account'
     try:
@@ -18,8 +19,16 @@ def view_records():
     except Exception as e:
         # TODO(Nik): Error handling/logging
         print(e)
-
     cur = conn.cursor()
+
+    if request.method == 'POST':
+        result = request.form
+        try:
+            cur.execute(result['command'])
+            conn.commit()
+        except Exception as e:
+            print(e)
+
     headings = []
     results = []
     try:
