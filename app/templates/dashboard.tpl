@@ -19,7 +19,7 @@
   <body>
     <nav class="navbar navbar-dark fixed-top bg-dark flex-md-nowrap p-0 shadow">
       <a class="navbar-brand col-sm-3 col-md-2 mr-0" href="#">CS2102</a>
-        <form action="/" method="POST">
+        <form action="/" method="POST" style="width: 100%">
             <input class="form-control form-control-dark w-100" type="text" name="command" placeholder="Command" aria-label="Command">
         </form>
       <ul class="navbar-nav px-3">
