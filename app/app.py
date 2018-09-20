@@ -34,7 +34,7 @@ def view_records():
     try:
         cur.execute(
             'select column_name from information_schema.columns'
-            f" where table_name='{view_table}'",
+            f" where table_name='{view_table.lower()}'",
         )
         headings = cur.fetchall()
         cur.execute(f'SELECT * FROM {view_table};')
