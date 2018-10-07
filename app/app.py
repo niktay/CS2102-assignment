@@ -6,7 +6,7 @@ from flask import request
 
 
 app = Flask(__name__)
-app.register_blueprint(driver_blueprint)
+app.register_blueprint(driver_blueprint, url_prefix='/driver')
 
 
 @app.route('/', methods=['GET', 'POST'])
