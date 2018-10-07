@@ -20,15 +20,15 @@ PRIMARY KEY (license_num),
 FOREIGN KEY (username) REFERENCES account (username)
 );
 
-CREATE TABLE advert
+CREATE TABLE advertisement
 (
 start_date_time TIMESTAMP NOT NULL,
 license_num VARCHAR(64) NOT NULL,
 origin VARCHAR(255) NOT NULL,
-dest VARCHAR(255) NOT NULL,
+destination VARCHAR(255) NOT NULL,
 PRIMARY KEY (start_date_time, license_num),
 FOREIGN KEY (license_num) REFERENCES driver (license_num),
-CONSTRAINT origin_dest_different CHECK (origin != dest)
+CONSTRAINT origin_dest_different CHECK (origin != destination)
 );
 
 CREATE TABLE car
@@ -50,7 +50,7 @@ start_date_time TIMESTAMP NOT NULL,
 license_num VARCHAR(64) NOT NULL,
 PRIMARY KEY (bid_id),
 FOREIGN KEY (username) REFERENCES account (username),
-FOREIGN KEY (start_date_time, license_num) REFERENCES advert
+FOREIGN KEY (start_date_time, license_num) REFERENCES advertisement
 (start_date_time, license_num),
 CONSTRAINT price_not_negative CHECK (price > 0)
 );
@@ -59,7 +59,6 @@ CREATE TABLE ride
 (
 bid_id INTEGER NOT NULL,
 won_date_time TIMESTAMP NOT NULL,
-
 PRIMARY KEY (bid_id, won_date_time),
 FOREIGN KEY (bid_id) REFERENCES bid (bid_id)
 );
