@@ -1,14 +1,64 @@
-CREATE TABLE Account
+CREATE TABLE account
 (
- account_id SERIAL PRIMARY KEY,
- first_name VARCHAR(64) NOT NULL,
- last_name VARCHAR(64) NOT NULL,
- is_admin BOOLEAN NOT NULL,
- email VARCHAR(64) NOT NULL
+username VARCHAR(64) NOT NULL,
+is_admin BOOLEAN NOT NULL,
+dob DATE NOT NULL,
+email VARCHAR(320) NOT NULL,
+contact VARCHAR(15) NOT NULL,
+pass VARCHAR(255) NOT NULL,
+name VARCHAR(255) NOT NULL,
+PRIMARY KEY (username),
+CONSTRAINT username_not_empty CHECK(LENGTH(username) > 0)
 );
 
-INSERT INTO Account VALUES (DEFAULT, 'XIE XIN', 'CHEN', false, 'xiexin2011@gmail.com');
-INSERT INTO Account VALUES (DEFAULT, 'MARY', 'TAN', false, 'mt1993@gmail.com');
-INSERT INTO Account VALUES (DEFAULT, 'SUSASSANE', 'LIM', false, 'suzzlim99@gmail.com');
-INSERT INTO Account VALUES (DEFAULT, 'FABIAN', 'KOH', false, 'fabiancool@gmail.com');
-INSERT INTO Account VALUES (DEFAULT, 'JASMINE', 'JEE', true, 'jasjee91@gmail.com');
+CREATE TABLE driver
+(
+license_num VARCHAR(64) NOT NULL,
+username VARCHAR(64) NOT NULL UNIQUE,
+driving_since DATE NOT NULL,
+PRIMARY KEY (license_num),
+FOREIGN KEY (username) REFERENCES account (username)
+);
+
+CREATE TABLE advertisement
+(
+start_timestamp TIMESTAMP NOT NULL,
+license_num VARCHAR(64) NOT NULL,
+origin VARCHAR(255) NOT NULL,
+destination VARCHAR(255) NOT NULL,
+PRIMARY KEY (start_timestamp, license_num),
+FOREIGN KEY (license_num) REFERENCES driver (license_num),
+CONSTRAINT origin_destination_different CHECK (origin != destination)
+);
+
+CREATE TABLE car
+(
+license_plate VARCHAR(10) NOT NULL,
+brand VARCHAR(64) NOT NULL,
+model VARCHAR(64) NOT NULL,
+license_num VARCHAR(64) NOT NULL,
+PRIMARY KEY (license_plate),
+FOREIGN KEY (license_num) REFERENCES driver (license_num)
+);
+
+CREATE TABLE bid
+(
+bid_id INTEGER NOT NULL,
+price DECIMAL(19,4) NOT NULL,
+username VARCHAR(64) NOT NULL,
+start_timestamp TIMESTAMP NOT NULL,
+license_num VARCHAR(64) NOT NULL,
+PRIMARY KEY (bid_id),
+FOREIGN KEY (username) REFERENCES account (username),
+FOREIGN KEY (start_timestamp, license_num) REFERENCES advertisement
+(start_timestamp, license_num),
+CONSTRAINT price_not_negative CHECK (price > 0)
+);
+
+CREATE TABLE ride
+(
+bid_id INTEGER NOT NULL,
+won_timestamp TIMESTAMP NOT NULL,
+PRIMARY KEY (bid_id, won_timestamp),
+FOREIGN KEY (bid_id) REFERENCES bid (bid_id)
+);
