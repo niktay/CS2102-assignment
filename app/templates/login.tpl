@@ -49,22 +49,22 @@
 <div class="col-md-6">
 <div class="card">
 <header class="card-header">
-	<h4 class="card-title mt-2">Login</h4>
+    <h4 class="card-title mt-2">Login</h4>
 </header>
 <article class="card-body">
 <form>
-	<div class="form-row">
-		<div class="col form-group">
-			<label>Username</label>
-		  	<input id="username" type="text" class="form-control" placeholder="" required>
-		</div> <!-- form-group end.// -->
-	</div> <!-- form-row end.// -->
-	<div class="form-row">
-		<div class="col form-group">
-			<label>Password</label>
-		  	<input id="password" type="password" class="form-control" placeholder="" required>
-		</div> <!-- form-group end.// -->
-	</div> <!-- form-row end.// -->
+    <div class="form-row">
+        <div class="col form-group">
+            <label>Username</label>
+              <input id="username" type="text" class="form-control" placeholder="" required>
+        </div> <!-- form-group end.// -->
+    </div> <!-- form-row end.// -->
+    <div class="form-row">
+        <div class="col form-group">
+            <label>Password</label>
+              <input id="password" type="password" class="form-control" placeholder="" required>
+        </div> <!-- form-group end.// -->
+    </div> <!-- form-row end.// -->
     <div class="form-group">
         <button type="submit" class="btn btn-primary btn-block">Submit</button>
     </div> <!-- form-group// -->
