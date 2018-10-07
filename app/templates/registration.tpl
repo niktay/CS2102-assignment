@@ -49,28 +49,51 @@
 <div class="col-md-6">
 <div class="card">
 <header class="card-header">
-    <h4 class="card-title mt-2">Login</h4>
+    <h4 class="card-title mt-2">User Registration</h4>
 </header>
 <article class="card-body">
 <form>
     <div class="form-row">
         <div class="col form-group">
-            <label>Username</label>
-              <input id="username" type="text" class="form-control" placeholder="" required>
-        </div> <!-- form-group end.// -->
-    </div> <!-- form-row end.// -->
-    <div class="form-row">
-        <div class="col form-group">
-            <label>Password</label>
-              <input id="password" type="password" class="form-control" placeholder="" required>
+            <label>Full Name</label>
+              <input id="full-name" type="text" class="form-control" placeholder="" required>
         </div> <!-- form-group end.// -->
     </div> <!-- form-row end.// -->
     <div class="form-group">
-        <button type="submit" class="btn btn-primary btn-block">Submit</button>
+        <label>Username</label>
+        <input id="username" class="form-control" type="text" required>
+    </div> <!-- form-group end.// -->
+    <div class="form-group">
+        <label>Date of Birth</label>
+        <input id="date-of-birth" class="form-control" type="date" required>
+    </div> <!-- form-group end.// -->
+    <div class="form-row">
+        <div class="form-group col-md-6">
+          <label>Email</label>
+          <input id="email" type="email" class="form-control" required>
+        </div> <!-- form-group end.// -->
+        <div class="form-group col-md-6">
+          <label>Contact</label>
+          <input id="contact" type="tel" class="form-control" required>
+        </div> <!-- form-group end.// -->
+    </div> <!-- form-row.// -->
+    <div class="form-row">
+        <div class="form-group col-md-6">
+          <label>Password</label>
+          <input id="password" type="password" class="form-control" required>
+        </div> <!-- form-group end.// -->
+        <div class="form-group col-md-6">
+          <label>Confirm Password</label>
+          <input id="confirm-password" type="password" class="form-control" required>
+        </div> <!-- form-group end.// -->
+    </div> <!-- form-row.// -->
+    <div class="form-group">
+        <button type="submit" class="btn btn-primary btn-block">Register</button>
     </div> <!-- form-group// -->
+    <small class="text-muted">By clicking the 'Sign Up' button, you confirm that you accept our <br> Terms of use and Privacy Policy.</small>
 </form>
 </article> <!-- card-body end .// -->
-<div class="border-top card-body text-center">Don't have an account? <a href="/register">register an account</a></div>
+<div class="border-top card-body text-center">Have an account? <a href="/login">Sign In</a></div>
 </div>
 </div> <!-- col.//-->
 
