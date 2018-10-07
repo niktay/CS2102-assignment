@@ -2,9 +2,12 @@ import psycopg2
 from flask import Flask
 from flask import render_template
 from flask import request
+from flask import Blueprint
+from driver import driver_blueprint
+
 
 app = Flask(__name__)
-
+app.register_blueprint(driver_blueprint)
 
 @app.route('/', methods=['GET', 'POST'])
 def view_records():
