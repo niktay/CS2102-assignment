@@ -5,6 +5,7 @@ from flask import request
 from flask import Blueprint
 from driver import driver_blueprint
 
+
 app = Flask(__name__)
 app.register_blueprint(driver_blueprint)
 
