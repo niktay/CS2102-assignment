@@ -1,13 +1,13 @@
 import psycopg2
+from driver import driver_blueprint
 from flask import Flask
 from flask import render_template
 from flask import request
-from flask import Blueprint
-from driver import driver_blueprint
 
 
 app = Flask(__name__)
 app.register_blueprint(driver_blueprint)
+
 
 @app.route('/', methods=['GET', 'POST'])
 def view_records():
@@ -15,8 +15,7 @@ def view_records():
     try:
         # TODO(Nik): Secrets management
         conn = psycopg2.connect(
-            dbname='admin', user='admin',
-            password='secret', host='db',
+            dbname='admin', user='admin', password='secret', host='db',
             port='5432',
         )
     except Exception as e:
@@ -49,8 +48,8 @@ def view_records():
     conn.close()
     cur.close()
     return render_template(
-        'dashboard.tpl', table_name=view_table,
-        headings=headings, results=results,
+        'dashboard.tpl', table_name=view_table, headings=headings,
+        results=results,
     )
 
 
