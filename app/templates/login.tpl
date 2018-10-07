@@ -18,29 +18,66 @@
 
   <body>
     <nav class="navbar navbar-dark fixed-top bg-dark flex-md-nowrap p-0 shadow">
-      <a class="navbar-brand col-sm-3 col-md-2 mr-0" href="/">CS2102</a>
+      <a class="navbar-brand col-sm-3 col-md-2 mr-0" href="#">CS2102</a>
     </nav>
 
     <div class="container-fluid">
-      <div class="row" style="width:50%; margin-left:32%; margin-right:auto; margin-top:5%;">
-        <main role="main" class="col-md-8 ml-sm-8 col-lg-8 px-4">
-          <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
-            <h1 class="h2">Login</h1>
+      <div class="row">
+        <nav class="col-md-2 d-none d-md-block bg-light sidebar">
+          <div class="sidebar-sticky">
+            <ul class="nav flex-column">
+              <li class="nav-item">
+                <a class="nav-link active" href="#">
+                  <span data-feather="users"></span>
+                  Accounts <span class="sr-only">(current)</span>
+                </a>
+              </li>
+            </ul>
+            <h6 class="sidebar-heading d-flex justify-content-between align-items-center px-3 mt-4 mb-1 text-muted">
+              <span>Saved reports</span>
+              <a class="d-flex align-items-center text-muted" href="#">
+                <span data-feather="plus-circle"></span>
+              </a>
+            </h6>
           </div>
+        </nav>
 
-          <div class="login-form">
-            <form>
-                <div class="form-group">
-                    <label for="usernameInput">Username</label>
-                    <input type="text" class="form-control" id="username" aria-describedby="usernameInput" placeholder="Enter username">
-                </div>
-                <div class="form-group">
-                    <label for="passwordInput">Password</label>
-                    <input type="password" class="form-control" id="password" placeholder="Enter password">
-                </div>
-                <button type="submit" class="btn btn-primary">Login</button>
-            </form>
+        <main role="main" class="col-md-9 ml-sm-auto col-lg-10 px-4">
+          <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
           </div>
+<div class="row justify-content-center">
+<div class="col-md-6">
+<div class="card">
+<header class="card-header">
+	<h4 class="card-title mt-2">Login</h4>
+</header>
+<article class="card-body">
+<form>
+	<div class="form-row">
+		<div class="col form-group">
+			<label>Username</label>
+		  	<input id="username" type="text" class="form-control" placeholder="" required>
+		</div> <!-- form-group end.// -->
+	</div> <!-- form-row end.// -->
+	<div class="form-row">
+		<div class="col form-group">
+			<label>Password</label>
+		  	<input id="password" type="password" class="form-control" placeholder="" required>
+		</div> <!-- form-group end.// -->
+	</div> <!-- form-row end.// -->
+    <div class="form-group">
+        <button type="submit" class="btn btn-primary btn-block">Submit</button>
+    </div> <!-- form-group// -->
+</form>
+</article> <!-- card-body end .// -->
+<div class="border-top card-body text-center">Don't have an account? <a href="/register">register an account</a></div>
+</div>
+</div> <!-- col.//-->
+
+</div> <!-- row.//-->
+
+
+</div>
         </main>
       </div>
     </div>
