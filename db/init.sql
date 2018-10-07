@@ -28,7 +28,7 @@ origin VARCHAR(255) NOT NULL,
 destination VARCHAR(255) NOT NULL,
 PRIMARY KEY (start_timestamp, license_num),
 FOREIGN KEY (license_num) REFERENCES driver (license_num),
-CONSTRAINT origin_dest_different CHECK (origin != destination)
+CONSTRAINT origin_destination_different CHECK (origin != destination)
 );
 
 CREATE TABLE car
