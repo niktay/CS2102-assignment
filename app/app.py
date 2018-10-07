@@ -3,10 +3,12 @@ from driver import driver_blueprint
 from flask import Flask
 from flask import render_template
 from flask import request
+from login import login_blueprint
 
 
 app = Flask(__name__)
 app.register_blueprint(driver_blueprint, url_prefix='/driver')
+app.register_blueprint(login_blueprint, url_prefix='/login')
 
 
 @app.route('/', methods=['GET', 'POST'])
