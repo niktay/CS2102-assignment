@@ -15,8 +15,8 @@ def view_records():
     try:
         # TODO(Nik): Secrets management
         conn = psycopg2.connect(
-            dbname='admin', user='admin',
-            password='secret', host='db', port='5432',
+            dbname='admin', user='admin', password='secret', host='db',
+            port='5432',
         )
     except Exception as e:
         # TODO(Nik): Error handling/logging
