@@ -16,6 +16,7 @@ CREATE TABLE driver
 license_number VARCHAR(64) NOT NULL,
 username VARCHAR(64) NOT NULL UNIQUE,
 driving_since DATE NOT NULL,
+optional_bio VARCHAR(255),
 PRIMARY KEY (license_number),
 FOREIGN KEY (username) REFERENCES account (username)
 );
