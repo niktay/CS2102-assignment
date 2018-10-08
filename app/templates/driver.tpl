@@ -79,7 +79,7 @@
                         <input id="driving-since" class="form-control" type="number" value="2012" required>
                     </div> <!-- form-group end.// -->
                     <div class="form-group">
-                        <label>Bio</label>
+                        <label>(Optional) Bio</label>
                         <textarea id="optional-bio" class="form-control" type="text" rows="3"></textarea>
                     </div>
                 </div>
