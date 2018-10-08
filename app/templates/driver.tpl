@@ -52,8 +52,8 @@
                 <h4 class="card-title mt-2">Driver Registration</h4>
             </header>
 
-            {% if is_view == 0 %}
-                {% if is_success == 0 %}
+            {% if is_view %}
+                {% if is_success %}
                 <div class="alert alert-success" role="alert">
                     You have successfully registered as a driver.
                 </div>
