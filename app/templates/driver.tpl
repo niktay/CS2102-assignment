@@ -56,7 +56,7 @@
                 <div class="form-row">
                     <div class="col form-group">
                         <label>License Number</label>
-                          <input id="license-num" type="text" class="form-control" placeholder="" required>
+                          <input id="license-number" type="text" class="form-control" placeholder="" required>
                     </div> <!-- form-group end.// -->
                 </div> <!-- form-row end.// -->
                 <div class="form-group">
