@@ -36,6 +36,7 @@ class Driver(Model):
             # TODO(Glenice): Error handling/logging
             print(e)
         return False
+    
     def __str__(self):
         output = f"""
 --------------------------------------------------------------------------------
