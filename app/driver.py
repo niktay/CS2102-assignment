@@ -22,11 +22,10 @@ def register_driver():
     except Exception as e:
         print(e)
 
-    return render_template('driver.tpl', is_view=0, is_success=is_success)
+    return render_template('driver.tpl', is_view = 0, is_success=is_success)
 
 
 @driver_blueprint.route('/', methods=['GET'])
 def view_driver_registration():
-
     # Placeholder for profile
-    return render_template('driver.tpl', is_view=1)
+    return render_template('driver.tpl', is_view = 1)
