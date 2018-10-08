@@ -2,12 +2,12 @@ from flask import Blueprint
 from flask import render_template
 
 
-createAd_blueprint = Blueprint(
+advertisement_blueprint = Blueprint(
     'advertisement', __name__, template_folder='templates',
 )
 
 
-@createAd_blueprint.route('/', methods=['GET', 'POST'])
-def view_createAd_form():
+@advertisement_blueprint.route('/', methods=['GET', 'POST'])
+def view_advertisement_form():
     # Placeholder for profile
-    return render_template('createAd.tpl')
+    return render_template('advertisement.tpl')

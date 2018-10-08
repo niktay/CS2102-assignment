@@ -1,6 +1,7 @@
 import psycopg2
 from admin import admin_blueprint
 from adminitise import adminitise_blueprint
+from advertisement import advertisement_blueprint
 from driver import driver_blueprint
 from flask import Flask
 from flask import render_template
@@ -14,6 +15,7 @@ app.register_blueprint(login_blueprint, url_prefix='/login')
 app.register_blueprint(registration_blueprint, url_prefix='/register')
 app.register_blueprint(admin_blueprint, url_prefix='/admin')
 app.register_blueprint(adminitise_blueprint, url_prefix='/adminitise')
+app.register_blueprint(advertisement_blueprint, url_prefix='/advertisement')
 
 
 @app.route('/', methods=['GET', 'POST'])
