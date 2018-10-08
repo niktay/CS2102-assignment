@@ -52,7 +52,7 @@
                 <h4 class="card-title mt-2">Driver Registration</h4>
             </header>
             <article class="card-body">
-            <form>
+            <form action="create" method="POST">
                 <div class="form-row">
                     <div class="col form-group">
                         <label>License Number</label>
