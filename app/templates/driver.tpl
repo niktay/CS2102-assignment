@@ -19,14 +19,6 @@
   <body>
     <nav class="navbar navbar-dark fixed-top bg-dark flex-md-nowrap p-0 shadow">
       <a class="navbar-brand col-sm-3 col-md-2 mr-0" href="#">CS2102</a>
-        <form action="/" method="POST" style="width: 100%">
-            <input class="form-control form-control-dark w-100" type="text" name="command" placeholder="Command" aria-label="Command">
-        </form>
-      <ul class="navbar-nav px-3">
-        <li class="nav-item text-nowrap">
-          <a class="nav-link" href="#">Sign out</a>
-        </li>
-      </ul>
     </nav>
 
     <div class="container-fluid">
@@ -41,15 +33,70 @@
                 </a>
               </li>
             </ul>
+            <h6 class="sidebar-heading d-flex justify-content-between align-items-center px-3 mt-4 mb-1 text-muted">
+              <span>Saved reports</span>
+              <a class="d-flex align-items-center text-muted" href="#">
+                <span data-feather="plus-circle"></span>
+              </a>
+            </h6>
           </div>
         </nav>
-        
+
         <main role="main" class="col-md-9 ml-sm-auto col-lg-10 px-4">
           <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
-            <h1 class="h2">Driver profile</h1>
-
           </div>
-         
+     <div class="row justify-content-center">
+            <div class="col-md-6">
+            <div class="card">
+            <header class="card-header">
+                <h4 class="card-title mt-2">Driver Registration</h4>
+            </header>
+            <article class="card-body">
+            <form>
+                <div class="form-row">
+                    <div class="col form-group">
+                        <label>License Number</label>
+                          <input id="license-number" type="text" class="form-control" placeholder="" required>
+                    </div> <!-- form-group end.// -->
+                </div> <!-- form-row end.// -->
+                <div class="form-group">
+                      <label>License Plate</label>
+                      <input id="license-plate" type="text" class="form-control" placeholder="SXX1234A" required>
+                </div> <!-- form-group end.// -->
+                <div class="form-row">
+                    <div class="form-group col-md-6">
+                          <label>Brand of Car</label>
+                          <input id="brand" type="text" class="form-control" required>
+                    </div> <!-- form-group end.// -->
+                    <div class="form-group col-md-6">
+                          <label>Model of Car</label>
+                          <input id="model" type="text" class="form-control" required>
+                    </div> <!-- form-group end.// -->
+                </div>
+                <div class="form-group">
+                    <div class="form-group">
+                        <label>Driving since</label>
+                        <input id="driving-since" class="form-control" type="number" value="2012" required>
+                    </div> <!-- form-group end.// -->
+                    <div class="form-group">
+                        <label>(Optional) Bio</label>
+                        <textarea id="optional-bio" class="form-control" type="text" rows="3"></textarea>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <button type="submit" class="btn btn-primary btn-block">Register as Driver</button>
+                </div> <!-- form-group// -->
+                </div> <!-- form-row.// -->
+            </form>
+            </article> <!-- card-body end .// -->
+            </div> <!-- col.//-->
+
+        </div> <!-- row.//-->
+
+</div>
+        </main>
+      </div>
+    </div>
     <!-- Bootstrap core JavaScript
     ================================================== -->
     <!-- Placed at the end of the document so the pages load faster -->
