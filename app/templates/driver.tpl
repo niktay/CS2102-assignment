@@ -51,6 +51,22 @@
             <header class="card-header">
                 <h4 class="card-title mt-2">Driver Registration</h4>
             </header>
+
+            {% if is_view == 0 %}
+                {% if is_success == 0 %}
+                <div class="alert alert-success" role="alert">
+                    You have successfully registered as a driver.
+                </div>
+
+                {% else %}
+                <div class="alert alert-danger" role="alert">
+                    Please ensure that you have not register as a driver previously.
+                </div>
+
+                {% endif %}
+
+            {% endif %}
+
             <article class="card-body">
             <form action="create" method="POST">
                 <div class="form-row">

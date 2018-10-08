@@ -15,17 +15,18 @@ def register_driver():
         return render_template('driver.tpl')
 
     new_driver = Driver(**request.form)
-
+    is_success = 0
     try:
         print(new_driver)
-        new_driver.save()
+        is_success = new_driver.save()
     except Exception as e:
         print(e)
 
-    return render_template('driver.tpl')
+    return render_template('driver.tpl', is_view=0, is_success=is_success)
 
 
 @driver_blueprint.route('/', methods=['GET'])
 def view_driver_registration():
+
     # Placeholder for profile
-    return render_template('driver.tpl')
+    return render_template('driver.tpl', is_view=1)
