@@ -32,8 +32,7 @@ def register_driver():
 
     return render_template('driver.tpl', is_view=True, is_success=is_success)
 
-
 @driver_blueprint.route('/', methods=['GET'])
 def view_driver_registration():
-    # Placeholder for profile
     return render_template('driver.tpl', is_view=False)
+
