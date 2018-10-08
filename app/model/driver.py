@@ -16,7 +16,6 @@ class Driver(Model):
     def _validate(self):
         return any([
             self.license_number, self.username, self.driving_since,
-            self.optional_bio,
         ])
 
     def save(self):
