@@ -21,7 +21,7 @@ class Driver(Model):
     def save(self):
         if not self._validate():
             # TODO(Glenice): Throw some error/log
-            return
+            return False
         try:
             cursor = self.conn.cursor()
             cursor.execute(
@@ -31,10 +31,12 @@ class Driver(Model):
                 f"'{self.driving_since}', '{self.optional_bio}');",
             )
             self.conn.commit()
+            return True
         except Exception as e:
             # TODO(Glenice): Error handling/logging
             print(e)
-
+        return False
+    
     def __str__(self):
         output = f"""
 --------------------------------------------------------------------------------
