@@ -56,31 +56,31 @@
                 <div class="form-row">
                     <div class="col form-group">
                         <label>License Number</label>
-                          <input id="license-number" type="text" class="form-control" placeholder="" required>
+                          <input name="license-number" id="license-number" type="text" class="form-control" required>
                     </div> <!-- form-group end.// -->
                 </div> <!-- form-row end.// -->
                 <div class="form-group">
                       <label>License Plate</label>
-                      <input id="license-plate" type="text" class="form-control" placeholder="SXX1234A" required>
+                      <input name="license-plate" id="license-plate" type="text" class="form-control" placeholder="SXX1234A" required>
                 </div> <!-- form-group end.// -->
                 <div class="form-row">
                     <div class="form-group col-md-6">
                           <label>Brand of Car</label>
-                          <input id="brand" type="text" class="form-control" required>
+                          <input name="brand" id="brand" type="text" class="form-control" required>
                     </div> <!-- form-group end.// -->
                     <div class="form-group col-md-6">
                           <label>Model of Car</label>
-                          <input id="model" type="text" class="form-control" required>
+                          <input name="model" id="model" type="text" class="form-control" required>
                     </div> <!-- form-group end.// -->
                 </div>
                 <div class="form-group">
                     <div class="form-group">
                         <label>Driving since</label>
-                        <input id="driving-since" class="form-control" type="number" value="2012" required>
+                        <input name="driving-since" id="driving-since" class="form-control" type="number" value="2012" required>
                     </div> <!-- form-group end.// -->
                     <div class="form-group">
                         <label>(Optional) Bio</label>
-                        <textarea id="optional-bio" class="form-control" type="text" rows="3"></textarea>
+                        <textarea name="optional-bio" id="optional-bio" class="form-control" type="text" rows="3"></textarea>
                     </div>
                 </div>
                 <div class="form-group">

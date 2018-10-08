@@ -44,6 +44,7 @@ class Driver(Model):
 license_number: {self.license_number}
 username: {self.username}
 driving_since: {self.driving_since}
+optional_bio: {self.optional_bio}
 --------------------------------------------------------------------------------
 """
         return output
