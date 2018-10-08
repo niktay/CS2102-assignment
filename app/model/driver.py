@@ -13,6 +13,12 @@ class Driver(Model):
         self.driving_since = kwargs.get('driving-since', None)
         self.optional_bio = kwargs.get('optional-bio', None)
 
+    def _validate(self):
+        return any([
+            self.license_number, self.username, self.driving_since,
+            self.optional_bio,
+        ])
+
     def save(self):
         if not self._validate():
             # TODO(Glenice): Throw some error/log
@@ -33,7 +39,7 @@ class Driver(Model):
     def __str__(self):
         output = f"""
 --------------------------------------------------------------------------------
-                               Account
+                               Driver
 --------------------------------------------------------------------------------
 license_number: {self.license_number}
 username: {self.username}
