@@ -1,9 +1,10 @@
 import psycopg2
+from admin import admin_blueprint
+from driver import driver_blueprint
 from flask import Flask
 from flask import render_template
 from flask import request
 from login import login_blueprint
-from driver import driver_blueprint
 from registration import registration_blueprint
 
 
@@ -11,6 +12,7 @@ app = Flask(__name__)
 app.register_blueprint(driver_blueprint, url_prefix='/driver')
 app.register_blueprint(login_blueprint, url_prefix='/login')
 app.register_blueprint(registration_blueprint, url_prefix='/register')
+app.register_blueprint(admin_blueprint, url_prefix='/admin')
 
 
 @app.route('/', methods=['GET', 'POST'])
@@ -55,6 +57,7 @@ def view_records():
         'dashboard.tpl', table_name=view_table, headings=headings,
         results=results,
     )
+
 
 def run():
     app.run(debug=True, host='0.0.0.0', port=5000)
