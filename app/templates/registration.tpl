@@ -52,39 +52,39 @@
     <h4 class="card-title mt-2">User Registration</h4>
 </header>
 <article class="card-body">
-<form>
+<form action="create" method="POST">
     <div class="form-row">
         <div class="col form-group">
             <label>Full Name</label>
-              <input id="full-name" type="text" class="form-control" placeholder="" required>
+              <input name="full-name" id="full-name" type="text" class="form-control" placeholder="" required>
         </div> <!-- form-group end.// -->
     </div> <!-- form-row end.// -->
     <div class="form-group">
         <label>Username</label>
-        <input id="username" class="form-control" type="text" required>
+        <input name="username" id="username" class="form-control" type="text" required>
     </div> <!-- form-group end.// -->
     <div class="form-group">
         <label>Date of Birth</label>
-        <input id="date-of-birth" class="form-control" type="date" required>
+        <input name="date-of-birth" id="date-of-birth" class="form-control" type="date" required>
     </div> <!-- form-group end.// -->
     <div class="form-row">
         <div class="form-group col-md-6">
           <label>Email</label>
-          <input id="email" type="email" class="form-control" required>
+          <input name="email" id="email" type="email" class="form-control" required>
         </div> <!-- form-group end.// -->
         <div class="form-group col-md-6">
           <label>Contact</label>
-          <input id="contact" type="tel" class="form-control" required>
+          <input name="contact" id="contact" type="tel" class="form-control" required>
         </div> <!-- form-group end.// -->
     </div> <!-- form-row.// -->
     <div class="form-row">
         <div class="form-group col-md-6">
           <label>Password</label>
-          <input id="password" type="password" class="form-control" required>
+          <input name="password" id="password" type="password" class="form-control" required>
         </div> <!-- form-group end.// -->
         <div class="form-group col-md-6">
           <label>Confirm Password</label>
-          <input id="confirm-password" type="password" class="form-control" required>
+          <input name="confirm-password" id="confirm-password" type="password" class="form-control" required>
         </div> <!-- form-group end.// -->
     </div> <!-- form-row.// -->
     <div class="form-group">

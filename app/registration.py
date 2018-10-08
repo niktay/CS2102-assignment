@@ -1,5 +1,7 @@
 from flask import Blueprint
 from flask import render_template
+from flask import request
+from model import Account
 
 
 registration_blueprint = Blueprint(
@@ -7,7 +9,22 @@ registration_blueprint = Blueprint(
 )
 
 
-@registration_blueprint.route('/', methods=['GET', 'POST'])
-def view_registration_form():
-    # Placeholder for profile
+@registration_blueprint.route('/create', methods=['GET', 'POST'])
+def register_account():
+    if request.method != 'POST':
+        return render_template('registration.tpl')
+
+    new_account = Account(**request.form)
+
+    try:
+        print(new_account)
+        new_account.save()
+    except Exception as e:
+        print(e)
+
+    return render_template('login.tpl')
+
+
+@registration_blueprint.route('/', methods=['GET'])
+def view_registration():
     return render_template('registration.tpl')
