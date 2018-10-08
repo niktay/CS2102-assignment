@@ -56,12 +56,12 @@
                 <div class="form-row">
                     <div class="col form-group">
                         <label>License Number</label>
-                          <input id="license_num" type="text" class="form-control" placeholder="" required>
+                          <input id="license-num" type="text" class="form-control" placeholder="" required>
                     </div> <!-- form-group end.// -->
                 </div> <!-- form-row end.// -->
                 <div class="form-group">
                       <label>License Plate</label>
-                      <input id="license_plate" type="text" class="form-control" placeholder="SXX1234A" required>
+                      <input id="license-plate" type="text" class="form-control" placeholder="SXX1234A" required>
                 </div> <!-- form-group end.// -->
                 <div class="form-row">
                     <div class="form-group col-md-6">
@@ -76,11 +76,11 @@
                 <div class="form-group">
                     <div class="form-group">
                         <label>Driving since</label>
-                        <input id="driving_since" class="form-control" type="number" value="2012" required>
+                        <input id="driving-since" class="form-control" type="number" value="2012" required>
                     </div> <!-- form-group end.// -->
                     <div class="form-group">
                         <label>Bio</label>
-                        <textarea id="bio" class="form-control" type="text" rows="3"></textarea>
+                        <textarea id="optional-bio" class="form-control" type="text" rows="3"></textarea>
                     </div>
                 </div>
                 <div class="form-group">
