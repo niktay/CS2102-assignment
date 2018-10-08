@@ -1,3 +1,5 @@
+import datetime
+
 from model.model import Model
 
 
@@ -10,8 +12,10 @@ class Driver(Model):
 
         self.license_number = kwargs.get('license-number', None)
         self.username = kwargs.get('username', None)
-        self.driving_since = kwargs.get('driving-since', None)
         self.optional_bio = kwargs.get('optional-bio', None)
+
+        today = datetime.datetime.now()
+        self.driving_since = today.strftime("%Y-%m-%d")
 
     def _validate(self):
         return any([
@@ -36,7 +40,7 @@ class Driver(Model):
             # TODO(Glenice): Error handling/logging
             print(e)
         return False
-    
+
     def __str__(self):
         output = f"""
 --------------------------------------------------------------------------------

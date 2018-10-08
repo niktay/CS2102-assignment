@@ -91,10 +91,6 @@
                 </div>
                 <div class="form-group">
                     <div class="form-group">
-                        <label>Driving since</label>
-                        <input name="driving-since" id="driving-since" class="form-control" type="number" value="2012" required>
-                    </div> <!-- form-group end.// -->
-                    <div class="form-group">
                         <label>(Optional) Bio</label>
                         <textarea name="optional-bio" id="optional-bio" class="form-control" type="text" rows="3"></textarea>
                     </div>
