@@ -43,7 +43,7 @@
             </ul>
             <ul class="nav flex-column">
               <li class="nav-item">
-                <a class="nav-link" href="/adminitise">
+                <a class="nav-link active" href="/adminitise">
                   <span data-feather="shield"></span>
                   Adminitise <span class="trending-up"></span>
                </a>
@@ -55,27 +55,28 @@
                 <span data-feather="database"></span>
               </a>
             </h6>
+
             <ul class="nav flex-column mb-2">
               <li class="nav-item">
-                <a class="nav-link active" href="accounts">
+                <a class="nav-link" href="/admin/accounts">
                   <span data-feather="users"></span>
                   Accounts
                 </a>
               </li>
               <li class="nav-item">
-                <a class="nav-link" href="ads">
+                <a class="nav-link" href="/admin/ads">
                   <span data-feather="tv"></span>
                   Advertisements
                 </a>
               </li>
               <li class="nav-item">
-                <a class="nav-link" href="bids">
+                <a class="nav-link" href="/admin/bids">
                   <span data-feather="dollar-sign"></span>
                   Bids
                 </a>
               </li>
               <li class="nav-item">
-                <a class="nav-link" href="rides">
+                <a class="nav-link" href="/admin/rides">
                   <span data-feather="navigation"></span>
                   Rides
                 </a>
@@ -83,43 +84,51 @@
             </ul>
           </div>
         </nav>
-        <main role="main" class="col-md-9 ml-sm-auto col-lg-10 px-4">
-          <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
-            <h1 class="h2">{{table_name}}</h1>
-            <div class="btn-toolbar mb-2 mb-md-0">
-              <div class="btn-group mr-2">
-                <button type="button" class="btn btn-sm btn-outline-secondary">Share</button>
-                <button type="button" class="btn btn-sm btn-outline-secondary">Export</button>
-              </div>
-              <button type="button" class="btn btn-sm btn-outline-secondary dropdown-toggle">
-                <span data-feather="calendar"></span>
-                This week
-              </button>
-            </div>
-          </div>
 
-          <!--<h2>{{table_name}}</h2>-->
-          <div class="table-responsive">
-            <table class="table table-striped table-sm">
-            <thead>
-                <tr>
-                    {% for heading in headings %}
-                        <th scope="col">{{heading[0]}}</th>
-                    {% endfor %}
-                </tr>
-            </thead>
-            <tbody>
-            {% for result in results %}
-                <tr>
-                    {% for field in result %}
-                        <td>{{field}}</td>
-                    {% endfor %}
-                </tr>
-            {% endfor %}
-            </tbody>
-            </table>
+<main role="main" class="col-md-9 ml-sm-auto col-lg-10 px-4">
+          <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
           </div>
-        </main>
+    <div class="row justify-content-center">
+            <div class="col-md-6">
+            <div class="card">
+            <header class="card-header">
+                <h4 class="card-title mt-2">Adminitise</h4>
+            </header>
+
+            {% if is_view %}
+                {% if is_success %}
+                <div class="alert alert-success" role="alert">
+                    Successfully adminitised.
+                </div>
+
+                {% else %}
+                <div class="alert alert-danger" role="alert">
+                    Failed to adminitise.
+                </div>
+
+                {% endif %}
+
+            {% endif %}
+
+            <article class="card-body">
+            <form action="create" method="POST">
+                <div class="form-row">
+                    <div class="col form-group">
+                        <label>Toggle this user's admin status:</label>
+                          <input name="new-admin" id="new-admin" type="text" class="form-control" required>
+                    </div> <!-- form-group end.// -->
+                </div> <!-- form-row end.// -->
+               <div class="form-group">
+                    <button type="submit" class="btn btn-primary btn-block">Adminitise</button>
+                </div> <!-- form-group// -->
+                </div> <!-- form-row.// -->
+            </form>
+            </article> <!-- card-body end .// -->
+            </div> <!-- col.//-->
+
+        </div> <!-- row.//-->
+    </div>
+ </main>
       </div>
     </div>
 

@@ -3,12 +3,12 @@ from flask import Blueprint
 from flask import render_template
 from flask import request
 
-
 admin_blueprint = Blueprint('admin', __name__, template_folder='templates')
 
 
 @admin_blueprint.route('/', methods=['GET', 'POST'])
 def view_adminHome():
+
     return render_template('admin.tpl')
 
 
