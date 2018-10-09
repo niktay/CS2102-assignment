@@ -1,5 +1,6 @@
 import psycopg2
 from admin import admin_blueprint
+from adminitise import adminitise_blueprint
 from driver import driver_blueprint
 from flask import Flask
 from flask import render_template
@@ -7,12 +8,12 @@ from flask import request
 from login import login_blueprint
 from registration import registration_blueprint
 
-
 app = Flask(__name__)
 app.register_blueprint(driver_blueprint, url_prefix='/driver')
 app.register_blueprint(login_blueprint, url_prefix='/login')
 app.register_blueprint(registration_blueprint, url_prefix='/register')
 app.register_blueprint(admin_blueprint, url_prefix='/admin')
+app.register_blueprint(adminitise_blueprint, url_prefix='/adminitise')
 
 
 @app.route('/', methods=['GET', 'POST'])
