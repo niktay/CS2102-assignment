@@ -56,19 +56,19 @@
     <div class="form-row">
         <div class="col form-group">
             <label>Date and Time</label>
-              <input id="datetime" type="datetime" class="form-control" placeholder="" required>
+              <input id="date-and-time" name="date-and-time" type="datetime-locals" class="form-control" placeholder="" required>
         </div> <!-- form-group end.// -->
     </div> <!-- form-row end.// -->
     <div class="form-row">
         <div class="col form-group">
             <label>Origin</label>
-              <input id="origin" type="text" class="form-control" placeholder="" required>
+              <input id="origin" name="origin" type="text" class="form-control" placeholder="" required>
         </div> <!-- form-group end.// -->
     </div> <!-- form-row end.// -->
     <div class="form-row">
         <div class="col form-group">
             <label>Destination</label>
-              <input id="destination" type="text" class="form-control" placeholder="" required>
+              <input id="destination" name="destination" type="text" class="form-control" placeholder="" required>
         </div> <!-- form-group end.// -->
     </div> <!-- form-row end.// -->
     <div class="form-group">
@@ -76,7 +76,6 @@
     </div> <!-- form-group// -->
 </form>
 </article> <!-- card-body end .// -->
-<div class="border-top card-body text-center">Don't have an account? <a href="/register">register an account</a></div>
 </div>
 </div> <!-- col.//-->
 
