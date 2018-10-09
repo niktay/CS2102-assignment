@@ -54,8 +54,8 @@ def get_profile():
     profile_car = car
 
     return render_template(
-        'driver.tpl', is_view=True, title='Your Driver Profile',
-        is_success=True, driver=profile_driver, car=profile_car,
+        'driver.tpl', is_view = True, title = 'Your Driver Profile',
+        is_success = True, driver = profile_driver, car = profile_car,
     )
 
 
@@ -82,14 +82,14 @@ def update_profile():
         print(e)
 
     return render_template(
-        'driver.tpl', is_view=True, is_success=is_success,
-        title='Profile', driver=driver, car=car,
+        'driver.tpl', is_view = True, is_success = is_success,
+        title = 'Profile', driver = driver, car = car,
     )
 
 
 @driver_blueprint.route('/', methods=['GET'])
 def view_driver_registration():
     return render_template(
-        'driver.tpl', is_view=False,
-        title='Driver Registration',
+        'driver.tpl', is_view = False,
+        title = 'Driver Registration',
     )
