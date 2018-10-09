@@ -41,6 +41,30 @@ class Driver(Model):
             print(e)
         return False
 
+    def get(self):
+        return [
+            self.license_number, self.username,
+            self.optional_bio, self.driving_since,
+        ]
+
+    def update(self):
+        print(self)
+        if not self._validate():
+            # TODO(Glenice): Throw some error/log
+            return False
+        try:
+            cursor = self.conn.cursor()
+            cursor.execute(
+                "UPDATE Driver SET optional_bio = '{self.optional_bio}' "
+                f"WHERE license_number = '{self.license_number}';",
+            )
+            self.conn.commit()
+            return True
+        except Exception as e:
+            # TODO(Glenice): Error handling/logging
+            print(e)
+        return False
+
     def __str__(self):
         output = f"""
 --------------------------------------------------------------------------------
