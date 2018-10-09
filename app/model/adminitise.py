@@ -9,7 +9,6 @@ class Adminitise(Model):
         kwargs = {k: v[0] for k, v in kwargs.items()}
 
         self.new_admin = kwargs.get('new-admin', None)
-        self.optional_reasons = kwargs.get('optional-reasons', None)
 
     def _validate(self):
         return any([
@@ -39,7 +38,6 @@ class Adminitise(Model):
                                 Adminitise
 --------------------------------------------------------------------------------
 new_admin: {self.new_admin}
-optional_reasons: {self.optional_reasons}
 --------------------------------------------------------------------------------
 """
         return output
