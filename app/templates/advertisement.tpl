@@ -56,7 +56,7 @@
     <div class="form-row">
         <div class="col form-group">
             <label>Date and Time</label>
-              <input id="date-and-time" name="date-and-time" type="datetime-locals" class="form-control" placeholder="" required>
+              <input id="date-and-time" name="date-and-time" type="datetime" class="form-control" placeholder="YYYY-MM-DD hh:mm" required>
         </div> <!-- form-group end.// -->
     </div> <!-- form-row end.// -->
     <div class="form-row">
