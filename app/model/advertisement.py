@@ -8,13 +8,13 @@ class Advertisement(Model):
 
         kwargs = {k: v[0] for k, v in kwargs.items()}
 
-        self.date_and_time = kwargs.get('date-and-time', None)
+        self.start_timestamp = kwargs.get('date-and-time', None)
         self.origin = kwargs.get('origin', None)
         self.destination = kwargs.get('destination', None)
 
     def _validate(self):
         return any([
-            self.date_and_time, self.origin, self.destination,
+            self.start_timestamp, self.origin, self.destination,
         ])
 
     def save(self):
@@ -24,9 +24,9 @@ class Advertisement(Model):
         try:
             cursor = self.conn.cursor()
             cursor.execute(
-                "INSERT INTO Advertisement (date_and_time, origin,"
+                "INSERT INTO Advertisement (start_timestamp, origin,"
                 f"destination)"
-                f"VALUES ('{self.date_and_time}', '{self.origin}', "
+                f"VALUES ('{self.start_timestamp}', '{self.origin}', "
                 f"'{self.destination}');",
             )
             self.conn.commit()
@@ -41,7 +41,7 @@ class Advertisement(Model):
 --------------------------------------------------------------------------------
                                Advertisement
 --------------------------------------------------------------------------------
-date_and_time: {self.date_and_time}
+start_timestamp: {self.start_timestamp}
 origin: {self.origin}
 destination: {self.destination}
 --------------------------------------------------------------------------------

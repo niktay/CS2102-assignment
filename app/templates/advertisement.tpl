@@ -52,7 +52,7 @@
     <h4 class="card-title mt-2">Create advertisement</h4>
 </header>
 <article class="card-body">
-<form>
+<form action="create" method="POST">
     <div class="form-row">
         <div class="col form-group">
             <label>Date and Time</label>

@@ -21,14 +21,17 @@ def create_advertisement_form():
         print(new_advertisement)
         is_advertisement_store = new_advertisement.save()
         print(is_advertisement_store)
-        is_success = new_advertisement and is_advertisement_store
+        is_success = is_advertisement_store
 
     except Exception as e:
         print(e)
 
-    return render_template('advertisement', is_view=True, is_succes=is_success)
+    return render_template(
+        'advertisement.tpl', is_view=True,
+        is_success=is_success,
+    )
 
 
-@advertisement_blueprint.route('/', method=['GET'])
+@advertisement_blueprint.route('/', methods=['GET'])
 def view_advertisement_creation():
     return render_template('advertisement.tpl', is_view=False)
