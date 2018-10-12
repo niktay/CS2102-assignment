@@ -5,10 +5,17 @@ from driver import driver_blueprint
 from flask import Flask
 from flask import render_template
 from flask import request
+from flask_login import LoginManager
 from login import login_blueprint
 from registration import registration_blueprint
 
 app = Flask(__name__)
+app.config['SECRET_KEY'] = 'secretkey'  # TODO(niktay): secrets management
+
+login_manager = LoginManager()
+login_manager.init_app(app)
+login_manager.login_view = 'login'
+
 app.register_blueprint(driver_blueprint, url_prefix='/driver')
 app.register_blueprint(login_blueprint, url_prefix='/login')
 app.register_blueprint(registration_blueprint, url_prefix='/register')
