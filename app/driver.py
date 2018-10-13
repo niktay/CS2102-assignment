@@ -8,10 +8,7 @@ from flask_login import login_required
 from model import Car
 from model import Driver
 
-
-driver_blueprint = Blueprint(
-    'driver', __name__, template_folder='templates',
-)
+driver_blueprint = Blueprint('driver', __name__, template_folder='templates',)
 
 
 username = '1234abc'
