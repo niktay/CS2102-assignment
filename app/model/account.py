@@ -43,6 +43,23 @@ class Account(UserMixin, Model):
             self.contact, self.password,
         ])
 
+    def toggle_admin_status(self):
+        try:
+            cursor = self.conn.cursor()
+            cursor.execute(
+                "UPDATE account SET is_admin = NOT is_admin WHERE username = "
+                f"'{self.username}';",
+            )
+            self.conn.commit()
+
+            return True
+
+        except Exception as e:
+            # TODO(Nik): Error handling/logging
+            print(e)
+
+        return False
+
     @classmethod
     def load(cls, username):
         if not username:

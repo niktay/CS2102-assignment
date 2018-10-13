@@ -1,7 +1,7 @@
 from flask import Blueprint
 from flask import render_template
 from flask import request
-from model.adminitise import Adminitise
+from model import Account
 
 adminitise_blueprint = Blueprint(
     'adminitise', __name__, template_folder='templates',
@@ -14,19 +14,15 @@ def adminitise_account():
     if request.method != 'POST':
         return render_template('adminitise.tpl')
 
-    new_admin = Adminitise(**request.form)
-    is_success = False
+    account = Account.load(request.form.get('username', 'None'))
 
-    try:
-        print(new_admin)
-        made_new_admin = new_admin.save()
-        is_success = made_new_admin
-    except Exception as e:
-        print(e)
+    toggle_success = False
+    if account:
+        toggle_success = account.toggle_admin_status()
 
     return render_template(
         'adminitise.tpl', is_view=True,
-        is_success=is_success,
+        is_success=toggle_success,
     )
 
 
