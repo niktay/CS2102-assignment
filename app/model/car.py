@@ -76,3 +76,20 @@ model: {self.model}
 --------------------------------------------------------------------------------
 """
         return output
+
+    @classmethod
+    def get_car(cls, license_number):
+        car = cls()
+        cursor = car.conn.cursor()
+
+        try:
+            cursor.execute(
+                'SELECT * FROM Car'
+                f" WHERE license_number = '{license_number}';",
+            )
+            car_found = list(cursor.fetchone())
+
+            return car_found
+        except Exception as e:
+            # TODO(Glenice): Error handling/logging
+            print(e)

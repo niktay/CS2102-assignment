@@ -11,12 +11,8 @@ from model import Driver
 driver_blueprint = Blueprint('driver', __name__, template_folder='templates',)
 
 
-username = '1234abc'
-driver = None
-car = None
-
-
 @driver_blueprint.route('/create', methods=['GET', 'POST'])
+@login_required
 def register_driver():
     if request.method != 'POST':
         return render_template(
@@ -24,19 +20,15 @@ def register_driver():
             title='Driver Registration',
         )
 
-    new_driver = Driver(**request.form)
+    new_driver = Driver(current_user.get_id(), **request.form)
     new_car = Car(**request.form)
 
-    global driver
-    driver = new_driver.get()
-    global car
-    car = new_car.get()
-
     try:
-        print(new_driver)
-        print(new_car)
         new_driver.save()
         new_car.save()
+
+        print(new_driver)
+        print(new_car)
 
     except Exception as e:
         print(e)
@@ -45,20 +37,21 @@ def register_driver():
 
 
 @driver_blueprint.route('/profile', methods=['GET', 'POST'])
+@login_required
 def get_profile():
-    global driver
-    global car
+    driver = Driver.get_driver(current_user.get_id())
+    license_number = driver[0]
 
-    profile_driver = driver
-    profile_car = car
+    car = Car.get_car(license_number)
 
     return render_template(
-        'driver.tpl', is_view = True, title = 'Your Driver Profile',
-        is_success = True, driver = profile_driver, car = profile_car,
+        'driver.tpl', is_view=True, title='Your Driver Profile',
+        is_success=True, driver=driver, car=car,
     )
 
 
 @driver_blueprint.route('/update', methods=['GET', 'POST'])
+@login_required
 def update_profile():
     if request.method != 'POST':
         return render_template('driver.tpl', is_view=False, title='Profile')
@@ -81,16 +74,15 @@ def update_profile():
         print(e)
 
     return render_template(
-        'driver.tpl', is_view = True, is_success = is_success,
-        title = 'Profile', driver = driver, car = car,
+        'driver.tpl', is_view=True, is_success=is_success,
+        title='Profile', driver=driver, car=car,
     )
-
 
 
 @driver_blueprint.route('/', methods=['GET'])
 @login_required
 def view_driver_registration():
     return render_template(
-        'driver.tpl', is_view = False,
-        title = 'Driver Registration',
+        'driver.tpl', is_view=False,
+        title='Driver Registration',
     )
