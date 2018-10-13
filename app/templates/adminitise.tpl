@@ -114,8 +114,8 @@
             <form action="{{ url_for('adminitise.adminitise_account') }}" method="POST">
                 <div class="form-row">
                     <div class="col form-group">
-                        <label>Toggle this user's admin status:</label>
-                          <input name="new-admin" id="new-admin" type="text" class="form-control" required>
+                        <label>Username:</label>
+                          <input name="username" id="username" type="text" class="form-control" required>
                     </div> <!-- form-group end.// -->
                 </div> <!-- form-row end.// -->
                <div class="form-group">
