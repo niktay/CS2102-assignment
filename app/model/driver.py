@@ -5,17 +5,18 @@ from model.model import Model
 
 class Driver(Model):
 
-    def __init__(self, **kwargs):
+    def __init__(self, *args, **kwargs):
         super().__init__()
 
         kwargs = {k: v[0] for k, v in kwargs.items()}
 
         self.license_number = kwargs.get('license-number', None)
-        self.username = kwargs.get('username', None)
-        self.optional_bio = kwargs.get('optional-bio', None)
 
-        today = datetime.datetime.now()
-        self.driving_since = today.strftime("%Y-%m-%d")
+        if(args):
+            self.username = args[0]
+
+        self.optional_bio = kwargs.get('optional-bio', None)
+        self.driving_since = kwargs.get('driving-since', None)
 
     def _validate(self):
         return any([
@@ -27,6 +28,8 @@ class Driver(Model):
             # TODO(Glenice): Throw some error/log
             return False
         try:
+            today = datetime.datetime.now()
+            self.driving_since = today.strftime("%Y-%m-%d")
             cursor = self.conn.cursor()
             cursor.execute(
                 "INSERT INTO Driver (license_number, username,"
@@ -65,6 +68,9 @@ class Driver(Model):
             print(e)
         return False
 
+    def get_license_number(self):
+        return self.license_number
+
     def __str__(self):
         output = f"""
 --------------------------------------------------------------------------------
@@ -77,3 +83,24 @@ optional_bio: {self.optional_bio}
 --------------------------------------------------------------------------------
 """
         return output
+
+    @classmethod
+    def get_driver(cls, username):
+        if not username:
+            return None
+
+        driver = cls()
+
+        cursor = driver.conn.cursor()
+
+        try:
+            cursor.execute(
+                f"SELECT * FROM Driver WHERE username = '{username}';",
+            )
+
+            driver_found = list(cursor.fetchone())
+
+            return driver_found
+        except Exception as e:
+            # TODO(Glenice): Error handling/logging
+            print(e)
