@@ -52,7 +52,7 @@
     <h4 class="card-title mt-2">Login</h4>
 </header>
 <article class="card-body">
-<form action="auth" method="POST">
+<form action="{{ url_for('login.process_login') }}" method="POST">
     <div class="form-row">
         <div class="col form-group">
             <label>Username</label>
