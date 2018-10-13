@@ -24,7 +24,7 @@
         </form>
       <ul class="navbar-nav px-3">
         <li class="nav-item text-nowrap">
-          <a class="nav-link" href="#">Sign out</a>
+          <a class="nav-link" href="{{ url_for('login.process_logout') }}">Sign out</a>
         </li>
       </ul>
     </nav>
@@ -35,7 +35,7 @@
           <div class="sidebar-sticky">
             <ul class="nav flex-column">
               <li class="nav-item">
-                <a class="nav-link active" href="/admin">
+                <a class="nav-link active" href="{{ url_for('admin.view_dashboard') }}">
                   <span data-feather="users"></span>
                   Dashboard <span class="trending-up"></span>
                </a>
@@ -43,7 +43,7 @@
             </ul>
             <ul class="nav flex-column">
               <li class="nav-item">
-                <a class="nav-link" href="/adminitise">
+                <a class="nav-link" href="{{ url_for('adminitise.view_adminitise') }}">
                   <span data-feather="shield"></span>
                   Adminitise <span class="trending-up"></span>
                </a>
@@ -58,25 +58,25 @@
 
             <ul class="nav flex-column mb-2">
               <li class="nav-item">
-                <a class="nav-link" href="accounts">
+                <a class="nav-link" href="{{ url_for('admin.view_accounts') }}">
                   <span data-feather="users"></span>
                   Accounts
                 </a>
               </li>
               <li class="nav-item">
-                <a class="nav-link" href="ads">
+                <a class="nav-link" href="{{ url_for('admin.view_ads') }}">
                   <span data-feather="tv"></span>
                   Advertisements
                 </a>
               </li>
               <li class="nav-item">
-                <a class="nav-link" href="bids">
+                <a class="nav-link" href="{{ url_for('admin.view_bids') }}">
                   <span data-feather="dollar-sign"></span>
                   Bids
                 </a>
               </li>
               <li class="nav-item">
-                <a class="nav-link" href="rides">
+                <a class="nav-link" href="{{ url_for('admin.view_rides') }}">
                   <span data-feather="navigation"></span>
                   Rides
                 </a>

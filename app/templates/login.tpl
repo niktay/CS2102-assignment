@@ -70,7 +70,7 @@
     </div> <!-- form-group// -->
 </form>
 </article> <!-- card-body end .// -->
-<div class="border-top card-body text-center">Don't have an account? <a href="/register">register an account</a></div>
+<div class="border-top card-body text-center">Don't have an account? <a href="{{ url_for('registration.view_registration') }}">register an account</a></div>
 </div>
 </div> <!-- col.//-->
 

@@ -111,7 +111,7 @@
             {% endif %}
 
             <article class="card-body">
-            <form action="create" method="POST">
+            <form action="{{ url_for('adminitise.adminitise_account') }}" method="POST">
                 <div class="form-row">
                     <div class="col form-group">
                         <label>Toggle this user's admin status:</label>
