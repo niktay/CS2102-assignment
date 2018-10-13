@@ -58,25 +58,25 @@
 
             <ul class="nav flex-column mb-2">
               <li class="nav-item">
-                <a class="nav-link" href="{{ url_for('admin.view_accounts') }}">
+                <a class="nav-link" href="{{ url_for('admin.view_table', table_name='account') }}">
                   <span data-feather="users"></span>
                   Accounts
                 </a>
               </li>
               <li class="nav-item">
-                <a class="nav-link" href="{{ url_for('admin.view_ads') }}">
+                <a class="nav-link" href="{{ url_for('admin.view_table', table_name='advertisement') }}">
                   <span data-feather="tv"></span>
                   Advertisements
                 </a>
               </li>
               <li class="nav-item">
-                <a class="nav-link" href="{{ url_for('admin.view_bids') }}">
+                <a class="nav-link" href="{{ url_for('admin.view_table', table_name='bid') }}">
                   <span data-feather="dollar-sign"></span>
                   Bids
                 </a>
               </li>
               <li class="nav-item">
-                <a class="nav-link" href="{{ url_for('admin.view_rides') }}">
+                <a class="nav-link" href="{{ url_for('admin.view_table', table_name='ride') }}">
                   <span data-feather="navigation"></span>
                   Rides
                 </a>
