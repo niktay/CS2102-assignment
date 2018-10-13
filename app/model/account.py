@@ -1,5 +1,7 @@
 from flask_login import UserMixin
 from model.model import Model
+from werkzeug.security import check_password_hash
+from werkzeug.security import generate_password_hash
 
 
 class Account(UserMixin, Model):
@@ -72,14 +74,15 @@ class Account(UserMixin, Model):
         try:
             cursor = self.conn.cursor()
             cursor.execute(
-                "SELECT username FROM Account "
-                f"WHERE username = '{self.username}' "
-                f"AND pass = '{self.password}';",
+                "SELECT pass FROM Account "
+                f"WHERE username = '{self.username}';",
             )
-            account_found = cursor.fetchone()
+            stored_account = cursor.fetchone()
 
-            if account_found:
-                return True
+            if not stored_account:
+                return False
+
+            return check_password_hash(stored_account[0], self.password)
 
         except Exception as e:
             # TODO(Nik): Error handling/logging
@@ -100,6 +103,7 @@ class Account(UserMixin, Model):
             return
         try:
             cursor = self.conn.cursor()
+            self.password = generate_password_hash(self.password)
             cursor.execute(
                 "INSERT INTO Account (name, username, dob, email, contact, "
                 f"pass, is_admin) VALUES ('{self.name}', '{self.username}', "
