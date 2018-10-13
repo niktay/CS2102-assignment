@@ -84,8 +84,8 @@ model: {self.model}
 
         try:
             cursor.execute(
-                'select * from car'
-                f" where license_number = '{license_number}';",
+                'SELECT * FROM Car'
+                f" WHERE license_number = '{license_number}';",
             )
             car_found = list(cursor.fetchone())
 
