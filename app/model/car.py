@@ -25,17 +25,44 @@ class Car(Model):
         try:
             cursor = self.conn.cursor()
             cursor.execute(
-                "INSERT INTO Car (license_number, license_plate,"
+                "INSERT INTO car (license_number, license_plate,"
                 f"brand, model)"
                 f"VALUES ('{self.license_number}', '{self.license_plate}', "
                 f"'{self.brand}', '{self.model}');",
             )
             self.conn.commit()
-            return True
+            return self
+
         except Exception as e:
             # TODO(Glenice): Error handling/logging
             print(e)
         return False
+
+    def update(self):
+        print(self)
+        if not self._validate():
+            # TODO(Glenice): Throw some error/log
+            return False
+        try:
+            cursor = self.conn.cursor()
+            cursor.execute(
+                "UPDATE car SET brand='{self.brand}',"
+                f"model = '{self.model}'"
+                f"WHERE license_plate = '{self.license_plate}'",
+            )
+            self.conn.commit()
+            return self
+
+        except Exception as e:
+            # TODO(Glenice): Error handling/logging
+            print(e)
+        return None
+
+    def get(self):
+        return [
+            self.license_number, self.license_plate,
+            self.brand, self.model,
+        ]
 
     def __str__(self):
         output = f"""
