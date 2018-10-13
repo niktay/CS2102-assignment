@@ -52,17 +52,17 @@
     <h4 class="card-title mt-2">Login</h4>
 </header>
 <article class="card-body">
-<form>
+<form action="auth" method="POST">
     <div class="form-row">
         <div class="col form-group">
             <label>Username</label>
-              <input id="username" type="text" class="form-control" placeholder="" required>
+              <input name="username" id="username" type="text" class="form-control" placeholder="" required>
         </div> <!-- form-group end.// -->
     </div> <!-- form-row end.// -->
     <div class="form-row">
         <div class="col form-group">
             <label>Password</label>
-              <input id="password" type="password" class="form-control" placeholder="" required>
+              <input name="password" id="password" type="password" class="form-control" placeholder="" required>
         </div> <!-- form-group end.// -->
     </div> <!-- form-row end.// -->
     <div class="form-group">

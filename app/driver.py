@@ -3,13 +3,12 @@ from flask import redirect
 from flask import render_template
 from flask import request
 from flask import url_for
+from flask_login import current_user
+from flask_login import login_required
 from model import Car
 from model import Driver
 
-
-driver_blueprint = Blueprint(
-    'driver', __name__, template_folder='templates',
-)
+driver_blueprint = Blueprint('driver', __name__, template_folder='templates',)
 
 
 username = '1234abc'
@@ -87,7 +86,9 @@ def update_profile():
     )
 
 
+
 @driver_blueprint.route('/', methods=['GET'])
+@login_required
 def view_driver_registration():
     return render_template(
         'driver.tpl', is_view = False,
