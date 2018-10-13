@@ -69,9 +69,9 @@
 
             <article class="card-body">
             {% if title in "Driver Registration" %}
-            <form action="create" method="POST">
+            <form action="{{ url_for('driver.register_driver') }}" method="POST">
             {% else %}
-            <form action="update" method="POST">
+            <form action="{{ url_for('driver.update_profile') }}" method="POST">
             {% endif %}
 
                 <div class="form-row">

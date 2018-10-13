@@ -9,7 +9,7 @@ adminitise_blueprint = Blueprint(
 
 
 @adminitise_blueprint.route('/create', methods=['GET', 'POST'])
-def view_doneAdminitised():
+def adminitise_account():
 
     if request.method != 'POST':
         return render_template('adminitise.tpl')

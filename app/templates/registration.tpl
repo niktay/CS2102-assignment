@@ -52,7 +52,7 @@
     <h4 class="card-title mt-2">User Registration</h4>
 </header>
 <article class="card-body">
-<form action="create" method="POST">
+<form action="{{ url_for('registration.register_account') }}" method="POST">
     <div class="form-row">
         <div class="col form-group">
             <label>Full Name</label>
@@ -93,7 +93,7 @@
     <small class="text-muted">By clicking the 'Sign Up' button, you confirm that you accept our <br> Terms of use and Privacy Policy.</small>
 </form>
 </article> <!-- card-body end .// -->
-<div class="border-top card-body text-center">Have an account? <a href="/login">Sign In</a></div>
+<div class="border-top card-body text-center">Have an account? <a href="{{ url_for('login.view_login_form') }}">Sign In</a></div>
 </div>
 </div> <!-- col.//-->
 
