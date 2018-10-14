@@ -24,17 +24,11 @@ def register_driver():
     new_car = Car(**request.form)
     is_success = False
 
-    try:
-        is_driver_created = new_driver.save()
-        is_car_created = new_car.save()
-        is_success = is_driver_created and is_car_created
-
-    except Exception as e:
-        print(e)
+    is_driver_created = new_driver.save()
+    is_car_created = new_car.save()
+    is_success = is_driver_created and is_car_created
 
     if(is_success):
-        print(new_driver)
-        print(new_car)
         return redirect(url_for('driver.get_profile'))
     else:
         return render_template(
@@ -74,15 +68,9 @@ def update_profile():
     car = update_car.get()
     is_success = False
 
-    try:
-
-        is_car_updated = update_car.update()
-        is_driver_updated = update_driver.update()
-
-        is_success = is_car_updated and is_driver_updated
-
-    except Exception as e:
-        print(e)
+    is_car_updated = update_car.update()
+    is_driver_updated = update_driver.update()
+    is_success = is_car_updated and is_driver_updated
 
     return render_template(
         'driver.tpl', is_view=True, is_success=is_success,

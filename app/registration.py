@@ -3,7 +3,6 @@ from flask import render_template
 from flask import request
 from model import Account
 
-
 registration_blueprint = Blueprint(
     'registration', __name__, template_folder='templates',
 )
@@ -15,12 +14,7 @@ def register_account():
         return render_template('registration.tpl')
 
     new_account = Account(**request.form)
-
-    try:
-        print(new_account)
-        new_account.save()
-    except Exception as e:
-        print(e)
+    new_account.save()
 
     return render_template('login.tpl')
 

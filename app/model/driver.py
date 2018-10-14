@@ -1,6 +1,11 @@
 import datetime
+from logging import getLogger
 
+import psycopg2
 from model.model import Model
+
+
+logger = getLogger(__name__)
 
 
 class Driver(Model):
@@ -11,12 +16,14 @@ class Driver(Model):
         kwargs = {k: v[0] for k, v in kwargs.items()}
 
         self.license_number = kwargs.get('license-number', None)
-        self.username = kwargs.get('license-number', None)
+        self.username = kwargs.get('username', None)
         self.optional_bio = kwargs.get('optional-bio', None)
         self.driving_since = kwargs.get('driving-since', None)
 
-        if(args):
+        if args:
             self.username = args[0]
+
+        logger.debug(f'Driver initialized"\n{self}')
 
     def _validate(self):
         return any([
@@ -25,11 +32,14 @@ class Driver(Model):
 
     def save(self):
         if not self._validate():
-            # TODO(Glenice): Throw some error/log
+            logger.warning('Insufficient fields provided to create driver')
+            logger.warning('Driver not created')
             return False
+
         try:
             today = datetime.datetime.now()
-            self.driving_since = today.strftime("%Y-%m-%d")
+            self.driving_since = today.strftime('%Y-%m-%d')
+
             cursor = self.conn.cursor()
             cursor.execute(
                 "INSERT INTO Driver (license_number, username,"
@@ -38,11 +48,18 @@ class Driver(Model):
                 f"'{self.driving_since}', '{self.optional_bio}');",
             )
             self.conn.commit()
+
+            logger.info(f'Driver {self.username} created')
+
             return True
+
+        except psycopg2.Error as e:
+            logger.warning(f'Failed to create driver {self.username}')
+            logger.debug(e.diag.message_detail)
+
         except Exception as e:
-            # TODO(Glenice): Error handling/logging
-            print(e)
-        return False
+            logger.warning(f'Failed to create driver {self.username}')
+            logger.critical(e)
 
     def get(self):
         return [
@@ -53,20 +70,28 @@ class Driver(Model):
     def update(self):
         print(self)
         if not self._validate():
-            # TODO(Glenice): Throw some error/log
+            logger.warning('Insufficient fields provided to update driver')
             return False
+
         try:
             cursor = self.conn.cursor()
             cursor.execute(
                 "UPDATE Driver SET optional_bio = '{self.optional_bio}' "
                 f"WHERE license_number = '{self.license_number}';",
             )
+
             self.conn.commit()
+
+            logger.info(f'Driver details for {self.license_number} updated')
             return True
+
+        except psycopg2.Error as e:
+            logger.warning('Failed to update driver {self.license_number}')
+            logger.debug(e.diag.message_detail)
+
         except Exception as e:
-            # TODO(Glenice): Error handling/logging
-            print(e)
-        return False
+            logger.warning('Failed to update driver {self.license_number}')
+            logger.critical(e)
 
     def get_license_number(self):
         return self.license_number
@@ -99,6 +124,11 @@ optional_bio: {self.optional_bio}
             driver_found = list(cursor.fetchone())
 
             return driver_found
+
+        except psycopg2.Error as e:
+            logger.warning(f'Failed to get driver {username}')
+            logger.debug(e.diag.message_detail)
+
         except Exception as e:
-            # TODO(Glenice): Error handling/logging
-            print(e)
+            logger.warning(f'Failed to get driver {username}')
+            logger.critical(e)
