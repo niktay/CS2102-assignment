@@ -35,7 +35,7 @@
           <div class="sidebar-sticky">
             <ul class="nav flex-column">
               <li class="nav-item">
-                <a class="nav-link" href="/admin">
+                <a class="nav-link" href="{{ url_for('admin.view_dashboard') }}">
                   <span data-feather="users"></span>
                   Dashboard <span class="trending-up"></span>
                </a>
@@ -43,7 +43,7 @@
             </ul>
             <ul class="nav flex-column">
               <li class="nav-item">
-                <a class="nav-link" href="/adminitise">
+                <a class="nav-link" href="{{ url_for('adminitise.view_adminitise') }}">
                   <span data-feather="shield"></span>
                   Adminitise <span class="trending-up"></span>
                </a>
@@ -57,25 +57,25 @@
             </h6>
             <ul class="nav flex-column mb-2">
               <li class="nav-item">
-                <a class="nav-link active" href="accounts">
+                <a class="nav-link {{'active' if table_name == 'account' else '' }}" href="{{ url_for('admin.view_table', table_name='account') }}">
                   <span data-feather="users"></span>
                   Accounts
                 </a>
               </li>
               <li class="nav-item">
-                <a class="nav-link" href="ads">
+                <a class="nav-link {{'active' if table_name == 'advertisement' else '' }}" href="{{ url_for('admin.view_table', table_name='advertisement') }}">
                   <span data-feather="tv"></span>
                   Advertisements
                 </a>
               </li>
               <li class="nav-item">
-                <a class="nav-link" href="bids">
+                <a class="nav-link {{'active' if table_name == 'bid' else '' }}" href="{{ url_for('admin.view_table', table_name='bid') }}">
                   <span data-feather="dollar-sign"></span>
                   Bids
                 </a>
               </li>
               <li class="nav-item">
-                <a class="nav-link" href="rides">
+                <a class="nav-link {{'active' if table_name == 'ride' else '' }}" href="{{ url_for('admin.view_table', table_name='ride') }}">
                   <span data-feather="navigation"></span>
                   Rides
                 </a>
@@ -85,7 +85,7 @@
         </nav>
         <main role="main" class="col-md-9 ml-sm-auto col-lg-10 px-4">
           <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
-            <h1 class="h2">{{table_name}}</h1>
+            <h1 class="h2">{{ table_name.title() }}</h1>
             <div class="btn-toolbar mb-2 mb-md-0">
               <div class="btn-group mr-2">
                 <button type="button" class="btn btn-sm btn-outline-secondary">Share</button>

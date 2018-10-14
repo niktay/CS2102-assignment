@@ -8,6 +8,7 @@ setup(
     install_requires=[
         "click==6.7",
         "Flask==1.0.2",
+        "Flask-Login==0.4.1",
         "itsdangerous==0.24",
         "Jinja2==2.10",
         "MarkupSafe==1.0",

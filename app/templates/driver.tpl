@@ -49,18 +49,18 @@
             <div class="col-md-6">
             <div class="card">
             <header class="card-header">
-                <h4 class="card-title mt-2">Driver Registration</h4>
+                <h4 class="card-title mt-2">{{title}}</h4>
             </header>
 
             {% if is_view %}
                 {% if is_success %}
                 <div class="alert alert-success" role="alert">
-                    You have successfully registered as a driver.
+                    You have successfully registered with us since {{driver[3]}}
                 </div>
 
                 {% else %}
                 <div class="alert alert-danger" role="alert">
-                    Please ensure that you have not register as a driver previously.
+                    An error has occured.
                 </div>
 
                 {% endif %}
@@ -68,35 +68,68 @@
             {% endif %}
 
             <article class="card-body">
-            <form action="create" method="POST">
+            {% if title in "Driver Registration" %}
+            <form action="{{ url_for('driver.register_driver') }}" method="POST">
+            {% else %}
+            <form action="{{ url_for('driver.update_profile') }}" method="POST">
+            {% endif %}
+
                 <div class="form-row">
                     <div class="col form-group">
                         <label>License Number</label>
-                          <input name="license-number" id="license-number" type="text" class="form-control" required>
+                        {% if title in "Driver Registration" %}
+                            <input name="license-number" id="license-number" type="text" class="form-control" required>
+                        {% else %}
+                            <input name="license-number" id="license-number" type="text" value ={{driver[0]}} class="form-control" readonly>
+                        {% endif %}
                     </div> <!-- form-group end.// -->
                 </div> <!-- form-row end.// -->
                 <div class="form-group">
-                      <label>License Plate</label>
-                      <input name="license-plate" id="license-plate" type="text" class="form-control" placeholder="SXX1234A" required>
+                        <label>License Plate</label>
+                        {% if title in "Driver Registration" %}
+                        <input name="license-plate" id="license-plate" type="text" class="form-control" placeholder="SXX1234A" required>
+                        {% else %}
+                        <input name = "license-plate" id="license-plate" type="text" class="form-control" value={{car[1]}} readonly>
+                        {% endif %}
                 </div> <!-- form-group end.// -->
                 <div class="form-row">
                     <div class="form-group col-md-6">
                           <label>Brand of Car</label>
-                          <input name="brand" id="brand" type="text" class="form-control" required>
+                          {% if title in "Driver Registration" %}
+                                <input name="brand" id="brand" type="text" class="form-control" required>
+                          {% else %}
+                                <input name="brand" id="brand" type="text" value={{car[2]}} class="form-control">
+                          {% endif %}
+
                     </div> <!-- form-group end.// -->
                     <div class="form-group col-md-6">
                           <label>Model of Car</label>
-                          <input name="model" id="model" type="text" class="form-control" required>
+                          {% if title in "Driver Registration" %}
+                                <input name="model" id="model" type="text" class="form-control" required>
+                          {% else %}
+                                <input name="model" id="model" type="text" value={{car[3]}} class="form-control">
+                          {% endif %}
+
                     </div> <!-- form-group end.// -->
                 </div>
                 <div class="form-group">
                     <div class="form-group">
                         <label>(Optional) Bio</label>
-                        <textarea name="optional-bio" id="optional-bio" class="form-control" type="text" rows="3"></textarea>
+                        {% if title in "Driver Registration" %}
+                            <textarea name="optional-bio" id="optional-bio" class="form-control" type="text" rows="3"></textarea>
+                        {% else %}
+                            <textarea name="optional-bio" id="optional-bio" class="form-control" type="text" rows="3">{{driver[2]}}</textarea>
+                        {% endif %}
                     </div>
                 </div>
                 <div class="form-group">
-                    <button type="submit" class="btn btn-primary btn-block">Register as Driver</button>
+                    <button type="submit" class="btn btn-primary btn-block">
+                        {% if title in "Driver Registration" %}
+                            Register as Driver
+                        {% else %}
+                            Save
+                        {% endif %}
+                    </button>
                 </div> <!-- form-group// -->
                 </div> <!-- form-row.// -->
             </form>
