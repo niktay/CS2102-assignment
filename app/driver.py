@@ -22,24 +22,35 @@ def register_driver():
 
     new_driver = Driver(current_user.get_id(), **request.form)
     new_car = Car(**request.form)
+    is_success = False
 
     try:
-        new_driver.save()
-        new_car.save()
-
-        print(new_driver)
-        print(new_car)
+        is_driver_created = new_driver.save()
+        is_car_created = new_car.save()
+        is_success = is_driver_created and is_car_created
 
     except Exception as e:
         print(e)
 
-    return redirect(url_for('driver.get_profile'))
+    if(is_success):
+        print(new_driver)
+        print(new_car)
+        return redirect(url_for('driver.get_profile'))
+    else:
+        return render_template(
+            'driver.tpl', is_view=True, is_success=False,
+            title='Driver Registration',
+        )
 
 
 @driver_blueprint.route('/profile', methods=['GET', 'POST'])
 @login_required
 def get_profile():
     driver = Driver.get_driver(current_user.get_id())
+
+    if(driver is None):
+        return redirect(url_for('driver.view_driver_registration'))
+
     license_number = driver[0]
 
     car = Car.get_car(license_number)
@@ -82,6 +93,10 @@ def update_profile():
 @driver_blueprint.route('/', methods=['GET'])
 @login_required
 def view_driver_registration():
+    driver = Driver.get_driver(current_user.get_id())
+    if(driver is not None):
+        return redirect(url_for('driver.get_profile'))
+
     return render_template(
         'driver.tpl', is_view=False,
         title='Driver Registration',

@@ -11,12 +11,12 @@ class Driver(Model):
         kwargs = {k: v[0] for k, v in kwargs.items()}
 
         self.license_number = kwargs.get('license-number', None)
+        self.username = kwargs.get('license-number', None)
+        self.optional_bio = kwargs.get('optional-bio', None)
+        self.driving_since = kwargs.get('driving-since', None)
 
         if(args):
             self.username = args[0]
-
-        self.optional_bio = kwargs.get('optional-bio', None)
-        self.driving_since = kwargs.get('driving-since', None)
 
     def _validate(self):
         return any([
@@ -90,10 +90,8 @@ optional_bio: {self.optional_bio}
             return None
 
         driver = cls()
-
-        cursor = driver.conn.cursor()
-
         try:
+            cursor = driver.conn.cursor()
             cursor.execute(
                 f"SELECT * FROM Driver WHERE username = '{username}';",
             )
