@@ -3,7 +3,7 @@ from model.model import Model
 
 class Advertisement(Model):
 
-    def __init__(self, **kwargs):
+    def __init__(self, *args, **kwargs):
         super().__init__()
 
         kwargs = {k: v[0] for k, v in kwargs.items()}
@@ -12,9 +12,13 @@ class Advertisement(Model):
         self.origin = kwargs.get('origin', None)
         self.destination = kwargs.get('destination', None)
 
+        if(args):
+            self.license_number = args[0]
+
     def _validate(self):
         return any([
             self.start_timestamp, self.origin, self.destination,
+            self.license_number,
         ])
 
     def save(self):
@@ -24,10 +28,10 @@ class Advertisement(Model):
         try:
             cursor = self.conn.cursor()
             cursor.execute(
-                "INSERT INTO Advertisement (start_timestamp, origin,"
-                f"destination)"
-                f"VALUES ('{self.start_timestamp}', '{self.origin}', "
-                f"'{self.destination}');",
+                "INSERT INTO Advertisement (start_timestamp, license_number,"
+                f"origin, destination)"
+                f"VALUES ('{self.start_timestamp}', '{self.license_number}',"
+                f"'{self.origin}', '{self.destination}');",
             )
             self.conn.commit()
             return True
@@ -42,6 +46,7 @@ class Advertisement(Model):
                                Advertisement
 --------------------------------------------------------------------------------
 start_timestamp: {self.start_timestamp}
+license_number: {self.license_number}
 origin: {self.origin}
 destination: {self.destination}
 --------------------------------------------------------------------------------
