@@ -126,9 +126,9 @@ optional_bio: {self.optional_bio}
             return driver_found
 
         except psycopg2.Error as e:
-            logger.warning('Failed to get driver {username}')
+            logger.warning(f'Failed to get driver {username}')
             logger.debug(e.diag.message_detail)
 
         except Exception as e:
-            logger.warning('Failed to get driver {username}')
+            logger.warning(f'Failed to get driver {username}')
             logger.critical(e)
