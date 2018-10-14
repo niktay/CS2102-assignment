@@ -15,6 +15,7 @@ from admin import admin_blueprint  # noqa: E402
 from adminitise import adminitise_blueprint  # noqa: E402
 from driver import driver_blueprint  # noqa: E402
 from registration import registration_blueprint  # noqa: E402
+from advertisement import advertisement_blueprint  # noqa:E402
 import login  # noqa: E402
 
 app.register_blueprint(driver_blueprint, url_prefix='/driver')
@@ -22,6 +23,7 @@ app.register_blueprint(login.login_blueprint, url_prefix='/login')
 app.register_blueprint(registration_blueprint, url_prefix='/register')
 app.register_blueprint(admin_blueprint, url_prefix='/admin')
 app.register_blueprint(adminitise_blueprint, url_prefix='/adminitise')
+app.register_blueprint(advertisement_blueprint, url_prefix='/advertisement')
 
 login_manager.login_view = 'login.view_login_form'
 
