@@ -16,7 +16,7 @@ class Driver(Model):
         kwargs = {k: v[0] for k, v in kwargs.items()}
 
         self.license_number = kwargs.get('license-number', None)
-        self.username = kwargs.get('license-number', None)
+        self.username = kwargs.get('username', None)
         self.optional_bio = kwargs.get('optional-bio', None)
         self.driving_since = kwargs.get('driving-since', None)
 
