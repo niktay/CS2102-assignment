@@ -80,9 +80,9 @@ model: {self.model}
     @classmethod
     def get_car(cls, license_number):
         car = cls()
-        cursor = car.conn.cursor()
 
         try:
+            cursor = car.conn.cursor()
             cursor.execute(
                 'SELECT * FROM Car'
                 f" WHERE license_number = '{license_number}';",
