@@ -22,4 +22,4 @@ services:
       - ./app:/app
     depends_on:
       - db
-    entrypoint: ["python", "-u", "-m", "flask", "run", "--host=0.0.0.0"]
+    command: ["/app/start.sh"]
