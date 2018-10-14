@@ -2,7 +2,8 @@ import logging
 
 
 def setup_logger(name):
-    log_format = '%(asctime)s : %(levelname)s : %(module)s - %(message)s'
+    log_format = '{[%(levelname)s] : %(module)s.%(funcName)s()}'
+    log_format += ' - %(message)s'
 
     logging.basicConfig(
         level=logging.DEBUG, format=log_format,
