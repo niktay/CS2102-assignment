@@ -22,7 +22,7 @@ def process_login():
     if request.method != 'POST':
         return render_template('login.tpl')
 
-    account = Account(**request.form)
+    account = Account.init_using_form(**request.form)
 
     if account.authenticate():
         login_user(account)
