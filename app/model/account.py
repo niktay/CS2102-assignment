@@ -2,9 +2,10 @@ from logging import getLogger
 
 import psycopg2
 from flask_login import UserMixin
-from model.model import Model
 from werkzeug.security import check_password_hash
 from werkzeug.security import generate_password_hash
+
+from app.model.model import Model
 
 logger = getLogger(__name__)
 

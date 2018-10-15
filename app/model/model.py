@@ -13,6 +13,7 @@ class Model(object):
             logger.info('Attempting to establish database connection')
 
             # TODO(Nik): Secrets management
+            conn = None
             conn = psycopg2.connect(
                 dbname='admin', user='admin', password='secret', host='db',
                 port='5432',

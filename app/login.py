@@ -6,7 +6,7 @@ from flask_login import login_user
 from flask_login import logout_user
 from model import Account
 
-from app import login_manager
+from app.app import login_manager
 
 
 login_blueprint = Blueprint('login', __name__, template_folder='templates')

@@ -1,8 +1,8 @@
-from model.account import Account  # noqa: F401
-from model.advertisement import Advertisement  # noqa: F401
-from model.car import Car  # noqa: F401
-from model.driver import Driver  # noqa: F401
-from model.model import Model  # noqa: F401
+from app.model.account import Account  # noqa: F401
+from app.model.advertisement import Advertisement  # noqa: F401
+from app.model.car import Car  # noqa: F401
+from app.model.driver import Driver  # noqa: F401
+from app.model.model import Model  # noqa: F401
 
 
-__all__ = ['account', 'driver', 'car', 'model','advertisement']
+__all__ = ['account', 'driver', 'car', 'model', 'advertisement']
