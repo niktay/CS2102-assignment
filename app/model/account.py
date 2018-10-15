@@ -88,16 +88,21 @@ class Account(UserMixin, Model):
     @classmethod
     def load(cls, username):
         if not username:
+            logger.debug(f'Username is empty: {username}')
             return None
 
         try:
-            model = Model()
-            cursor = model.conn.cursor()
-            cursor.execute(
-                f"SELECT username, is_admin, dob, email, contact, pass, name"
-                "FROM Account WHERE username = '{username}';",
-            )
+            account = Account()
+            cursor = account.conn.cursor()
+            logger.debug(f'cursor: {cursor}')
+
+            statement = "SELECT username, is_admin, dob, email, contact, pass,"
+            statement += f" name FROM Account WHERE username = '{username}';"
+            logger.debug(f'Query: {statement}')
+            cursor.execute(statement)
+
             account_found = cursor.fetchone()
+            logger.debug(f'Query result: {account_found}')
 
             if not account_found:
                 return None
@@ -105,7 +110,7 @@ class Account(UserMixin, Model):
             account_details = {
                 'username': account_found[0],
                 'is_admin': account_found[1],
-                'dob': account_found[2],
+                'date_of_birth': account_found[2],
                 'email': account_found[3],
                 'contact': account_found[4],
                 'name': account_found[6],
@@ -169,7 +174,7 @@ class Account(UserMixin, Model):
                 "INSERT INTO Account (name, username, dob, email, contact, "
                 f"pass, is_admin) VALUES ('{self.name}', '{self.username}', "
                 f"'{self.date_of_birth}', '{self.email}', '{self.contact}', "
-                f"'{self.password}', '{self.is_admin}');",
+                f"'{self.password}', 'False');",
             )
             self.conn.commit()
 
