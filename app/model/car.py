@@ -7,10 +7,9 @@ import psycopg2
 logger = getLogger(__name__)
 
 
-class Car(Model):
-    def __init__(self, **kwargs):
-        super().__init__()
+class Car(object):
 
+    def __init__(self, **kwargs):
         kwargs = {k: v[0] for k, v in kwargs.items()}
 
         self.license_number = kwargs.get('license-number', None)
@@ -24,7 +23,8 @@ class Car(Model):
             self.brand, self.model,
         ])
 
-    def save(self):
+    @connection_required
+    def save(self, conn=None):
         if not self._validate():
             # TODO(Glenice): Throw some error/log
             return False
@@ -44,7 +44,8 @@ class Car(Model):
             print(e)
         return False
 
-    def update(self):
+    @connection_required
+    def update(self, conn=None):
         if not self._validate():
             # TODO(Glenice): Throw some error/log
             return False
@@ -90,7 +91,8 @@ model: {self.model}
         return output
 
     @classmethod
-    def get_car(cls, license_number):
+    @connection_required
+    def get_car(cls, license_number, conn=None):
         car = cls()
 
         try:

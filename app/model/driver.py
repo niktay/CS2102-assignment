@@ -3,17 +3,15 @@ from logging import getLogger
 
 import psycopg2
 
-from app.model.model import Model
+from app.model.database import connection_required
 
 
 logger = getLogger(__name__)
 
 
-class Driver(Model):
+class Driver(object):
 
     def __init__(self, *args, **kwargs):
-        super().__init__()
-
         kwargs = {k: v[0] for k, v in kwargs.items()}
 
         self.license_number = kwargs.get('license-number', None)
@@ -31,7 +29,8 @@ class Driver(Model):
             self.license_number, self.username, self.driving_since,
         ])
 
-    def save(self):
+    @connection_required
+    def save(self, conn=None):
         if not self._validate():
             logger.warning('Insufficient fields provided to create driver')
             logger.warning('Driver not created')
@@ -68,7 +67,8 @@ class Driver(Model):
             self.optional_bio, self.driving_since,
         ]
 
-    def update(self):
+    @connection_required
+    def update(self, conn=None):
         if not self._validate():
             logger.warning('Insufficient fields provided to update driver')
             return False
@@ -108,7 +108,8 @@ optional_bio: {self.optional_bio}
         return output
 
     @classmethod
-    def get_driver(cls, username):
+    @connection_required
+    def get_driver(cls, username, conn=None):
         if not username:
             return None
 

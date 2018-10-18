@@ -7,11 +7,9 @@ import psycopg2
 logger = getLogger(__name__)
 
 
-class Advertisement(Model):
+class Advertisement(object):
 
     def __init__(self, *args, **kwargs):
-        super().__init__()
-
         kwargs = {k: v[0] for k, v in kwargs.items()}
 
         self.start_timestamp = kwargs.get('date-and-time', None)
@@ -27,7 +25,8 @@ class Advertisement(Model):
             self.license_number,
         ])
 
-    def save(self):
+    @connection_required
+    def save(self, conn=None):
         if not self._validate():
             logger.warning(
                 'Insufficient fields provided to insert advertisement',

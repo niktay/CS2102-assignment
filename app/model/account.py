@@ -5,19 +5,18 @@ from flask_login import UserMixin
 from werkzeug.security import check_password_hash
 from werkzeug.security import generate_password_hash
 
-from app.model.model import Model
+from app.model.database import connection_required
 
 logger = getLogger(__name__)
 
 
-class Account(UserMixin, Model):
+class Account(UserMixin, object):
 
     def __init__(
         self, username=None, is_admin=None, date_of_birth=None,
         email=None, contact=None, password=None, name=None,
         confirm_password=None,
     ):
-        super().__init__()
 
         self.username = username
         self.id = username
@@ -60,7 +59,8 @@ class Account(UserMixin, Model):
 
         return account
 
-    def toggle_admin_status(self):
+    @connection_required
+    def toggle_admin_status(self, conn=None):
         try:
             logger.info(f'Toggling admin status for username: {self.username}')
 
@@ -86,14 +86,14 @@ class Account(UserMixin, Model):
         return False
 
     @classmethod
-    def load(cls, username):
+    @connection_required
+    def load(cls, username, conn=None):
         if not username:
             logger.debug(f'Username is empty: {username}')
             return None
 
         try:
-            account = Account()
-            cursor = account.conn.cursor()
+            cursor = conn.cursor()
             logger.debug(f'cursor: {cursor}')
 
             statement = "SELECT username, is_admin, dob, email, contact, pass,"
@@ -129,7 +129,8 @@ class Account(UserMixin, Model):
             logger.warning('Failed to load Account from database')
             logger.critical(e)
 
-    def authenticate(self):
+    @connection_required
+    def authenticate(self, conn=None):
         required_parameters = [self.username, self.password]
 
         if not all(required_parameters):
@@ -157,7 +158,8 @@ class Account(UserMixin, Model):
             logger.warning('Failed to authenticate Account')
             logger.critical(e)
 
-    def save(self):
+    @connection_required
+    def save(self, conn=None):
         required_parameters = [
             self.name, self.username, self.date_of_birth,
             self.email, self.contact, self.password,
