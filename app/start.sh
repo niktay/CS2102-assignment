@@ -1,5 +1,7 @@
 #! /bin/sh
 
+HOST=$1
+
 function postgres_ready() {
 	python << END
 import sys
@@ -7,7 +9,7 @@ import psycopg2
 
 try:
 	conn = psycopg2.connect(
-		dbname='admin', user='admin', password='secret', host='db', port='5432',
+		dbname='admin', user='admin', password='secret', host='$HOST', port='5432',
 	)
 except psycopg2.OperationalError:
 	sys.exit(-1)

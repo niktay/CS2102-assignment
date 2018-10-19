@@ -6,8 +6,6 @@ services:
     build: ./db
     ports:
       - 5432:5432
-    volumes:
-      - ./volumes/test/postgresql:/var/lib/postgresql/data
     environment:
         PGDATA: /var/lib/postgresql/data/pgdata
         POSTGRES_USER: admin
@@ -22,4 +20,4 @@ services:
       - ./app:/app
     depends_on:
       - testdb
-    command: ["/app/start.sh"]
+    command: ["/app/start.sh", "testdb"]

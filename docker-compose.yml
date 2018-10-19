@@ -22,4 +22,4 @@ services:
       - ./app:/app
     depends_on:
       - db
-    command: ["/app/start.sh"]
+    command: ["/app/start.sh", "db"]
