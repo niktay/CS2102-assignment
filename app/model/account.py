@@ -59,17 +59,17 @@ class Account(UserMixin, object):
 
         return account
 
-    @connection_required
+    @connection_required()
     def toggle_admin_status(self, conn=None):
         try:
             logger.info(f'Toggling admin status for username: {self.username}')
 
-            cursor = self.conn.cursor()
+            cursor = conn.cursor()
             cursor.execute(
                 "UPDATE account SET is_admin = NOT is_admin WHERE username = "
                 f"'{self.username}';",
             )
-            self.conn.commit()
+            conn.commit()
 
             logger.info(f'Admin status toggled successfully')
 
@@ -86,7 +86,7 @@ class Account(UserMixin, object):
         return False
 
     @classmethod
-    @connection_required
+    @connection_required()
     def load(cls, username, conn=None):
         if not username:
             logger.debug(f'Username is empty: {username}')
@@ -129,7 +129,7 @@ class Account(UserMixin, object):
             logger.warning('Failed to load Account from database')
             logger.critical(e)
 
-    @connection_required
+    @connection_required()
     def authenticate(self, conn=None):
         required_parameters = [self.username, self.password]
 
@@ -138,7 +138,7 @@ class Account(UserMixin, object):
             return False
 
         try:
-            cursor = self.conn.cursor()
+            cursor = conn.cursor()
             cursor.execute(
                 "SELECT pass FROM Account "
                 f"WHERE username = '{self.username}';",
@@ -158,7 +158,7 @@ class Account(UserMixin, object):
             logger.warning('Failed to authenticate Account')
             logger.critical(e)
 
-    @connection_required
+    @connection_required()
     def save(self, conn=None):
         required_parameters = [
             self.name, self.username, self.date_of_birth,
@@ -171,14 +171,14 @@ class Account(UserMixin, object):
         try:
             self.password = generate_password_hash(self.password)
 
-            cursor = self.conn.cursor()
+            cursor = conn.cursor()
             cursor.execute(
                 "INSERT INTO Account (name, username, dob, email, contact, "
                 f"pass, is_admin) VALUES ('{self.name}', '{self.username}', "
                 f"'{self.date_of_birth}', '{self.email}', '{self.contact}', "
                 f"'{self.password}', 'False');",
             )
-            self.conn.commit()
+            conn.commit()
 
         except psycopg2.Error as e:
             logger.warning(f'Failed to create Account {self.username}')

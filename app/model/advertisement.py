@@ -25,7 +25,7 @@ class Advertisement(object):
             self.license_number,
         ])
 
-    @connection_required
+    @connection_required()
     def save(self, conn=None):
         if not self._validate():
             logger.warning(
@@ -33,14 +33,14 @@ class Advertisement(object):
             )
             return False
         try:
-            cursor = self.conn.cursor()
+            cursor = conn.cursor()
             cursor.execute(
                 "INSERT INTO Advertisement (start_timestamp, license_number,"
                 f"origin, destination)"
                 f"VALUES ('{self.start_timestamp}', '{self.license_number}',"
                 f"'{self.origin}', '{self.destination}');",
             )
-            self.conn.commit()
+            conn.commit()
             return True
 
         except psycopg2.Error as e:

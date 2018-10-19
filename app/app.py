@@ -2,6 +2,7 @@ import psycopg2
 from flask import Flask
 from flask import render_template
 from flask import request
+from flask_login import current_user
 from flask_login import LoginManager
 from log import setup_logger
 
@@ -48,6 +49,9 @@ logger.info(f'Registered login view to LoginManager')
 
 @app.route('/', methods=['GET', 'POST'])
 def view_records():
+    logger.error(current_user)
+    logger.error(type(current_user))
+    logger.error(dir(current_user))
     view_table = 'Account'
     try:
         # TODO(Nik): Secrets management

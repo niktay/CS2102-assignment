@@ -29,7 +29,7 @@ class Driver(object):
             self.license_number, self.username, self.driving_since,
         ])
 
-    @connection_required
+    @connection_required()
     def save(self, conn=None):
         if not self._validate():
             logger.warning('Insufficient fields provided to create driver')
@@ -40,14 +40,14 @@ class Driver(object):
             today = datetime.datetime.now()
             self.driving_since = today.strftime('%Y-%m-%d')
 
-            cursor = self.conn.cursor()
+            cursor = conn.cursor()
             cursor.execute(
                 "INSERT INTO Driver (license_number, username,"
                 f"driving_since, optional_bio)"
                 f"VALUES ('{self.license_number}', '{self.username}', "
                 f"'{self.driving_since}', '{self.optional_bio}');",
             )
-            self.conn.commit()
+            conn.commit()
 
             logger.info(f'Driver {self.username} created')
 
@@ -67,21 +67,21 @@ class Driver(object):
             self.optional_bio, self.driving_since,
         ]
 
-    @connection_required
+    @connection_required()
     def update(self, conn=None):
         if not self._validate():
             logger.warning('Insufficient fields provided to update driver')
             return False
 
         try:
-            cursor = self.conn.cursor()
+            cursor = conn.cursor()
             cursor.execute(
                 "UPDATE Driver "
                 f"SET optional_bio = '{self.optional_bio}' "
                 f"WHERE license_number = '{self.license_number}';",
             )
 
-            self.conn.commit()
+            conn.commit()
 
             logger.info(f'Driver details for {self.license_number} updated')
             return True
@@ -108,14 +108,13 @@ optional_bio: {self.optional_bio}
         return output
 
     @classmethod
-    @connection_required
+    @connection_required()
     def get_driver(cls, username, conn=None):
         if not username:
             return None
 
-        driver = cls()
         try:
-            cursor = driver.conn.cursor()
+            cursor = conn.cursor()
             cursor.execute(
                 f"SELECT license_number, username, "
                 f"driving_since, optional_bio "

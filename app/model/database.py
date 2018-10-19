@@ -5,7 +5,7 @@ import psycopg2
 logger = getLogger(__name__)
 
 
-def connection_required(test=True):
+def connection_required(test=False):
     def connection_required_decorator(f):
         def wrapper(*args, **kwargs):
             if test:
@@ -33,5 +33,5 @@ def connection_required(test=True):
 
             return result
 
-        return connection_required_decorator
-    return connection_required
+        return wrapper
+    return connection_required_decorator

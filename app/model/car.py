@@ -23,20 +23,20 @@ class Car(object):
             self.brand, self.model,
         ])
 
-    @connection_required
+    @connection_required()
     def save(self, conn=None):
         if not self._validate():
             # TODO(Glenice): Throw some error/log
             return False
         try:
-            cursor = self.conn.cursor()
+            cursor = conn.cursor()
             cursor.execute(
                 "INSERT INTO car (license_number, license_plate,"
                 f"brand, model)"
                 f"VALUES ('{self.license_number}', '{self.license_plate}', "
                 f"'{self.brand}', '{self.model}');",
             )
-            self.conn.commit()
+            conn.commit()
             return self
 
         except Exception as e:
@@ -44,13 +44,13 @@ class Car(object):
             print(e)
         return False
 
-    @connection_required
+    @connection_required()
     def update(self, conn=None):
         if not self._validate():
             # TODO(Glenice): Throw some error/log
             return False
         try:
-            cursor = self.conn.cursor()
+            cursor = conn.cursor()
             cursor.execute(
                 "UPDATE car SET "
                 f"brand = '{self.brand}',"
@@ -58,7 +58,7 @@ class Car(object):
                 f"WHERE license_plate = '{self.license_plate}'",
             )
 
-            self.conn.commit()
+            conn.commit()
 
             logger.info(f'Car details for {self.license_plate} updated')
             return True
@@ -91,12 +91,11 @@ model: {self.model}
         return output
 
     @classmethod
-    @connection_required
+    @connection_required()
     def get_car(cls, license_number, conn=None):
-        car = cls()
 
         try:
-            cursor = car.conn.cursor()
+            cursor = conn.cursor()
             cursor.execute(
                 'SELECT license_plate, brand, model FROM Car'
                 f" WHERE license_number = '{license_number}';",
