@@ -44,23 +44,47 @@
                      <table class="table table-striped table-sm">
                         <thead>
                            <tr>
-                              <h4 class="table-title mt-2">View advertisements</h4>
+                              <h4 class="table-title mt-2">Advertisements</h4>
                            </tr>
                         </thead>
                         <tbody>
-                           {% for result in results %}
-                           <tr>
-                              {% for field in result %}
-                              <td><input type="radio" name="radio_enable" value="fixed"></td>
-                              <td>{{field}}</td>
-                              {% endfor %}
-                           </tr>
-                           {% endfor %}
+                            {% if results is not none %}
+                                <tr>
+                                  <td></td>
+                                  <td>Date and Time</td>
+                                  <td>Driver License Number</td>
+                                  <td>Origin</td>
+                                  <td>Destination</td>
+                               </tr>
+
+                               {% for ad in results %}
+                               <tr>
+                                  <td>
+                                    <form action="bid" method="POST">
+                                        <input type="hidden" name="advert_start_timestamp" value="{{ad[1]}}" />
+                                        <input type="hidden" name="advert_license_number" value="{{ad[0]}}" />
+
+                                        <input type="submit" name="bid" value="Bid" class="btn btn-primary btn-block"/>
+                                    </form>
+                                   </td>
+                                  {% for field in ad %}
+
+                                  <td>{{field}}</td>
+                                  {% endfor %}
+                               </tr>
+                               {% endfor %}
+                           {% else %}
+                                <tr>
+                                  No advertisements found.
+                               </tr>
+                           {% endif %}
                         </tbody>
                      </table>
-                     <div class="form-group">
-                        <button type="bid" class="btn btn-primary btn-block">Bid</button>
-                     </div>
+                     {% if results is not none %}
+                         <div class="form-group">
+
+                         </div>
+                     {% endif %}
                   </div>
                </div>
                <!-- col.//-->
