@@ -24,7 +24,7 @@ def view_advertisements():
     )
 
 
-@advertisement_blueprint.route('/view/mine', methods=['GET', 'POST'])
+@advertisement_blueprint.route('/view/user', methods=['GET', 'POST'])
 @login_required
 def view_my_advertisements():
     driver = Driver.get_driver(current_user.get_id())
