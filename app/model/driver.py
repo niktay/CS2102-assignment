@@ -68,7 +68,6 @@ class Driver(Model):
         ]
 
     def update(self):
-        print(self)
         if not self._validate():
             logger.warning('Insufficient fields provided to update driver')
             return False
@@ -76,7 +75,8 @@ class Driver(Model):
         try:
             cursor = self.conn.cursor()
             cursor.execute(
-                "UPDATE Driver SET optional_bio = '{self.optional_bio}' "
+                "UPDATE Driver "
+                f"SET optional_bio = '{self.optional_bio}' "
                 f"WHERE license_number = '{self.license_number}';",
             )
 
@@ -92,9 +92,6 @@ class Driver(Model):
         except Exception as e:
             logger.warning('Failed to update driver {self.license_number}')
             logger.critical(e)
-
-    def get_license_number(self):
-        return self.license_number
 
     def __str__(self):
         output = f"""
@@ -118,10 +115,17 @@ optional_bio: {self.optional_bio}
         try:
             cursor = driver.conn.cursor()
             cursor.execute(
-                f"SELECT * FROM Driver WHERE username = '{username}';",
+                f"SELECT license_number, username, "
+                f"driving_since, optional_bio "
+                f"FROM Driver WHERE username = '{username}';",
             )
 
-            driver_found = list(cursor.fetchone())
+            results = cursor.fetchone()
+
+            if results is None:
+                return None
+
+            driver_found = list(results)
 
             return driver_found
 

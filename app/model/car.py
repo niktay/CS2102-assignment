@@ -1,4 +1,10 @@
+from logging import getLogger
+
+import psycopg2
 from model.model import Model
+
+
+logger = getLogger(__name__)
 
 
 class Car(Model):
@@ -39,24 +45,30 @@ class Car(Model):
         return False
 
     def update(self):
-        print(self)
         if not self._validate():
             # TODO(Glenice): Throw some error/log
             return False
         try:
             cursor = self.conn.cursor()
             cursor.execute(
-                "UPDATE car SET brand='{self.brand}',"
-                f"model = '{self.model}'"
+                "UPDATE car SET "
+                f"brand = '{self.brand}',"
+                f"model = '{self.model}' "
                 f"WHERE license_plate = '{self.license_plate}'",
             )
+
             self.conn.commit()
-            return self
+
+            logger.info(f'Car details for {self.license_plate} updated')
+            return True
+
+        except psycopg2.Error as e:
+            logger.warning('Failed to update car {self.license_plate}')
+            logger.debug(e.diag.message_detail)
 
         except Exception as e:
-            # TODO(Glenice): Error handling/logging
-            print(e)
-        return None
+            logger.warning('Failed to update car {self.license_plate}')
+            logger.critical(e)
 
     def get(self):
         return [
@@ -84,7 +96,7 @@ model: {self.model}
         try:
             cursor = car.conn.cursor()
             cursor.execute(
-                'SELECT * FROM Car'
+                'SELECT license_plate, brand, model FROM Car'
                 f" WHERE license_number = '{license_number}';",
             )
             car_found = list(cursor.fetchone())
