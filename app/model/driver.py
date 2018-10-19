@@ -122,7 +122,7 @@ optional_bio: {self.optional_bio}
 
             results = cursor.fetchone()
 
-            if(results is None):
+            if results is None:
                 return None
 
             driver_found = list(results)
