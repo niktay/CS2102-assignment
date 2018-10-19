@@ -15,10 +15,7 @@ driver_blueprint = Blueprint('driver', __name__, template_folder='templates',)
 @login_required
 def register_driver():
     if request.method != 'POST':
-        return render_template(
-            'driver.tpl', is_view=False,
-            title='Driver Registration',
-        )
+        return redirect(url_for('driver.view_driver_registration'))
 
     new_driver = Driver(current_user.get_id(), **request.form)
     new_car = Car(**request.form)
@@ -61,21 +58,14 @@ def update_profile():
     if request.method != 'POST':
         return render_template('driver.tpl', is_view=False, title='Profile')
 
-    update_driver = Driver(**request.form)
+    update_driver = Driver(current_user.get_id(), **request.form)
+
     update_car = Car(**request.form)
 
-    driver = update_driver.get()
-    car = update_car.get()
-    is_success = False
+    update_car.update()
+    update_driver.update()
 
-    is_car_updated = update_car.update()
-    is_driver_updated = update_driver.update()
-    is_success = is_car_updated and is_driver_updated
-
-    return render_template(
-        'driver.tpl', is_view=True, is_success=is_success,
-        title='Profile', driver=driver, car=car,
-    )
+    return redirect(url_for('driver.get_profile'))
 
 
 @driver_blueprint.route('/', methods=['GET'])
