@@ -29,7 +29,7 @@ class Driver(object):
             self.license_number, self.username, self.driving_since,
         ])
 
-    @connection_required()
+    @connection_required
     def save(self, conn=None):
         if not self._validate():
             logger.warning('Insufficient fields provided to create driver')
@@ -67,7 +67,7 @@ class Driver(object):
             self.optional_bio, self.driving_since,
         ]
 
-    @connection_required()
+    @connection_required
     def update(self, conn=None):
         if not self._validate():
             logger.warning('Insufficient fields provided to update driver')
@@ -108,7 +108,7 @@ optional_bio: {self.optional_bio}
         return output
 
     @classmethod
-    @connection_required()
+    @connection_required
     def get_driver(cls, username, conn=None):
         if not username:
             return None

@@ -141,3 +141,55 @@ def test_init_using_form_attribute_type_invalid():
 
     with pytest.raises(TypeError):
         Account.init_using_form(**test_request_form)
+
+
+# Account.toggle_admin_status()
+def test_toggle_admin_status_false_to_true(mock_db):
+    name = 'Test Case'
+    username = 'tester'
+    date_of_birth = '1990-12-12'
+    email = 'tester@test.com'
+    contact = '91234567'
+    is_admin = 'False'
+    password = '12345678'
+
+    cursor = mock_db.cursor()
+    cursor.execute(
+        "INSERT INTO account (name, username, dob, email, contact, "
+        f"pass, is_admin) VALUES ('{name}', '{username}', '{date_of_birth}', "
+        f"'{email}', '{contact}', '{password}', '{is_admin}');",
+    )
+
+    test_account = Account(username=username)
+    test_account.toggle_admin_status(conn=mock_db)
+
+    cursor.execute(
+        f"SELECT is_admin FROM account WHERE username='{username}';",
+    )
+
+    assert cursor.fetchone()[0] is True
+
+
+def test_toggle_admin_status_true_to_false(mock_db):
+    name = 'Test Case'
+    username = 'tester'
+    date_of_birth = '1990-12-12'
+    email = 'tester@test.com'
+    contact = '91234567'
+    is_admin = 'True'
+    password = '12345678'
+
+    cursor = mock_db.cursor()
+    cursor.execute(
+        "INSERT INTO account (name, username, dob, email, contact, "
+        f"pass, is_admin) VALUES ('{name}', '{username}', '{date_of_birth}', "
+        f"'{email}', '{contact}', '{password}', '{is_admin}');",
+    )
+
+    test_account = Account(username=username)
+    test_account.toggle_admin_status(conn=mock_db)
+
+    cursor.execute(
+        f"SELECT is_admin FROM account WHERE username='{username}';",
+    )
+    assert cursor.fetchone()[0] is False

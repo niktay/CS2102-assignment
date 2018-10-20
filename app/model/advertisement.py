@@ -25,7 +25,7 @@ class Advertisement(object):
             self.license_number,
         ])
 
-    @connection_required()
+    @connection_required
     def save(self, conn=None):
         if not self._validate():
             logger.warning(

@@ -59,10 +59,11 @@ class Account(UserMixin, object):
 
         return account
 
-    @connection_required()
+    @connection_required
     def toggle_admin_status(self, conn=None):
         try:
             logger.info(f'Toggling admin status for username: {self.username}')
+            logger.debug(conn)
 
             cursor = conn.cursor()
             cursor.execute(
@@ -86,7 +87,7 @@ class Account(UserMixin, object):
         return False
 
     @classmethod
-    @connection_required()
+    @connection_required
     def load(cls, username, conn=None):
         if not username:
             logger.debug(f'Username is empty: {username}')
@@ -129,7 +130,7 @@ class Account(UserMixin, object):
             logger.warning('Failed to load Account from database')
             logger.critical(e)
 
-    @connection_required()
+    @connection_required
     def authenticate(self, conn=None):
         required_parameters = [self.username, self.password]
 
@@ -158,7 +159,7 @@ class Account(UserMixin, object):
             logger.warning('Failed to authenticate Account')
             logger.critical(e)
 
-    @connection_required()
+    @connection_required
     def save(self, conn=None):
         required_parameters = [
             self.name, self.username, self.date_of_birth,

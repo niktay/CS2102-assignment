@@ -23,7 +23,7 @@ class Car(object):
             self.brand, self.model,
         ])
 
-    @connection_required()
+    @connection_required
     def save(self, conn=None):
         if not self._validate():
             # TODO(Glenice): Throw some error/log
@@ -44,7 +44,7 @@ class Car(object):
             print(e)
         return False
 
-    @connection_required()
+    @connection_required
     def update(self, conn=None):
         if not self._validate():
             # TODO(Glenice): Throw some error/log
@@ -91,7 +91,7 @@ model: {self.model}
         return output
 
     @classmethod
-    @connection_required()
+    @connection_required
     def get_car(cls, license_number, conn=None):
 
         try:
