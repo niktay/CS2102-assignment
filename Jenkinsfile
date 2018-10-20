@@ -24,11 +24,16 @@ pipeline {
             failFast true
             parallel {
                 stage("Build repo difference for nightly release on master") {
-					steps {
-						sh "tox"
-					}
+                    steps {
+                        sh "tox"
+                    }
                 }
             }
+        }
+    }
+    post {
+        always {
+            sh "docker-compose down --remove-orphans"
         }
     }
 }
