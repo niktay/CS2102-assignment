@@ -2,6 +2,7 @@ FROM python:alpine
 
 RUN mkdir /app
 
+COPY app/ /app
 COPY requirements.txt /app/requirements.txt
 
 WORKDIR /app
