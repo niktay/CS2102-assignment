@@ -1,3 +1,5 @@
+@Library("elise-jenkins-scripts") _
+
 pipeline {
     agent {
         docker {
@@ -13,6 +15,9 @@ pipeline {
         stage("Install Dependencies") {
             failFast true
             parallel {
+                script {
+                    helper.abortPreviousBuilds()
+                }
                 stage("Install dependencies") {
                     steps {
                         sh "pip install -r requirements.txt"
