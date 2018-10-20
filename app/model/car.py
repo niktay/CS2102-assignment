@@ -1,7 +1,8 @@
-from app.model.database import connection_required
 from logging import getLogger
 
 import psycopg2
+
+from app.model.database import connection_required
 
 
 logger = getLogger(__name__)
