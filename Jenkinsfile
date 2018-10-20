@@ -15,9 +15,6 @@ pipeline {
         stage("Install Dependencies") {
             failFast true
             parallel {
-                script {
-                    helper.abortPreviousBuilds()
-                }
                 stage("Install dependencies") {
                     steps {
                         sh "pip install -r requirements.txt"
