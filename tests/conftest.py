@@ -11,7 +11,7 @@ def mock_db():
     try:
         conn = psycopg2.connect(
             dbname='admin', user='admin', password='secret',
-            host='127.0.0.1', port='5432',
+            host='127.0.0.1', port='1234',
         )
 
         conn.set_session(autocommit=True)
