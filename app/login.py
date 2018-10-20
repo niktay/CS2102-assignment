@@ -6,7 +6,7 @@ from flask_login import login_user
 from flask_login import logout_user
 from model import Account
 
-from app import login_manager
+from app.app import login_manager
 
 
 login_blueprint = Blueprint('login', __name__, template_folder='templates')
@@ -22,7 +22,7 @@ def process_login():
     if request.method != 'POST':
         return render_template('login.tpl')
 
-    account = Account(**request.form)
+    account = Account.init_using_form(**request.form)
 
     if account.authenticate():
         login_user(account)
@@ -39,5 +39,4 @@ def process_logout():
 
 @login_manager.user_loader
 def load_user(username):
-    print(f'Loading user {username}')
     return Account.load(username)

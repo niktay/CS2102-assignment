@@ -2,87 +2,75 @@ from logging import getLogger
 
 import psycopg2
 from flask_login import UserMixin
-from model.model import Model
 from werkzeug.security import check_password_hash
 from werkzeug.security import generate_password_hash
+
+from app.model.database import connection_required
 
 logger = getLogger(__name__)
 
 
-class Account(UserMixin, Model):
+class Account(UserMixin, object):
 
-    def __init__(self, *args, **kwargs):
-        super().__init__()
+    def __init__(
+        self, username=None, is_admin=None, date_of_birth=None,
+        email=None, contact=None, password=None, name=None,
+        confirm_password=None,
+    ):
 
-        if args:
-            logger.debug(f'Intializing Account with args:\n{args}')
+        self.username = username
+        self.id = username
+        self.is_admin = is_admin
+        self.date_of_birth = date_of_birth
+        self.email = email
+        self.contact = contact
+        self.password = password
+        self.name = name
 
-            try:
-                self.username = args[0]
-                self.id = self.username  # flask-login expects id
-                self.is_admin = args[1]
-                self.date_of_birth = args[2]
-                self.email = args[3]
-                self.contact = args[4]
-                self.password = args[5]
-                self.name = args[6]
-                self.confirm_password = None
+        if confirm_password and self.password != confirm_password:
+            self.password = None
+            logger.debug('Password mismatch, password set to `None`')
+            logger.debug(f'Password: {self.password}')
+            logger.debug(f'Confirm password: {confirm_password}')
 
-            except IndexError as e:
-                logger.error('Insufficient metadata to initialize Account:')
-                logger.error(e)
+    @classmethod
+    def init_using_form(cls, **kwargs):
+        for _type in (type(v) for v in kwargs.values()):
+            if _type != list:
+                raise TypeError('Not all values in kwargs are of type `list`')
 
-            except Exception as e:
-                logger.critical('Account failed to initialize')
+        kwargs = {k: v[0] for k, v in kwargs.items() if v[0]}
+        logger.debug(f'Extracted from kwargs: {kwargs}')
 
-            logger.debug(f'Account initialzed:\n{self}')
+        username = kwargs.get('username', None)
+        date_of_birth = kwargs.get('date-of-birth', None)
+        email = kwargs.get('email', None)
+        contact = kwargs.get('contact', None)
+        password = kwargs.get('password', None)
+        confirm_password = kwargs.get('confirm-password', None)
+        name = kwargs.get('full-name', None)
 
-        elif kwargs:
-            try:
-                logger.debug(f'Intializing Account with kwargs:\n{kwargs}')
-                kwargs = {k: v[0] for k, v in kwargs.items()}
+        account = cls(
+            username=username, date_of_birth=date_of_birth,
+            email=email, contact=contact, password=password,
+            confirm_password=confirm_password, name=name,
+        )
+        logger.debug(f'Instantiated Account using form:\n{account}')
 
-                self.name = kwargs.get('full-name', None)
-                self.username = kwargs.get('username', None)
-                self.id = self.username  # flask-login expects id
-                self.date_of_birth = kwargs.get('date-of-birth', None)
-                self.email = kwargs.get('email', None)
-                self.contact = kwargs.get('contact', None)
-                self.is_admin = kwargs.get('is-admin', False)
-                self.password = kwargs.get('password', None)
-                self.confirm_password = kwargs.get('confirm-password', None)
+        return account
 
-                logger.debug(f'Account initialzed: \n{self}')
-
-            except TypeError as e:
-                logger.error(e)
-
-            except Exception as e:
-                logger.critical('Account failed to initialize')
-
-        else:
-            logger.warning('Account initialized with no metadata')
-            pass
-
-    def _auth_validate(self):
-        return any([self.username, self.password])
-
-    def _save_validate(self):
-        return any([
-            self.name, self.username, self.date_of_birth, self.email,
-            self.contact, self.password,
-        ])
-
-    def toggle_admin_status(self):
+    @connection_required
+    def toggle_admin_status(self, conn=None):
         try:
             logger.info(f'Toggling admin status for username: {self.username}')
+            logger.debug(conn)
 
-            cursor = self.conn.cursor()
+            cursor = conn.cursor()
             cursor.execute(
                 "UPDATE account SET is_admin = NOT is_admin WHERE username = "
                 f"'{self.username}';",
             )
-            self.conn.commit()
+            conn.commit()
 
             logger.info(f'Admin status toggled successfully')
 
@@ -99,43 +87,59 @@ class Account(UserMixin, Model):
         return False
 
     @classmethod
-    def load(cls, username):
+    @connection_required
+    def load(cls, username, conn=None):
         if not username:
+            logger.debug(f'Username is empty: {username}')
             return None
 
         try:
-            logger.info(f'Loading account {username} for database')
-            account = cls()
-            cursor = account.conn.cursor()
-            cursor.execute(
-                f"SELECT * FROM Account WHERE username = '{username}';",
-            )
+            cursor = conn.cursor()
+            logger.debug(f'cursor: {cursor}')
+
+            statement = "SELECT username, is_admin, dob, email, contact, pass,"
+            statement += f" name FROM Account WHERE username = '{username}';"
+            logger.debug(f'Query: {statement}')
+            cursor.execute(statement)
+
             account_found = cursor.fetchone()
+            logger.debug(f'Query result: {account_found}')
 
             if not account_found:
-                logger.info(f'Account {username} not found')
                 return None
 
-            logger.info(f'Account {username} found')
-            return cls(*account_found)
+            account_details = {
+                'username': account_found[0],
+                'is_admin': account_found[1],
+                'date_of_birth': account_found[2],
+                'email': account_found[3],
+                'contact': account_found[4],
+                'name': account_found[6],
+            }
+
+            loaded_account = cls(**account_details)
+            logger.debug(f'Loaded Account:\n{loaded_account}')
+
+            return loaded_account
 
         except psycopg2.Error as e:
-            logger.warning('Failed to load account from database')
+            logger.warning('Failed to load Account from database')
             logger.debug(e.diag.message_detail)
 
         except Exception as e:
-            logger.warning('Failed to load account from database')
+            logger.warning('Failed to load Account from database')
             logger.critical(e)
 
-    def authenticate(self):
-        if not self._auth_validate():
-            logger.warning(f'Insufficient parameters to authenticate user')
+    @connection_required
+    def authenticate(self, conn=None):
+        required_parameters = [self.username, self.password]
+
+        if not all(required_parameters):
+            logger.warning(f'Insufficient parameters to authenticate Account')
             return False
 
         try:
-            logger.info(f'Attemping to authenticate account {self.username}')
-
-            cursor = self.conn.cursor()
+            cursor = conn.cursor()
             cursor.execute(
                 "SELECT pass FROM Account "
                 f"WHERE username = '{self.username}';",
@@ -143,52 +147,46 @@ class Account(UserMixin, Model):
             stored_account = cursor.fetchone()
 
             if not stored_account:
-                logger.info(f'Account {self.username} not found')
                 return False
 
             return check_password_hash(stored_account[0], self.password)
 
         except psycopg2.Error as e:
-            logger.warning('Failed to authenticate account')
+            logger.warning('Failed to authenticate Account')
             logger.debug(e.diag.message_detail)
 
         except Exception as e:
-            logger.warning('Failed to authenticate account')
+            logger.warning('Failed to authenticate Account')
             logger.critical(e)
 
-    def save(self):
-        if (
-            not self.password or not self.confirm_password or
-            self.password != self.confirm_password
-        ):
-            logger.warning('Password field(s) empty mismatched')
-            logger.warning('Account not created')
-            return
+    @connection_required
+    def save(self, conn=None):
+        required_parameters = [
+            self.name, self.username, self.date_of_birth,
+            self.email, self.contact, self.password,
+        ]
+        if not all(required_parameters):
+            logger.warning('Insufficient fields provided to create Account')
+            return False
 
-        if not self._save_validate():
-            logger.warning('Insufficient fields provided to create account')
-            logger.warning('Account not created')
-            return
         try:
             self.password = generate_password_hash(self.password)
 
-            cursor = self.conn.cursor()
+            cursor = conn.cursor()
             cursor.execute(
                 "INSERT INTO Account (name, username, dob, email, contact, "
                 f"pass, is_admin) VALUES ('{self.name}', '{self.username}', "
                 f"'{self.date_of_birth}', '{self.email}', '{self.contact}', "
-                f"'{self.password}', '{self.is_admin}');",
+                f"'{self.password}', 'False');",
             )
-            self.conn.commit()
-
-            logger.info(f'Account {self.username} created')
+            conn.commit()
 
         except psycopg2.Error as e:
-            logger.warning(f'Failed to create account {self.username}')
+            logger.warning(f'Failed to create Account {self.username}')
             logger.debug(e.diag.message_detail)
 
         except Exception as e:
-            logger.warning(f'Failed to create account {self.username}')
+            logger.warning(f'Failed to create Account {self.username}')
             logger.critical(e)
 
     def __str__(self):
