@@ -1,3 +1,4 @@
+from datetime import date
 from random import randint
 
 
@@ -7,21 +8,12 @@ def generate_account(namelist, surnamelist):
             random_surname = randint(0, 19)
             random_number = randint(1, 101)
             random_year = randint(1971, 2000)
-            random_month = randint(1, 13)
-            random_day = randint(1, 30)
+            random_month = randint(1, 12)
+            random_day = randint(1, 28)
             random_contact = randint(80000000, 99999999)
         surname = ''.join(surnamelist[random_surname])
         username = name.lower() + str(random_number)
-        year = str(random_year)
-        if random_month < 10:
-            month = '0' + str(random_month)
-        else:
-            month = str(random_month)
-        if random_day < 10:
-            day = '0' + str(random_day)
-        else:
-            day = str(random_day)
-        dob = year + '-' + month + '-' + day
+        dob = date(random_year, random_month, random_day).isoformat()
         contact = str(random_contact)
         print(
             f'INSERT INTO account(username, is_admin, dob, email, '
