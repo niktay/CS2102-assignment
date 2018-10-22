@@ -7,119 +7,60 @@
     <meta name="author" content="">
     <link rel="icon" href="../../../../favicon.ico">
 
-    <title>CS2102</title>
+    <title>Welcome to ZOOOM!</title>
 
     <!-- Bootstrap core CSS -->
     <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
 
     <!-- Custom styles for this template -->
-    <link href="{{ url_for('static',filename='styles/dashboard.css') }}" rel="stylesheet">
+    <link href="{{ url_for('static', filename='styles/dashboard.css') }}" rel="stylesheet">
+<link href='https://fonts.googleapis.com/css?family=Nova+Flat' rel='stylesheet' type='text/css'>
   </head>
 
   <body>
     <nav class="navbar navbar-dark fixed-top bg-dark flex-md-nowrap p-0 shadow">
-      <a class="navbar-brand col-sm-3 col-md-2 mr-0" href="#">CS2102</a>
-        <form action="/" method="POST" style="width: 100%">
-            <input class="form-control form-control-dark w-100" type="text" name="command" placeholder="Command" aria-label="Command">
-        </form>
-      <ul class="navbar-nav px-3">
-        <li class="nav-item text-nowrap">
-          <a class="nav-link" href="#">Sign out</a>
-        </li>
-      </ul>
+      <a class="navbar-brand col-sm-3 col-md-2 mr-0" href="#">ZOOOM</a>
     </nav>
+<video autoplay muted loop id="background-video" style="position:fixed;">
+  <source src="{{ url_for('static', filename='assets/traffic.webm') }}" type="video/webm">
+  <source src="{{ url_for('static', filename='assets/traffic.mp4') }}" type="video/mp4">
+  Your browser does not support HTML5 video.
+</video>
 
-    <div class="container-fluid">
-      <div class="row">
-        <nav class="col-md-2 d-none d-md-block bg-light sidebar">
-          <div class="sidebar-sticky">
-            <ul class="nav flex-column">
-              <li class="nav-item">
-                <a class="nav-link active" href="#">
-                  <span data-feather="users"></span>
-                  Accounts <span class="sr-only">(current)</span>
-                </a>
-              </li>
-            <!--<li class="nav-item">
-                <a class="nav-link" href="#">
-                  <span data-feather="layers"></span>
-                  Integrations
-                </a>
-              </li>-->
-            </ul>
+        <main role="main" class="col-md-12">
+<div class="row justify-content-center">
+<div class="col-md-4">
+<div class="card bg-dark" style="margin-top: 40%; color: #eeeeee;">
+<header class="card-header">
+    <h4 class="card-title mt-2"></h4>
+</header>
+<article class="card-body">
+<form action="{{ url_for('login.process_login') }}" method="POST">
+    <div class="form-row">
+        <div class="col form-group">
+            <label style="font-weight: bold;">Username</label>
+              <input name="username" id="username" type="text" class="form-control" placeholder="" required>
+        </div> <!-- form-group end.// -->
+    </div> <!-- form-row end.// -->
+    <div class="form-row">
+        <div class="col form-group">
+            <label style="font-weight: bold;">Password</label>
+              <input name="password" id="password" type="password" class="form-control" placeholder="" required>
+        </div> <!-- form-group end.// -->
+    </div> <!-- form-row end.// -->
+    <div class="form-group">
+        <button type="submit" class="btn btn-secondary btn-block" style="font-weight: bold;">Start Booking Rides</button>
+    </div> <!-- form-group// -->
+</form>
+</article> <!-- card-body end .// -->
+<div class="border-top card-body text-center" style="border-top: 1px solid #444444!important; font-weight: bold;">Don't have an account? <a href="{{ url_for('registration.view_registration') }}" style="color: #ffcc00;"> Register now!</a></div>
+</div>
+</div> <!-- col.//-->
 
-            <h6 class="sidebar-heading d-flex justify-content-between align-items-center px-3 mt-4 mb-1 text-muted">
-              <span>Saved reports</span>
-              <a class="d-flex align-items-center text-muted" href="#">
-                <span data-feather="plus-circle"></span>
-              </a>
-            </h6>
-            <!--
-            <ul class="nav flex-column mb-2">
-              <li class="nav-item">
-                <a class="nav-link" href="#">
-                  <span data-feather="file-text"></span>
-                  Current month
-                </a>
-              </li>
-              <li class="nav-item">
-                <a class="nav-link" href="#">
-                  <span data-feather="file-text"></span>
-                  Last quarter
-                </a>
-              </li>
-              <li class="nav-item">
-                <a class="nav-link" href="#">
-                  <span data-feather="file-text"></span>
-                  Social engagement
-                </a>
-              </li>
-              <li class="nav-item">
-                <a class="nav-link" href="#">
-                  <span data-feather="file-text"></span>
-                  Year-end sale
-                </a>
-              </li>
-            </ul>-->
-          </div>
-        </nav>
+</div> <!-- row.//-->
 
-        <main role="main" class="col-md-9 ml-sm-auto col-lg-10 px-4">
-          <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
-            <h1 class="h2">{{table_name}}</h1>
-            <div class="btn-toolbar mb-2 mb-md-0">
-              <div class="btn-group mr-2">
-                <button type="button" class="btn btn-sm btn-outline-secondary">Share</button>
-                <button type="button" class="btn btn-sm btn-outline-secondary">Export</button>
-              </div>
-              <button type="button" class="btn btn-sm btn-outline-secondary dropdown-toggle">
-                <span data-feather="calendar"></span>
-                This week
-              </button>
-            </div>
-          </div>
 
-          <!--<h2>{{table_name}}</h2>-->
-          <div class="table-responsive">
-            <table class="table table-striped table-sm">
-            <thead>
-                <tr>
-                    {% for heading in headings %}
-                        <th scope="col">{{heading[0]}}</th>
-                    {% endfor %}
-                </tr>
-            </thead>
-            <tbody>
-            {% for result in results %}
-                <tr>
-                    {% for field in result %}
-                        <td>{{field}}</td>
-                    {% endfor %}
-                </tr>
-            {% endfor %}
-            </tbody>
-            </table>
-          </div>
+</div>
         </main>
       </div>
     </div>
