@@ -67,13 +67,9 @@ def create_advertisement():
         return redirect(url_for('driver.view_driver_registration'))
     license_number = driver[0]
 
-    new_advertisement = Advertisement(license_number, **request.form)
-    is_success = new_advertisement.save()
+    Advertisement(license_number, **request.form)
 
-    return render_template(
-        'advertisement.tpl', is_view=True, is_success=is_success,
-        advert=new_advertisement, is_alert=True,
-    )
+    return redirect(url_for('advertisement.view_advertisements'))
 
 
 @advertisement_blueprint.route('/', methods=['GET'])
