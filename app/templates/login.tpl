@@ -5,7 +5,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <meta name="description" content="">
     <meta name="author" content="">
-    <link rel="icon" href="../../../../favicon.ico">
+	<link rel="icon" type="image/png" href="{{ url_for('static', filename='assets/favicon-32x32.png') }}" sizes="32x32" />
+	<link rel="icon" type="image/png" href="{{ url_for('static', filename='assets/favicon-16x16.png') }}" sizes="16x16" />
 
     <title>Welcome to ZOOOM!</title>
 
@@ -19,7 +20,9 @@
 
   <body>
     <nav class="navbar navbar-dark fixed-top bg-dark flex-md-nowrap p-0 shadow">
-      <a class="navbar-brand col-sm-3 col-md-2 mr-0" href="#">ZOOOM</a>
+      <a class="navbar-brand col-sm-1 col-md-1 mr-0" style="padding-left: 5px;" href="#">
+		<img src="{{ url_for('static', filename='assets/zooom-logo-white@3x.png') }}" style="max-height: 35px; max-width: 35px; padding-left: 10px; margin-top: -5px;"/>
+		ZOOOM</a>
     </nav>
 <video autoplay muted loop id="background-video" style="position:fixed;">
   <source src="{{ url_for('static', filename='assets/traffic.webm') }}" type="video/webm">
