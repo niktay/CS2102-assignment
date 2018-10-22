@@ -50,15 +50,23 @@
                         <tbody>
                             {% if results is not none %}
                                 <tr>
-                                  <td></td>
+
                                   <td>Date and Time</td>
                                   <td>Driver License Number</td>
                                   <td>Origin</td>
                                   <td>Destination</td>
+                                  <td></td>
+
                                </tr>
 
                                {% for ad in results %}
                                <tr>
+                                  {% for field in ad %}
+
+                                  <td>{{field}}</td>
+
+                                  {% endfor %}
+
                                   <td>
                                     <form action="bid" method="POST">
                                         <input type="hidden" name="advert_start_timestamp" value="{{ad[1]}}" />
@@ -67,10 +75,6 @@
                                         <input type="submit" name="bid" value="Bid" class="btn btn-primary btn-block"/>
                                     </form>
                                    </td>
-                                  {% for field in ad %}
-
-                                  <td>{{field}}</td>
-                                  {% endfor %}
                                </tr>
                                {% endfor %}
                            {% else %}
