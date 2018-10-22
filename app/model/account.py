@@ -1,3 +1,5 @@
+import datetime
+from datetime import datetime as dt
 from logging import getLogger
 
 import psycopg2
@@ -32,6 +34,57 @@ class Account(UserMixin, object):
             logger.debug('Password mismatch, password set to `None`')
             logger.debug(f'Password: {self.password}')
             logger.debug(f'Confirm password: {confirm_password}')
+
+    @property
+    def date_of_birth(self):
+        return self._date_of_birth
+
+    @date_of_birth.setter
+    def date_of_birth(self, date_of_birth):
+        if not date_of_birth:
+            self._date_of_birth = None
+        elif type(date_of_birth) == datetime.date:
+            self._date_of_birth = date_of_birth
+        elif type(date_of_birth) == datetime.datetime:
+            self._date_of_birth = date_of_birth.date()
+        elif type(date_of_birth) == str:
+            try:
+                self._date_of_birth = dt.strptime(
+                    date_of_birth,
+                    '%Y-%m-%d',
+                ).date()
+            except ValueError as e:
+                logger.debug(date_of_birth)
+                logger.error('date_of_birth string not in YYYY-MM-DD')
+                raise
+        else:
+            logger.debug(type(date_of_birth))
+            raise TypeError(
+                'date_of_birth can only be assigned types: str, '
+                'datetime.datetime, datetime.datetime.date',
+            )
+
+    @property
+    def is_admin(self):
+        return self._is_admin
+
+    @is_admin.setter
+    def is_admin(self, is_admin):
+        if type(is_admin) == bool:
+            self._is_admin = is_admin
+        elif not is_admin:
+            self._is_admin = None
+        elif type(is_admin) == str:
+            allowed_str = ['True', 'TRUE', 'true', 'False', 'FALSE', 'false']
+
+            if is_admin not in allowed_str:
+                logger.debug(is_admin)
+                raise ValueError(f'is_admin not in: {allowed_str}')
+            else:
+                self._is_admin = bool(is_admin)
+        else:
+            logger.debug(type(is_admin))
+            raise TypeError('is_admin can only be assigned types: bool, str')
 
     @classmethod
     def init_using_form(cls, **kwargs):
@@ -145,10 +198,15 @@ class Account(UserMixin, object):
                 f"WHERE username = '{self.username}';",
             )
             stored_account = cursor.fetchone()
+            logger.debug(f'Query Result: {stored_account}')
 
             if not stored_account:
                 return False
 
+            logger.debug(
+                f'comparing {generate_password_hash(self.password)} '
+                f'with {stored_account[0]}',
+            )
             return check_password_hash(stored_account[0], self.password)
 
         except psycopg2.Error as e:
@@ -181,9 +239,12 @@ class Account(UserMixin, object):
             )
             conn.commit()
 
+            return True
+
         except psycopg2.Error as e:
             logger.warning(f'Failed to create Account {self.username}')
             logger.debug(e.diag.message_detail)
+            return False
 
         except Exception as e:
             logger.warning(f'Failed to create Account {self.username}')
