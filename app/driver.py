@@ -62,8 +62,8 @@ def update_profile():
 
     update_car = Car(**request.form)
 
-    update_car.update()
-    update_driver.update()
+    is_success = update_car.update()
+    is_success = is_success and update_driver.update()
 
     return redirect(url_for('driver.get_profile'))
 
