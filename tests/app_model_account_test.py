@@ -1,4 +1,9 @@
+import datetime
+from datetime import datetime as dt
+
 import pytest
+from werkzeug.security import check_password_hash
+from werkzeug.security import generate_password_hash
 
 from app.model import Account
 
@@ -8,10 +13,10 @@ def test_init_all_parameters():
     test_attributes = {
         'name': 'Test Case',
         'username': 'tester',
-        'date_of_birth': '1990-12-12',
+        'date_of_birth': dt(1990, 12, 12).date(),
         'email': 'tester@test.comm',
         'contact': '91234567',
-        'is_admin': 'True',
+        'is_admin': True,
         'password': '12345678',
         'confirm_password': '12345678',
     }
@@ -32,10 +37,10 @@ def test_init_all_parameters_mismatched_password():
     test_attributes = {
         'name': 'Test Case',
         'username': 'tester',
-        'date_of_birth': '1990-12-12',
+        'date_of_birth': dt(1990, 12, 12).date(),
         'email': 'tester@test.comm',
         'contact': '91234567',
-        'is_admin': 'True',
+        'is_admin': True,
         'password': '12345678',
         'confirm_password': 'abcdefgh',
     }
@@ -51,6 +56,62 @@ def test_init_all_parameters_mismatched_password():
     assert test_account.is_admin == test_attributes['is_admin']
     assert test_account.password is None
 
+# Account.date_of_birth
+
+
+def test_date_of_birth_setter_date():
+    test_date_of_birth = dt(1990, 12, 12).date()
+
+    test_account = Account()
+    test_account.date_of_birth = test_date_of_birth
+
+    assert type(test_account.date_of_birth) == datetime.date
+
+
+def test_date_of_birth_setter_datetime():
+    test_date_of_birth = dt(1990, 12, 12)
+
+    test_account = Account()
+    test_account.date_of_birth = test_date_of_birth
+
+    assert type(test_account.date_of_birth) == datetime.date
+
+
+def test_date_of_birth_setter_str_yyyy_mm_dd():
+    test_date_of_birth = '1990-12-12'
+
+    test_account = Account()
+    test_account.date_of_birth = test_date_of_birth
+
+    assert type(test_account.date_of_birth) == datetime.date
+
+
+def test_date_of_birth_setter_str_dd_mm_yyyy():
+    test_date_of_birth = '24-12-1990'
+
+    test_account = Account()
+
+    with pytest.raises(ValueError):
+        test_account.date_of_birth = test_date_of_birth
+
+
+def test_date_of_birth_setter_str_mm_dd_yyyy():
+    test_date_of_birth = '12-24-1990'
+
+    test_account = Account()
+
+    with pytest.raises(ValueError):
+        test_account.date_of_birth = test_date_of_birth
+
+
+def test_date_of_birth_setter_str_garbage():
+    test_date_of_birth = 'asdf12345!@#$%'
+
+    test_account = Account()
+
+    with pytest.raises(ValueError):
+        test_account.date_of_birth = test_date_of_birth
+
 # Account.init_using_form()
 
 
@@ -58,7 +119,7 @@ def test_init_using_form_all_attributes():
     test_request_form = {
         'full-name': ['Test Case'],
         'username': ['tester'],
-        'date-of-birth': ['1990-12-12'],
+        'date-of-birth': [dt(1990, 12, 12).date()],
         'email': ['tester@test.comm'],
         'contact': ['91234567'],
         'password': ['12345678'],
@@ -147,11 +208,11 @@ def test_init_using_form_attribute_type_invalid():
 def test_toggle_admin_status_false_to_true(mock_db):
     name = 'Test Case'
     username = 'tester'
-    date_of_birth = '1990-12-12'
+    date_of_birth = dt(1990, 12, 12).date()
     email = 'tester@test.com'
     contact = '91234567'
-    is_admin = 'False'
-    password = '12345678'
+    is_admin = False
+    password = generate_password_hash('12345678')
 
     cursor = mock_db.cursor()
     cursor.execute(
@@ -173,11 +234,11 @@ def test_toggle_admin_status_false_to_true(mock_db):
 def test_toggle_admin_status_true_to_false(mock_db):
     name = 'Test Case'
     username = 'tester'
-    date_of_birth = '1990-12-12'
+    date_of_birth = dt(1990, 12, 12).date()
     email = 'tester@test.com'
     contact = '91234567'
-    is_admin = 'True'
-    password = '12345678'
+    is_admin = True
+    password = generate_password_hash('12345678')
 
     cursor = mock_db.cursor()
     cursor.execute(
@@ -193,3 +254,275 @@ def test_toggle_admin_status_true_to_false(mock_db):
         f"SELECT is_admin FROM account WHERE username='{username}';",
     )
     assert cursor.fetchone()[0] is False
+
+
+# Account.load()
+def test_load_valid_username(mock_db):
+    name = 'Test Case'
+    username = 'tester'
+    date_of_birth = dt(1990, 12, 12).date()
+    email = 'tester@test.com'
+    contact = '91234567'
+    is_admin = False
+    password = generate_password_hash('12345678')
+
+    cursor = mock_db.cursor()
+    cursor.execute(
+        "INSERT INTO account (name, username, dob, email, contact, "
+        f"pass, is_admin) VALUES ('{name}', '{username}', '{date_of_birth}', "
+        f"'{email}', '{contact}', '{password}', '{is_admin}');",
+    )
+
+    test_account = Account.load(username, conn=mock_db)
+
+    assert test_account.name == name
+    assert test_account.username == username
+    assert test_account.date_of_birth == date_of_birth
+    assert test_account.email == email
+    assert test_account.contact == contact
+    assert test_account.is_admin == is_admin
+    assert test_account.password is None
+
+
+def test_load_none_username(mock_db):
+    username = None
+    test_account = Account.load(username, conn=mock_db)
+
+    assert test_account is None
+
+
+def test_load_username_not_found(mock_db):
+    username = 'tester1'
+    test_account = Account.load(username, conn=mock_db)
+
+    assert test_account is None
+
+
+def test_load_username_wrong_type(mock_db):
+    username = []
+    test_account = Account.load(username, conn=mock_db)
+
+    assert test_account is None
+
+
+# Account.authenticate()
+def test_authenticate_valid_username_valid_password(mock_db):
+    name = 'Test Case'
+    username = 'tester'
+    date_of_birth = dt(1990, 12, 12).date()
+    email = 'tester@test.com'
+    contact = '91234567'
+    is_admin = False
+    password = '12345678'
+
+    cursor = mock_db.cursor()
+
+    cursor.execute(
+        "INSERT INTO account (name, username, dob, email, contact, "
+        f"pass, is_admin) VALUES ('{name}', '{username}', '{date_of_birth}', "
+        f"'{email}', '{contact}', '{generate_password_hash(password)}', "
+        f"'{is_admin}');",
+    )
+
+    test_account = Account(username=username, password=password)
+
+    assert test_account.authenticate(conn=mock_db) is True
+
+
+def test_authenticate_valid_username_invalid_password(mock_db):
+    name = 'Test Case'
+    username = 'tester'
+    date_of_birth = dt(1990, 12, 12).date()
+    email = 'tester@test.com'
+    contact = '91234567'
+    is_admin = False
+    password = '12345678'
+
+    cursor = mock_db.cursor()
+
+    cursor.execute(
+        "INSERT INTO account (name, username, dob, email, contact, "
+        f"pass, is_admin) VALUES ('{name}', '{username}', '{date_of_birth}', "
+        f"'{email}', '{contact}', '{generate_password_hash(password)}', "
+        f"'{is_admin}');",
+    )
+
+    test_password = '87654321'
+    test_account = Account(username=username, password=test_password)
+
+    assert test_account.authenticate(conn=mock_db) is False
+
+
+def test_authenticate_invalid_username_valid_password(mock_db):
+    name = 'Test Case'
+    username = 'tester'
+    date_of_birth = dt(1990, 12, 12).date()
+    email = 'tester@test.com'
+    contact = '91234567'
+    is_admin = False
+    password = '12345678'
+
+    cursor = mock_db.cursor()
+
+    cursor.execute(
+        "INSERT INTO account (name, username, dob, email, contact, "
+        f"pass, is_admin) VALUES ('{name}', '{username}', '{date_of_birth}', "
+        f"'{email}', '{contact}', '{generate_password_hash(password)}', "
+        f"'{is_admin}');",
+    )
+
+    test_username = 'tester1'
+    test_account = Account(username=test_username, password=password)
+
+    assert test_account.authenticate(conn=mock_db) is False
+
+
+def test_authenticate_invalid_username_invalid_password(mock_db):
+    name = 'Test Case'
+    username = 'tester'
+    date_of_birth = dt(1990, 12, 12).date()
+    email = 'tester@test.com'
+    contact = '91234567'
+    is_admin = False
+    password = '12345678'
+
+    cursor = mock_db.cursor()
+
+    cursor.execute(
+        "INSERT INTO account (name, username, dob, email, contact, "
+        f"pass, is_admin) VALUES ('{name}', '{username}', '{date_of_birth}', "
+        f"'{email}', '{contact}', '{generate_password_hash(password)}', "
+        f"'{is_admin}');",
+    )
+
+    test_username = 'tester1'
+    test_password = '87654321'
+    test_account = Account(username=test_username, password=test_password)
+
+    assert test_account.authenticate(conn=mock_db) is False
+
+
+# Account.save()
+def test_save_account_valid(mock_db):
+    name = 'Test Case'
+    username = 'tester'
+    date_of_birth = dt(1990, 12, 12).date()
+    email = 'tester@test.com'
+    contact = '91234567'
+    password = '12345678'
+
+    account = Account(
+        name=name, username=username,
+        date_of_birth=date_of_birth, email=email,
+        contact=contact, password=password,
+    )
+
+    assert account.save(conn=mock_db) is True
+
+    cursor = mock_db.cursor()
+
+    cursor.execute(
+        "SELECT name, username, dob, email, contact, is_admin, "
+        f"pass FROM account WHERE username='{username}'",
+    )
+
+    test_account = cursor.fetchone()
+
+    assert test_account
+
+    test_account_details = {
+        'name': test_account[0],
+        'username': test_account[1],
+        'date_of_birth': test_account[2],
+        'email': test_account[3],
+        'contact': test_account[4],
+        'is_admin': test_account[5],
+        'password': test_account[6],
+    }
+
+    test_account = Account(**test_account_details)
+
+    assert test_account.name == name
+    assert test_account.username == username
+    assert test_account.date_of_birth == date_of_birth
+    assert test_account.email == email
+    assert test_account.contact == contact
+    assert check_password_hash(test_account.password, password)
+
+
+def test_save_account_duplicate(mock_db):
+    name = 'Test Case'
+    username = 'tester'
+    date_of_birth = dt(1990, 12, 12).date()
+    email = 'tester@test.com'
+    contact = '91234567'
+    password = '12345678'
+
+    account = Account(
+        name=name, username=username,
+        date_of_birth=date_of_birth, email=email,
+        contact=contact, password=password,
+    )
+
+    assert account.save(conn=mock_db) is True
+    assert account.save(conn=mock_db) is False
+
+
+def test_save_account_insufficient_fields(mock_db):
+    name = 'Test Case'
+    username = 'tester'
+    date_of_birth = dt(1990, 12, 12).date()
+    contact = '91234567'
+    password = '12345678'
+
+    account = Account(
+        name=name, username=username,
+        date_of_birth=date_of_birth, contact=contact,
+        password=password,
+    )
+
+    assert account.save(conn=mock_db) is False
+
+    cursor = mock_db.cursor()
+
+    cursor.execute(
+        "SELECT name, username, dob, email, contact, is_admin, "
+        f"pass FROM account WHERE username='{username}'",
+    )
+
+    test_account = cursor.fetchone()
+
+    assert not test_account
+
+
+# Account.__str__
+def test_str():
+    name = 'Test Case'
+    username = 'tester'
+    date_of_birth = dt(1990, 12, 12).date()
+    is_admin = True
+    email = 'tester@test.com'
+    contact = '91234567'
+    password = '12345678'
+
+    account = Account(
+        name=name, username=username,
+        date_of_birth=date_of_birth, is_admin=is_admin,
+        email=email, contact=contact, password=password,
+    )
+
+    test_str = f"""
+--------------------------------------------------------------------------------
+                               Account
+--------------------------------------------------------------------------------
+name: {name}
+username: {username}
+date of birth: {date_of_birth}
+email: {email}
+contact: {contact}
+password: {password}
+admin: {is_admin}
+--------------------------------------------------------------------------------
+"""
+
+    assert account.__str__() == test_str
