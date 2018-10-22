@@ -59,7 +59,7 @@
     </h4>
 </header>
 <article class="card-body">
-<form action="{{ url_for('advertisement.view_advertisements') }}" method="POST">
+<form action="{{ url_for('advertisement.create_advertisement') }}" method="POST">
     {% if is_view and is_alert %}
         {% if is_success %}
         <div class="alert alert-success" role="alert">

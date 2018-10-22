@@ -41,9 +41,14 @@ class Advertisement(object):
                 f"VALUES ('{self.start_timestamp}', '{self.license_number}',"
                 f"'{self.origin}', '{self.destination}');",
             )
-            conn.commit()
-            return True
 
+            conn.commit()
+
+            logger.info(
+                f'Advertisement details from {self.license_number} added',
+            )
+
+            return True
         except psycopg2.Error as e:
             logger.warning('Failed to update advertisement')
             logger.debug(e.diag.message_detail)
@@ -68,19 +73,17 @@ destination: {self.destination}
         return output
 
     @classmethod
-    def get_all(cls):
+    @connection_required
+    def get_all(cls, conn=None):
         results = []
 
-        advert = Advertisement()
         try:
-            cursor = advert.conn.cursor()
+            cursor = conn.cursor()
             cursor.execute(
-                'SELECT * FROM Advertisement NATURAL JOIN Driver;',
+                'SELECT * FROM Advertisement;',
             )
 
             results = cursor.fetchall()
-
-            print(results)
 
             return results
         except Exception as e:
@@ -88,10 +91,11 @@ destination: {self.destination}
             logger.critical(e)
 
     @classmethod
-    def get_advert(cls, start_timestamp, license_number):
-        advert = Advertisement()
+    @connection_required
+    def get_advert(cls, start_timestamp, license_number, conn=None):
+
         try:
-            cursor = advert.conn.cursor()
+            cursor = conn.cursor()
             cursor.execute(
                 "SELECT a.start_timestamp, a.origin, a.destination, "
                 f"c.license_plate, c.brand, c.model "
@@ -110,14 +114,14 @@ destination: {self.destination}
             logger.critical(e)
 
     @classmethod
-    def get_mine(cls, license_number):
+    @connection_required
+    def get_mine(cls, license_number, conn=None):
         results = []
 
-        advert = Advertisement()
         try:
-            cursor = advert.conn.cursor()
+            cursor = conn.cursor()
             cursor.execute(
-                "SELECT * FROM Advertisement  NATURAL JOIN Driver"
+                "SELECT * FROM Advertisement "
                 f"WHERE license_number = '{license_number}';",
             )
 

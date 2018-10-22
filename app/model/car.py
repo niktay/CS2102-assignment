@@ -27,7 +27,7 @@ class Car(object):
     @connection_required
     def save(self, conn=None):
         if not self._validate():
-            # TODO(Glenice): Throw some error/log
+            logger.warning('Insufficient fields provided to add car')
             return False
         try:
             cursor = conn.cursor()
@@ -40,15 +40,19 @@ class Car(object):
             conn.commit()
             return self
 
+        except psycopg2.Error as e:
+            logger.warning('Failed to create car')
+            logger.debug(e.diag.message_detail)
+
         except Exception as e:
-            # TODO(Glenice): Error handling/logging
-            print(e)
+            logger.warning('Failed to create car')
+            logger.critical(e)
         return False
 
     @connection_required
     def update(self, conn=None):
         if not self._validate():
-            # TODO(Glenice): Throw some error/log
+            logger.warning('Insufficient fields provided to update car')
             return False
         try:
             cursor = conn.cursor()
@@ -104,6 +108,10 @@ model: {self.model}
             car_found = list(cursor.fetchone())
 
             return car_found
+        except psycopg2.Error as e:
+            logger.warning(f'Failed to get car for {license_number}')
+            logger.debug(e.diag.message_detail)
+
         except Exception as e:
-            # TODO(Glenice): Error handling/logging
-            print(e)
+            logger.warning(f'Failed to get car for {license_number}')
+            logger.critical(e)

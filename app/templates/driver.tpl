@@ -98,7 +98,7 @@
                           {% if title in "Driver Registration" %}
                                 <input name="brand" id="brand" type="text" class="form-control" required>
                           {% else %}
-                                <input name="brand" id="brand" type="text" value={{car[1]}} class="form-control">
+                                <input name="brand" id="brand" type="text" value={{car[1]}} class="form-control" required>
                           {% endif %}
 
                     </div> <!-- form-group end.// -->
@@ -107,7 +107,7 @@
                           {% if title in "Driver Registration" %}
                                 <input name="model" id="model" type="text" class="form-control" required>
                           {% else %}
-                                <input name="model" id="model" type="text" value={{car[2]}} class="form-control">
+                                <input name="model" id="model" type="text" value={{car[2]}} class="form-control" required>
                           {% endif %}
 
                     </div> <!-- form-group end.// -->
