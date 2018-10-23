@@ -17,7 +17,8 @@ from admin import admin_blueprint  # noqa: E402
 from adminitise import adminitise_blueprint  # noqa: E402
 from driver import driver_blueprint  # noqa: E402
 from registration import registration_blueprint  # noqa: E402
-from advertisement import advertisement_blueprint  # noqa:E402
+from advertisement import advertisement_blueprint  # noqa: E402
+from profile import profile_blueprint  # noqa: E402
 import login  # noqa: E402
 
 try:
@@ -32,6 +33,7 @@ try:
         advertisement_blueprint,
         url_prefix='/advertisement',
     )
+    app.register_blueprint(profile_blueprint, url_prefix='/profile',)
 
     logger.info(f'Registered blueprints')
 except NameError as e:

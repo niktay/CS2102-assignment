@@ -1,7 +1,6 @@
 from flask import Blueprint
 from flask import render_template
 from flask import request
-from flask_login import current_user
 from flask_login import login_user
 from flask_login import logout_user
 from model import Account
@@ -26,9 +25,9 @@ def process_login():
 
     if account.authenticate():
         login_user(account)
-        return f'<h1>Login Success! Welcome {current_user.get_id()}</h1>'
+        return render_template('profile.tpl')
     else:
-        return '<h1>Invalid Credentials!</h1>'
+        return render_template('login.tpl')
 
 
 @login_blueprint.route('/deauth', methods=['GET', 'POST'])
