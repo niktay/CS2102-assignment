@@ -41,7 +41,7 @@ class Account(UserMixin, object):
 
     @date_of_birth.setter
     def date_of_birth(self, date_of_birth):
-        if not date_of_birth:
+        if date_of_birth is None:
             self._date_of_birth = None
         elif type(date_of_birth) == datetime.date:
             self._date_of_birth = date_of_birth
@@ -72,7 +72,7 @@ class Account(UserMixin, object):
     def is_admin(self, is_admin):
         if type(is_admin) == bool:
             self._is_admin = is_admin
-        elif not is_admin:
+        elif is_admin is None:
             self._is_admin = None
         elif type(is_admin) == str:
             allowed_str = ['True', 'TRUE', 'true', 'False', 'FALSE', 'false']
@@ -80,8 +80,8 @@ class Account(UserMixin, object):
             if is_admin not in allowed_str:
                 logger.debug(is_admin)
                 raise ValueError(f'is_admin not in: {allowed_str}')
-            else:
-                self._is_admin = bool(is_admin)
+
+            self._is_admin = bool(is_admin)
         else:
             logger.debug(type(is_admin))
             raise TypeError('is_admin can only be assigned types: bool, str')
@@ -188,8 +188,14 @@ class Account(UserMixin, object):
         required_parameters = [self.username, self.password]
 
         if not all(required_parameters):
-            logger.warning(f'Insufficient parameters to authenticate Account')
-            return False
+            logger.debug(
+                f'username: {self.username}\npassword: '
+                f'{self.password}',
+            )
+            raise TypeError(
+                'authenticate requires both username and password '
+                'to be set',
+            )
 
         try:
             cursor = conn.cursor()

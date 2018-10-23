@@ -9,6 +9,7 @@ from app.model import Account
 
 
 # Account.__init__()
+
 def test_init_all_parameters():
     test_attributes = {
         'name': 'Test Case',
@@ -56,8 +57,8 @@ def test_init_all_parameters_mismatched_password():
     assert test_account.is_admin == test_attributes['is_admin']
     assert test_account.password is None
 
-# Account.date_of_birth
 
+# Account.date_of_birth
 
 def test_date_of_birth_setter_date():
     test_date_of_birth = dt(1990, 12, 12).date()
@@ -112,8 +113,64 @@ def test_date_of_birth_setter_str_garbage():
     with pytest.raises(ValueError):
         test_account.date_of_birth = test_date_of_birth
 
-# Account.init_using_form()
 
+def test_date_of_birth_setter_wrong_type():
+    test_date_of_birth = []
+
+    test_account = Account()
+
+    with pytest.raises(TypeError):
+        test_account.date_of_birth = test_date_of_birth
+
+
+# Account.is_admin
+
+def test_is_admin_setter_bool():
+    test_is_admin = True
+
+    test_account = Account()
+    test_account.is_admin = test_is_admin
+
+    assert test_account.is_admin == test_is_admin
+
+
+def test_is_admin_setter_none():
+    test_is_admin = None
+
+    test_account = Account()
+    test_account.is_admin = test_is_admin
+
+    assert test_account.is_admin == test_is_admin
+
+
+def test_is_admin_setter_str_allowed_string():
+    test_is_admin = 'FALSE'
+
+    test_account = Account()
+    test_account.is_admin = test_is_admin
+
+    assert test_account.is_admin is False
+
+
+def test_is_admin_setter_str_invalid_string():
+    test_is_admin = 'asdf1234'
+
+    test_account = Account()
+
+    with pytest.raises(ValueError):
+        test_account.is_admin = test_is_admin
+
+
+def test_is_admin_setter_invalid_type():
+    test_is_admin = []
+
+    test_account = Account()
+
+    with pytest.raises(TypeError):
+        test_account.is_admin = test_is_admin
+
+
+# Account.init_using_form()
 
 def test_init_using_form_all_attributes():
     test_request_form = {
@@ -205,6 +262,7 @@ def test_init_using_form_attribute_type_invalid():
 
 
 # Account.toggle_admin_status()
+
 def test_toggle_admin_status_false_to_true(mock_db):
     name = 'Test Case'
     username = 'tester'
@@ -257,6 +315,7 @@ def test_toggle_admin_status_true_to_false(mock_db):
 
 
 # Account.load()
+
 def test_load_valid_username(mock_db):
     name = 'Test Case'
     username = 'tester'
@@ -306,6 +365,7 @@ def test_load_username_wrong_type(mock_db):
 
 
 # Account.authenticate()
+
 def test_authenticate_valid_username_valid_password(mock_db):
     name = 'Test Case'
     username = 'tester'
@@ -402,7 +462,32 @@ def test_authenticate_invalid_username_invalid_password(mock_db):
     assert test_account.authenticate(conn=mock_db) is False
 
 
+def test_authenticate_insufficient_parameters(mock_db):
+    name = 'Test Case'
+    username = 'tester'
+    date_of_birth = dt(1990, 12, 12).date()
+    email = 'tester@test.com'
+    contact = '91234567'
+    is_admin = False
+    password = '12345678'
+
+    cursor = mock_db.cursor()
+
+    cursor.execute(
+        "INSERT INTO account (name, username, dob, email, contact, "
+        f"pass, is_admin) VALUES ('{name}', '{username}', '{date_of_birth}', "
+        f"'{email}', '{contact}', '{generate_password_hash(password)}', "
+        f"'{is_admin}');",
+    )
+
+    test_account = Account(username=username)
+
+    with pytest.raises(TypeError):
+        test_account.authenticate(conn=mock_db)
+
+
 # Account.save()
+
 def test_save_account_valid(mock_db):
     name = 'Test Case'
     username = 'tester'
@@ -496,6 +581,7 @@ def test_save_account_insufficient_fields(mock_db):
 
 
 # Account.__str__
+
 def test_str():
     name = 'Test Case'
     username = 'tester'
