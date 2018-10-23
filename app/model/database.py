@@ -22,7 +22,7 @@ def connection_required(f):
 
             result = f(*args, **kwargs, conn=conn)
             conn.close()
-        except psycopg2.OperationalError as e:
+        except psycopg2.OperationalError:
             logger.error('Failed to establish database connection')
             logger.debug(credentials)
             raise
