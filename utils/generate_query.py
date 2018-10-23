@@ -7,12 +7,13 @@ def generate_account(namelist, surnamelist):
     for name in namelist:
         surname = random.choice(surnamelist)
         random_number = randint(1, 101)
-        random_year = randint(1971, 2000)
-        random_month = randint(1, 12)
-        random_day = randint(1, 28)
         contact = randint(80000000, 99999999)
-        username = name.lower() + str(random_number)
-        dob = date(random_year, random_month, random_day).isoformat()
+        username = f'{name.lower()}{random_number}'
+        dob = date(
+            randint(1971, 2000),
+            randint(1, 12),
+            randint(1, 28),
+        ).isoformat()
         with open('output_account_query.sql', 'a+') as output_account_query:
             output_account_query.write(
                 f'INSERT INTO account(username, is_admin, dob, email, '
