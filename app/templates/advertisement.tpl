@@ -30,7 +30,7 @@
           <div class="sidebar-sticky">
             <ul class="nav flex-column">
               <li class="nav-item">
-                <a class="nav-link active" href="#">
+                <a class="nav-link" href="#">
                   <span data-feather="user"></span>
                   My Profile <span class="sr-only">(current)</span>
                 </a>
