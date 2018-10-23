@@ -81,7 +81,7 @@ class Account(UserMixin, object):
                 logger.debug(is_admin)
                 raise ValueError(f'is_admin not in: {allowed_str}')
 
-            self._is_admin = bool(is_admin)
+            self._is_admin = (is_admin.lower() == 'true')
         else:
             logger.debug(type(is_admin))
             raise TypeError('is_admin can only be assigned types: bool, str')
