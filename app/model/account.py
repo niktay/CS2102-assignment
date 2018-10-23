@@ -41,7 +41,7 @@ class Account(UserMixin, object):
 
     @date_of_birth.setter
     def date_of_birth(self, date_of_birth):
-        if not date_of_birth:
+        if date_of_birth is None:
             self._date_of_birth = None
         elif type(date_of_birth) == datetime.date:
             self._date_of_birth = date_of_birth
@@ -72,7 +72,7 @@ class Account(UserMixin, object):
     def is_admin(self, is_admin):
         if type(is_admin) == bool:
             self._is_admin = is_admin
-        elif not is_admin:
+        elif is_admin is None:
             self._is_admin = None
         elif type(is_admin) == str:
             allowed_str = ['True', 'TRUE', 'true', 'False', 'FALSE', 'false']
@@ -80,8 +80,8 @@ class Account(UserMixin, object):
             if is_admin not in allowed_str:
                 logger.debug(is_admin)
                 raise ValueError(f'is_admin not in: {allowed_str}')
-            else:
-                self._is_admin = bool(is_admin)
+
+            self._is_admin = (is_admin.lower() == 'true')
         else:
             logger.debug(type(is_admin))
             raise TypeError('is_admin can only be assigned types: bool, str')
@@ -127,17 +127,22 @@ class Account(UserMixin, object):
 
             logger.info(f'Admin status toggled successfully')
 
-            return True
+        except AttributeError:
+            logger.error(
+                'Unable to toggle admin status, '
+                'did you pass in a connection?',
+            )
+            logger.debug(conn)
+            raise
 
-        except psycopg2.Error as e:
-            logger.warning('Failed to toggle admin status')
-            logger.debug(e.diag.message_detail)
+        except psycopg2.InterfaceError:
+            logger.error('Unable to toggle admin status, is connection open?')
+            logger.debug(conn)
+            raise
 
-        except Exception as e:
-            logger.warning('Failed to toggle admin status')
-            logger.critical(e)
-
-        return False
+        except psycopg2.OperationalError:
+            logger.error('Unable to toggle admin status, is database running?')
+            raise
 
     @classmethod
     @connection_required
@@ -175,21 +180,33 @@ class Account(UserMixin, object):
 
             return loaded_account
 
-        except psycopg2.Error as e:
-            logger.warning('Failed to load Account from database')
-            logger.debug(e.diag.message_detail)
+        except AttributeError:
+            logger.error('Unable to load user, did you pass in a connection?')
+            logger.debug(conn)
+            raise
 
-        except Exception as e:
-            logger.warning('Failed to load Account from database')
-            logger.critical(e)
+        except psycopg2.InterfaceError:
+            logger.error('Unable to load user, is connection open?')
+            logger.debug(conn)
+            raise
+
+        except psycopg2.OperationalError:
+            logger.error('Unable to load user, is database running?')
+            raise
 
     @connection_required
     def authenticate(self, conn=None):
         required_parameters = [self.username, self.password]
 
         if not all(required_parameters):
-            logger.warning(f'Insufficient parameters to authenticate Account')
-            return False
+            logger.debug(
+                f'username: {self.username}\npassword: '
+                f'{self.password}',
+            )
+            raise TypeError(
+                'authenticate requires both username and password '
+                'to be set',
+            )
 
         try:
             cursor = conn.cursor()
@@ -209,13 +226,22 @@ class Account(UserMixin, object):
             )
             return check_password_hash(stored_account[0], self.password)
 
-        except psycopg2.Error as e:
-            logger.warning('Failed to authenticate Account')
-            logger.debug(e.diag.message_detail)
+        except AttributeError:
+            logger.error(
+                'Unable to authenticate, '
+                'did you pass in a connection?',
+            )
+            logger.debug(conn)
+            raise
 
-        except Exception as e:
-            logger.warning('Failed to authenticate Account')
-            logger.critical(e)
+        except psycopg2.InterfaceError:
+            logger.error('Unable to authenticate, is connection open?')
+            logger.debug(conn)
+            raise
+
+        except psycopg2.OperationalError:
+            logger.error('Unable to authenticate, is database running?')
+            raise
 
     @connection_required
     def save(self, conn=None):
@@ -241,14 +267,23 @@ class Account(UserMixin, object):
 
             return True
 
-        except psycopg2.Error as e:
-            logger.warning(f'Failed to create Account {self.username}')
-            logger.debug(e.diag.message_detail)
-            return False
+        except psycopg2.IntegrityError:
+            logger.warning('Unable to save, username already exists')
+            raise
 
-        except Exception as e:
-            logger.warning(f'Failed to create Account {self.username}')
-            logger.critical(e)
+        except AttributeError:
+            logger.error('Unable to save, did you pass in a connection?')
+            logger.debug(conn)
+            raise
+
+        except psycopg2.InterfaceError:
+            logger.error('Unable to save, is connection open?')
+            logger.debug(conn)
+            raise
+
+        except psycopg2.OperationalError:
+            logger.error('Unable to save, is database running?')
+            raise
 
     def __str__(self):
         output = f"""

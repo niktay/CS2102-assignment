@@ -11,15 +11,21 @@ def connection_required(f):
             return f(*args, **kwargs)
         try:
             # TODO(Nik): Secrets management
-            conn = psycopg2.connect(
-                dbname='admin', user='admin', password='secret',
-                host='db', port='5432',
-            )
-        except Exception as e:
-            logger.error('Failed to establish database connection')
+            credentials = {
+                'dbname': 'admin',
+                'user': 'admin',
+                'password': 'secret',
+                'host': 'db',
+                'port': '5432',
+            }
+            conn = psycopg2.connect(**credentials)
 
-        result = f(*args, **kwargs, conn=conn)
-        conn.close()
+            result = f(*args, **kwargs, conn=conn)
+            conn.close()
+        except psycopg2.OperationalError:
+            logger.error('Failed to establish database connection')
+            logger.debug(credentials)
+            raise
 
         return result
     return wrapper
