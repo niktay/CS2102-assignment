@@ -111,3 +111,6 @@ dmypy.json
 
 # ignore volume folder
 volumes/
+
+# ignore mac files
+*.DS_Store

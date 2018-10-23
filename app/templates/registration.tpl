@@ -5,95 +5,81 @@
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <meta name="description" content="">
     <meta name="author" content="">
-    <link rel="icon" href="../../../../favicon.ico">
+	<link rel="icon" type="image/png" href="{{ url_for('static', filename='assets/favicon-32x32.png') }}" sizes="32x32" />
+	<link rel="icon" type="image/png" href="{{ url_for('static', filename='assets/favicon-16x16.png') }}" sizes="16x16" />
 
-    <title>CS2102</title>
+    <title> ZOOOM</title>
 
     <!-- Bootstrap core CSS -->
     <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
 
     <!-- Custom styles for this template -->
-    <link href="{{ url_for('static',filename='styles/dashboard.css') }}" rel="stylesheet">
+    <link href="{{ url_for('static', filename='styles/dashboard.css') }}" rel="stylesheet">
+<link href='https://fonts.googleapis.com/css?family=Nova+Flat' rel='stylesheet' type='text/css'>
   </head>
 
   <body>
     <nav class="navbar navbar-dark fixed-top bg-dark flex-md-nowrap p-0 shadow">
-      <a class="navbar-brand col-sm-3 col-md-2 mr-0" href="#">CS2102</a>
+      <a class="navbar-brand col-sm-1 col-md-1 mr-0" style="padding-left: 5px;" href="#">
+		<img src="{{ url_for('static', filename='assets/zooom-logo-white@3x.png') }}" style="max-height: 35px; max-width: 35px; padding-left: 10px; margin-top: -5px;"/>
+		ZOOOM</a>
     </nav>
+<video autoplay muted loop id="background-video" style="position:fixed;">
+  <source src="{{ url_for('static', filename='assets/traffic.webm') }}" type="video/webm">
+  <source src="{{ url_for('static', filename='assets/traffic.mp4') }}" type="video/mp4">
+  Your browser does not support HTML5 video.
+</video>
 
-    <div class="container-fluid">
-      <div class="row">
-        <nav class="col-md-2 d-none d-md-block bg-light sidebar">
-          <div class="sidebar-sticky">
-            <ul class="nav flex-column">
-              <li class="nav-item">
-                <a class="nav-link active" href="#">
-                  <span data-feather="users"></span>
-                  Accounts <span class="sr-only">(current)</span>
-                </a>
-              </li>
-            </ul>
-            <h6 class="sidebar-heading d-flex justify-content-between align-items-center px-3 mt-4 mb-1 text-muted">
-              <span>Saved reports</span>
-              <a class="d-flex align-items-center text-muted" href="#">
-                <span data-feather="plus-circle"></span>
-              </a>
-            </h6>
-          </div>
-        </nav>
-
-        <main role="main" class="col-md-9 ml-sm-auto col-lg-10 px-4">
-          <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
-          </div>
+        <main role="main" class="col-md-12">
 <div class="row justify-content-center">
-<div class="col-md-6">
-<div class="card">
+<div class="col-md-4">
+<div class="card bg-dark" style="margin-top: 20%; color: #eeeeee;">
 <header class="card-header">
-    <h4 class="card-title mt-2">User Registration</h4>
+    <h4 class="card-title mt-2"></h4>
 </header>
 <article class="card-body">
 <form action="{{ url_for('registration.register_account') }}" method="POST">
     <div class="form-row">
         <div class="col form-group">
-            <label>Full Name</label>
+            <label style="font-weight: bold;">Full Name</label>
               <input name="full-name" id="full-name" type="text" class="form-control" placeholder="" required>
         </div> <!-- form-group end.// -->
     </div> <!-- form-row end.// -->
     <div class="form-group">
-        <label>Username</label>
+        <label style="font-weight: bold;">Username</label>
         <input name="username" id="username" class="form-control" type="text" required>
     </div> <!-- form-group end.// -->
     <div class="form-group">
-        <label>Date of Birth</label>
+        <label style="font-weight: bold;">Date of Birth</label>
         <input name="date-of-birth" id="date-of-birth" class="form-control" type="date" required>
     </div> <!-- form-group end.// -->
     <div class="form-row">
         <div class="form-group col-md-6">
-          <label>Email</label>
+          <label style="font-weight: bold;">Email</label>
           <input name="email" id="email" type="email" class="form-control" required>
         </div> <!-- form-group end.// -->
         <div class="form-group col-md-6">
-          <label>Contact</label>
+          <label style="font-weight: bold;">Contact</label>
           <input name="contact" id="contact" type="tel" class="form-control" required>
         </div> <!-- form-group end.// -->
     </div> <!-- form-row.// -->
     <div class="form-row">
         <div class="form-group col-md-6">
-          <label>Password</label>
+          <label style="font-weight: bold;">Password</label>
           <input name="password" id="password" type="password" class="form-control" required>
         </div> <!-- form-group end.// -->
         <div class="form-group col-md-6">
-          <label>Confirm Password</label>
+          <label style="font-weight: bold;">Confirm Password</label>
           <input name="confirm-password" id="confirm-password" type="password" class="form-control" required>
         </div> <!-- form-group end.// -->
     </div> <!-- form-row.// -->
     <div class="form-group">
-        <button type="submit" class="btn btn-primary btn-block">Register</button>
+        <button type="submit" class="btn btn-secondary btn-block" style="font-weight: bold;">Register Account</button>
     </div> <!-- form-group// -->
-    <small class="text-muted">By clicking the 'Sign Up' button, you confirm that you accept our <br> Terms of use and Privacy Policy.</small>
+    <small class="text-muted">By clicking the 'Sign Up' button, you confirm that you accept our Terms of use and Privacy Policy.</small>
 </form>
 </article> <!-- card-body end .// -->
-<div class="border-top card-body text-center">Have an account? <a href="{{ url_for('login.view_login_form') }}">Sign In</a></div>
+<div class="border-top card-body text-center" style="border-top: 1px solid #444444!important; font-weight: bold;">Already have an account? <a href="{{ url_for('login.view_login_form') }}" style="color: #ffcc00;"> Login Now!</a></div>
 </div>
 </div> <!-- col.//-->
 
