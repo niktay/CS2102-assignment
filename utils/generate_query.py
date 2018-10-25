@@ -10,7 +10,13 @@ def generate_account(namelist, surnamelist):
         contact = randint(80000000, 99999999)
         username = f'{name.lower()}{random_number}'
         dob = date(
-            randint(1971, 2000),
+            randint(1971, 1990),
+            randint(1, 12),
+            randint(1, 28),
+        ).isoformat()
+        license_number = randint(10000000, 99999999)
+        drive_since = date(
+            randint(2008, 2018),
             randint(1, 12),
             randint(1, 28),
         ).isoformat()
@@ -20,6 +26,12 @@ def generate_account(namelist, surnamelist):
                 f"contact, pass, name) VALUES('{username}', 'False', "
                 f"'{dob}', '{username}@gmail.com', '{contact}', "
                 f"'{username}pw', '{name} {surname}');\n",
+            )
+        with open('output_driver_query.sql', 'a+') as output_driver_query:
+            output_driver_query.write(
+                f'INSERT INTO driver(license_number, username, driving_since) '
+                f"VALUES('{license_number}', '{username}', "
+                f"'{drive_since}');\n",
             )
 
 
