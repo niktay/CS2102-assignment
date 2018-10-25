@@ -1,6 +1,8 @@
 from flask import Blueprint
+from flask import redirect
 from flask import render_template
 from flask import request
+from flask import url_for
 from flask_login import login_user
 from flask_login import logout_user
 from model import Account
@@ -25,7 +27,7 @@ def process_login():
 
     if account.authenticate():
         login_user(account)
-        return render_template('profile.tpl')
+        return redirect(url_for('profile.view_profile'))
     else:
         return render_template('login.tpl')
 
@@ -33,7 +35,7 @@ def process_login():
 @login_blueprint.route('/deauth', methods=['GET', 'POST'])
 def process_logout():
     logout_user()
-    return render_template('login.tpl')
+    return redirect(url_for('login.view_login_form'))
 
 
 @login_manager.user_loader

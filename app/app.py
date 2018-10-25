@@ -1,5 +1,7 @@
 from flask import Flask
-from flask import render_template
+from flask import redirect
+from flask import url_for
+from flask_login import current_user
 from flask_login import LoginManager
 from log import setup_logger
 
@@ -19,13 +21,13 @@ from driver import driver_blueprint  # noqa: E402
 from registration import registration_blueprint  # noqa: E402
 from advertisement import advertisement_blueprint  # noqa: E402
 from profile import profile_blueprint  # noqa: E402
-import login  # noqa: E402
+from login import login_blueprint  # noqa: E402
 
 try:
     logger.info(f'Registering blueprints')
 
     app.register_blueprint(driver_blueprint, url_prefix='/driver')
-    app.register_blueprint(login.login_blueprint, url_prefix='/login')
+    app.register_blueprint(login_blueprint, url_prefix='/login')
     app.register_blueprint(registration_blueprint, url_prefix='/register')
     app.register_blueprint(admin_blueprint, url_prefix='/admin')
     app.register_blueprint(adminitise_blueprint, url_prefix='/adminitise')
@@ -48,7 +50,9 @@ logger.info(f'Registered login view to LoginManager')
 
 @app.route('/', methods=['GET', 'POST'])
 def landing_page():
-    return render_template('login.tpl')
+    if current_user:
+        return redirect(url_for('profile.view_profile'))
+    return redirect(url_for('login.view_login_form'))
 
 
 def run():

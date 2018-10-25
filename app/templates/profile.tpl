@@ -23,6 +23,11 @@
       <a class="navbar-brand col-sm-1 col-md-1 mr-0" style="padding-left: 5px; font-family: 'Nova Flat'!important" href="#">
 		<img src="{{ url_for('static', filename='assets/zooom-logo-white@3x.png') }}" style="max-height: 35px; max-width: 35px; padding-left: 10px; margin-top: -5px;"/>
 		ZOOOM</a>
+	<ul class="navbar-nav px-3">
+		<li class="nav-item text-nowrap">
+		  <a class="nav-link" href="{{ url_for('login.process_logout') }}">Log out</a>
+		</li>
+    </ul>
     </nav>
 
     <div class="container-fluid">
@@ -75,8 +80,11 @@
                 <h4 class="card-title mt-2">My Profile</h4>
             </header>
 
-
-            <article class="card-body">
+            <article class="card-body" style="font-weight: bold;">
+			<p>Name: {{ account.name }} ({{ account.username }})</p>
+			<p>DOB: {{ account.date_of_birth }}</p>
+			<p>Contact: {{ account.contact }}</p>
+			<p>Email: {{ account.email }}</p>
             <form action="" method="POST">
             </form>
             </article> <!-- card-body end .// -->
