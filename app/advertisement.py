@@ -50,7 +50,7 @@ def bid():
 
     advert = Advertisement.get_advert(advert_start, advert_license)
 
-    if(advert is None):
+    if advert is None:
         return redirect(url_for('advertisement.view_advertisements'))
 
     return render_template(
