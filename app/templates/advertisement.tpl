@@ -8,7 +8,7 @@
 	<link rel="icon" type="image/png" href="{{ url_for('static', filename='assets/favicon-32x32.png') }}" sizes="32x32" />
 	<link rel="icon" type="image/png" href="{{ url_for('static', filename='assets/favicon-16x16.png') }}" sizes="16x16" />
 
-    <title>CS2102</title>
+    <title>Zoom Dashboard</title>
 
     <!-- Bootstrap core CSS -->
     <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
@@ -17,9 +17,11 @@
     <link href="{{ url_for('static',filename='styles/dashboard.css') }}" rel="stylesheet">
   </head>
 
-  <body>
+  <body style="background: #f7f7f7;">
     <nav class="navbar navbar-dark fixed-top bg-dark flex-md-nowrap p-0 shadow">
-      <a class="navbar-brand col-sm-3 col-md-2 mr-0" href="#">CS2102</a>
+      <a class="navbar-brand col-sm-1 col-md-1 mr-0" style="padding-left: 5px; font-family: 'Nova Flat'!important" href="#">
+		<img src="{{ url_for('static', filename='assets/zooom-logo-white@3x.png') }}" style="max-height: 35px; max-width: 35px; padding-left: 10px; margin-top: -5px;"/>
+		ZOOOM</a>
     </nav>
 
     <div class="container-fluid">
@@ -28,17 +30,38 @@
           <div class="sidebar-sticky">
             <ul class="nav flex-column">
               <li class="nav-item">
-                <a class="nav-link active" href="#">
-                  <span data-feather="users"></span>
-                  Accounts <span class="sr-only">(current)</span>
+                <a class="nav-link" href="#">
+                  <span data-feather="user"></span>
+                  My Profile <span class="sr-only">(current)</span>
+                </a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" href="#">
+                  <span data-feather="inbox"></span>
+                  	Notifications<span class="sr-only"></span>
+                </a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" href="#">
+                  <span data-feather="map-pin"></span>
+                  	Place Bids<span class="sr-only"></span>
+                </a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" href="#">
+                  <span data-feather="clock"></span>
+                  	Scheduled Rides<span class="sr-only"></span>
+                </a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" href="#">
+                  <span data-feather="archive"></span>
+                  	Ride History<span class="sr-only"></span>
                 </a>
               </li>
             </ul>
             <h6 class="sidebar-heading d-flex justify-content-between align-items-center px-3 mt-4 mb-1 text-muted">
-              <span>Saved reports</span>
-              <a class="d-flex align-items-center text-muted" href="#">
-                <span data-feather="plus-circle"></span>
-              </a>
+            	<!--<span>Driver Dashboard</span>-->
             </h6>
           </div>
         </nav>
@@ -49,7 +72,7 @@
 <div class="row justify-content-center">
 <div class="col-md-6">
 <div class="card">
-<header class="card-header">
+<header class="card-header" style="background: #3b4249; color: white; font-weight: bold;">
     <h4 class="card-title mt-2">
     {% if is_view and is_success %}
         Advertisement
@@ -133,14 +156,14 @@
      <div class="form-row">
         {% if not (is_view and is_success) %}
             <div class="col form-group">
-                <button type="submit" class="btn btn-primary btn-block">Create</button>
+                <button type="submit" class="btn btn-secondary btn-block">Create</button>
             </div> <!-- form-group// -->
         {% else %}
             <div class="col form-group">
                 <label>Your bid</label>
                 <input id="bid_value" name="bid_value" type="number" step="1.0" class="form-control" required>
                 <br/>
-                <button type="submit" class="btn btn-primary btn-block">Submit</button>
+                <button type="submit" class="btn btn-secondary btn-block">Submit</button>
             </div> <!-- form-group// -->
     {% endif %}
     </div>
