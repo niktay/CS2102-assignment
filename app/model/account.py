@@ -53,7 +53,7 @@ class Account(UserMixin, object):
                     date_of_birth,
                     '%Y-%m-%d',
                 ).date()
-            except ValueError as e:
+            except ValueError:
                 logger.debug(date_of_birth)
                 logger.error('date_of_birth string not in YYYY-MM-DD')
                 raise
