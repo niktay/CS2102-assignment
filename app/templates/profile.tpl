@@ -35,7 +35,7 @@
           <div class="sidebar-sticky">
             <ul class="nav flex-column">
               <li class="nav-item">
-                <a class="nav-link active" href="#">
+                <a class="nav-link active" href="{{ url_for('profile.view_profile') }}">
                   <span data-feather="user"></span>
                   My Profile <span class="sr-only">(current)</span>
                 </a>
@@ -47,7 +47,7 @@
                 </a>
               </li>
               <li class="nav-item">
-                <a class="nav-link" href="#">
+                <a class="nav-link" href="{{ url_for('advertisement.bid') }}">
                   <span data-feather="map-pin"></span>
                   	Place Bids<span class="sr-only"></span>
                 </a>

@@ -21,6 +21,11 @@
       <a class="navbar-brand col-sm-1 col-md-1 mr-0" style="padding-left: 5px; font-family: 'Nova Flat'!important" href="#">
 		<img src="{{ url_for('static', filename='assets/zooom-logo-white@3x.png') }}" style="max-height: 35px; max-width: 35px; padding-left: 10px; margin-top: -5px;"/>
 		ZOOOM</a>
+		<ul class="navbar-nav px-3">
+			<li class="nav-item text-nowrap">
+			  <a class="nav-link" href="{{ url_for('login.process_logout') }}">Log out</a>
+			</li>
+		</ul>
     </nav>
 
     <div class="container-fluid">
@@ -29,7 +34,7 @@
           <div class="sidebar-sticky">
             <ul class="nav flex-column">
               <li class="nav-item">
-                <a class="nav-link" href="#">
+                <a class="nav-link" href="{{ url_for('profile.view_profile') }}">
                   <span data-feather="user"></span>
                   My Profile <span class="sr-only">(current)</span>
                 </a>
@@ -41,7 +46,7 @@
                 </a>
               </li>
               <li class="nav-item">
-                <a class="nav-link" href="#">
+                <a class="nav-link active" href="{{ url_for('advertisement.bid') }}">
                   <span data-feather="map-pin"></span>
                   	Place Bids<span class="sr-only"></span>
                 </a>
