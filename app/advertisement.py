@@ -69,7 +69,7 @@ def create_advertisement():
     if driver is None:
         return redirect(url_for('driver.view_driver_registration'))
 
-    Advertisement(driver.license_number, **request.form)
+    Advertisement(driver.license_number, **request.form).save()
 
     return redirect(url_for('advertisement.view_advertisements'))
 
