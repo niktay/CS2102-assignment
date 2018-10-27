@@ -27,13 +27,12 @@ def view_advertisements():
 @advertisement_blueprint.route('/view/user', methods=['GET', 'POST'])
 @login_required
 def view_my_advertisements():
-    driver = Driver.get_driver(current_user.get_id())
-    if(driver is None):
+    driver = Driver.load(username=current_user.get_id())
+
+    if driver is None:
         return redirect(url_for('driver.view_driver_registration'))
 
-    license_number = driver[0]
-
-    results = Advertisement.get_mine(license_number)
+    results = Advertisement.get_mine(driver.license_number)
 
     return render_template('view_advertisement.tpl', results=results)
 
@@ -65,12 +64,12 @@ def create_advertisement():
     if request.method != 'POST':
         return render_template('advertisement.tpl')
 
-    driver = Driver.get_driver(current_user.get_id())
-    if(driver is None):
-        return redirect(url_for('driver.view_driver_registration'))
-    license_number = driver[0]
+    driver = Driver.load(username=current_user.get_id())
 
-    Advertisement(license_number, **request.form)
+    if driver is None:
+        return redirect(url_for('driver.view_driver_registration'))
+
+    Advertisement(driver.license_number, **request.form)
 
     return redirect(url_for('advertisement.view_advertisements'))
 
@@ -78,7 +77,9 @@ def create_advertisement():
 @advertisement_blueprint.route('/', methods=['GET'])
 @login_required
 def view_advertisement_creation():
-    driver = Driver.get_driver(current_user.get_id())
-    if(driver is None):
+    driver = Driver.load(username=current_user.get_id())
+
+    if driver is None:
         return redirect(url_for('driver.view_driver_registration'))
+
     return render_template('advertisement.tpl', is_view=False)

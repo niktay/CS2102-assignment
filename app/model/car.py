@@ -10,25 +10,47 @@ logger = getLogger(__name__)
 
 class Car(object):
 
-    def __init__(self, **kwargs):
-        kwargs = {k: v[0] for k, v in kwargs.items()}
+    def __init__(
+        self, license_number=None, license_plate=None, brand=None,
+        model=None,
+    ):
 
-        self.license_number = kwargs.get('license-number', None)
-        self.license_plate = kwargs.get('license-plate', None)
-        self.brand = kwargs.get('brand', None)
-        self.model = kwargs.get('model', None)
+        self.license_number = license_number
+        self.license_plate = license_plate
+        self.brand = brand
+        self.model = model
 
-    def _validate(self):
-        return any([
-            self.license_number, self.license_plate,
-            self.brand, self.model,
-        ])
+    @classmethod
+    def init_using_form(cls, **kwargs):
+        for _type in (type(v) for v in kwargs.values()):
+            if _type != list:
+                raise TypeError('Not all values in kwargs are of type `list`')
+
+        kwargs = {k: v[0] for k, v in kwargs.items() if v[0]}
+        logger.debug(f'Extracted from kwargs: {kwargs}')
+
+        license_number = kwargs.get('license-number', None)
+        license_plate = kwargs.get('license-plate', None)
+        brand = kwargs.get('brand', None)
+        model = kwargs.get('model', None)
+
+        car = cls(
+            license_number=license_number, license_plate=license_plate,
+            brand=brand, model=model,
+        )
+        logger.debug(f'Instantiated Car using form:\n{car}')
+
+        return car
 
     @connection_required
     def save(self, conn=None):
-        if not self._validate():
+        required_parameters = [
+            self.license_number, self.license_plate,
+            self.brand, self.model, ]
+        if not all(required_parameters):
             logger.warning('Insufficient fields provided to add car')
             return False
+
         try:
             cursor = conn.cursor()
             cursor.execute(
@@ -38,80 +60,136 @@ class Car(object):
                 f"'{self.brand}', '{self.model}');",
             )
             conn.commit()
-            return self
 
-        except psycopg2.Error as e:
-            logger.warning('Failed to create car')
-            logger.debug(e.diag.message_detail)
+            return True
 
-        except Exception as e:
-            logger.warning('Failed to create car')
-            logger.critical(e)
-        return False
+        except psycopg2.IntegrityError:
+            logger.warning('Unable to save, license plate already exists')
+            raise
+
+        except AttributeError:
+            logger.error('Unable to save, did you pass in a connection?')
+            logger.debug(conn)
+            raise
+
+        except psycopg2.InterfaceError:
+            logger.error('Unable to save, is connection open?')
+            logger.debug(conn)
+            raise
+
+        except psycopg2.OperationalError:
+            logger.error('Unable to save, is database running?')
+            raise
 
     @connection_required
     def update(self, conn=None):
-        if not self._validate():
+        required_parameters = [
+            self.license_number, self.license_plate,
+            self.brand, self.model, ]
+        if not all(required_parameters):
             logger.warning('Insufficient fields provided to update car')
             return False
+
         try:
             cursor = conn.cursor()
+
             cursor.execute(
-                "UPDATE car SET "
-                f"brand = '{self.brand}',"
-                f"model = '{self.model}' "
-                f"WHERE license_plate = '{self.license_plate}'",
+                "SELECT * FROM car WHERE license_plate = "
+                f"'{self.license_plate}';",
+            )
+            conn.commit()
+
+            if cursor.fetchone() is None:
+                return False
+
+            cursor.execute(
+                f"UPDATE car SET brand = '{self.brand}', model = "
+                f"'{self.model}' WHERE license_plate = "
+                f"'{self.license_plate}';",
             )
 
             conn.commit()
 
-            logger.info(f'Car details for {self.license_plate} updated')
             return True
 
-        except psycopg2.Error as e:
-            logger.warning('Failed to update car {self.license_plate}')
-            logger.debug(e.diag.message_detail)
+        except AttributeError:
+            logger.error('Unable to save, did you pass in a connection?')
+            logger.debug(conn)
+            raise
 
-        except Exception as e:
-            logger.warning('Failed to update car {self.license_plate}')
-            logger.critical(e)
+        except psycopg2.InterfaceError:
+            logger.error('Unable to save, is connection open?')
+            logger.debug(conn)
+            raise
 
-    def get(self):
-        return [
-            self.license_number, self.license_plate,
-            self.brand, self.model,
-        ]
+        except psycopg2.OperationalError:
+            logger.error('Unable to save, is database running?')
+            raise
+
+    @classmethod
+    @connection_required
+    def load(cls, license_number=None, license_plate=None, conn=None):
+        # Check if either license_number or license_plate is set (XOR)
+        if not bool(license_number) != bool(license_plate):
+            logger.warning('load called with invalid parameters')
+            logger.debug(license_number)
+            logger.debug(license_plate)
+            return None
+
+        try:
+            cursor = conn.cursor()
+
+            if license_number:
+                cursor.execute(
+                    "SELECT license_plate, license_number, brand, model FROM "
+                    f"car WHERE license_number = '{license_number}';",
+                )
+            else:
+                cursor.execute(
+                    "SELECT license_plate, license_number, brand, model FROM "
+                    f"car WHERE license_plate = '{license_plate}';",
+                )
+
+            car_found = cursor.fetchone()
+
+            if not car_found:
+                return None
+
+            car_details = {
+                'license_plate': car_found[0],
+                'license_number': car_found[1],
+                'brand': car_found[2],
+                'model': car_found[3],
+            }
+
+            loaded_car = cls(**car_details)
+            logger.debug(f'Loaded Car:\n{loaded_car}')
+
+            return loaded_car
+
+        except AttributeError:
+            logger.error('Unable to load car, did you pass in a connection?')
+            logger.debug(conn)
+            raise
+
+        except psycopg2.InterfaceError:
+            logger.error('Unable to load car, is connection open?')
+            logger.debug(conn)
+            raise
+
+        except psycopg2.OperationalError:
+            logger.error('Unable to load car, is database running?')
+            raise
 
     def __str__(self):
         output = f"""
 --------------------------------------------------------------------------------
                                Car
 --------------------------------------------------------------------------------
-license_number: {self.license_number}
 license_plate: {self.license_plate}
+license_number: {self.license_number}
 brand: {self.brand}
 model: {self.model}
 --------------------------------------------------------------------------------
 """
         return output
-
-    @classmethod
-    @connection_required
-    def get_car(cls, license_number, conn=None):
-
-        try:
-            cursor = conn.cursor()
-            cursor.execute(
-                'SELECT license_plate, brand, model FROM Car'
-                f" WHERE license_number = '{license_number}';",
-            )
-            car_found = list(cursor.fetchone())
-
-            return car_found
-        except psycopg2.Error as e:
-            logger.warning(f'Failed to get car for {license_number}')
-            logger.debug(e.diag.message_detail)
-
-        except Exception as e:
-            logger.warning(f'Failed to get car for {license_number}')
-            logger.critical(e)

@@ -1,5 +1,6 @@
 import datetime
 from datetime import datetime as dt
+from time import sleep
 
 import psycopg2
 import pytest
@@ -281,6 +282,7 @@ def test_toggle_admin_status_false_to_true(mock_db):
     )
 
     test_account = Account(username=username)
+    sleep(0.5)  # Sleep to increase reliablity of the test
     test_account.toggle_admin_status(conn=mock_db)
 
     cursor.execute(
@@ -307,6 +309,7 @@ def test_toggle_admin_status_true_to_false(mock_db):
     )
 
     test_account = Account(username=username)
+    sleep(0.5)  # Sleep to increase reliablity of the test
     test_account.toggle_admin_status(conn=mock_db)
 
     cursor.execute(
