@@ -62,11 +62,12 @@ class Driver(object):
 
         license_number = kwargs.get('license-number', None)
         username = kwargs.get('username', None)
+        driving_since = kwargs.get('driving-since', None)
         optional_bio = kwargs.get('optional-bio', None)
 
         driver = cls(
             license_number=license_number, username=username,
-            optional_bio=optional_bio,
+            optional_bio=optional_bio, driving_since=driving_since,
         )
         logger.debug(f'Instantiated Driver using forrm:\n{driver}')
 
@@ -83,7 +84,7 @@ class Driver(object):
             return False
 
         try:
-            self.driving_since = dt.now.date()
+            self.driving_since = dt.now().date()
 
             cursor = conn.cursor()
             cursor.execute(
@@ -96,8 +97,14 @@ class Driver(object):
 
             return True
 
-        except psycopg2.IntegrityError:
-            logger.warning('Unable to save, license number already exists')
+        except psycopg2.IntegrityError as e:
+            if 'not present in table "account"' in e.diag.message_detail:
+                logger.warning(
+                    'Unable to save, provided username not in '
+                    'account table',
+                )
+            else:
+                logger.warning('Unable to save, license number already exists')
             raise
 
         except AttributeError:

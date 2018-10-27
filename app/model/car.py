@@ -92,10 +92,20 @@ class Car(object):
 
         try:
             cursor = conn.cursor()
+
+            cursor.execute(
+                "SELECT * FROM car WHERE license_plate = "
+                f"'{self.license_plate}';",
+            )
+            conn.commit()
+
+            if cursor.fetchone() is None:
+                return False
+
             cursor.execute(
                 f"UPDATE car SET brand = '{self.brand}', model = "
                 f"'{self.model}' WHERE license_plate = "
-                f"'{self.license_plate}'",
+                f"'{self.license_plate}';",
             )
 
             conn.commit()
@@ -176,8 +186,8 @@ class Car(object):
 --------------------------------------------------------------------------------
                                Car
 --------------------------------------------------------------------------------
-license_number: {self.license_number}
 license_plate: {self.license_plate}
+license_number: {self.license_number}
 brand: {self.brand}
 model: {self.model}
 --------------------------------------------------------------------------------
