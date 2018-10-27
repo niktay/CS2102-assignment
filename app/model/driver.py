@@ -75,9 +75,7 @@ class Driver(object):
 
     @connection_required
     def save(self, conn=None):
-        required_parameters = [
-            self.license_number, self.username,
-            self.driving_since, ]
+        required_parameters = [self.license_number, self.username, ]
 
         if not all(required_parameters):
             logger.warning('Insufficient fields provided to create Driver')

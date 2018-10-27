@@ -17,15 +17,13 @@ def register_driver():
     if request.method != 'POST':
         return redirect(url_for('driver.view_driver_registration'))
 
-    new_driver = Driver(current_user.get_id(), **request.form)
-    new_car = Car(**request.form)
-    is_success = False
+    new_driver = Driver.init_using_form(**request.form)
+    new_driver.username = current_user.get_id()
+    new_car = Car.init_using_form(**request.form)
 
-    is_driver_created = new_driver.save()
-    is_car_created = new_car.save()
-    is_success = is_driver_created and is_car_created
-
-    if(is_success):
+    # todo(Nik): Handle case when driver is created but car fails to create
+    #            try-except and do rollback
+    if(new_driver.save() and new_car.save()):
         return redirect(url_for('driver.get_profile'))
     else:
         return render_template(
@@ -37,14 +35,12 @@ def register_driver():
 @driver_blueprint.route('/profile', methods=['GET', 'POST'])
 @login_required
 def get_profile():
-    driver = Driver.get_driver(current_user.get_id())
+    driver = Driver.load(username=current_user.get_id())
 
-    if(driver is None):
+    if driver is None:
         return redirect(url_for('driver.view_driver_registration'))
 
-    license_number = driver[0]
-
-    car = Car.get_car(license_number)
+    car = Car.load(license_number=driver.license_number)
 
     return render_template(
         'driver.tpl', is_view=True, title='Your Driver Profile',
@@ -58,12 +54,13 @@ def update_profile():
     if request.method != 'POST':
         return render_template('driver.tpl', is_view=False, title='Profile')
 
-    update_driver = Driver(current_user.get_id(), **request.form)
+    driver = Driver.init_using_form(**request.form)
+    driver.username = current_user.get_id()
 
-    update_car = Car(**request.form)
+    car = Car.init_using_form(**request.form)
 
-    is_success = update_car.update()
-    is_success = is_success and update_driver.update()
+    car.update()
+    driver.update_bio()
 
     return redirect(url_for('driver.get_profile'))
 
@@ -71,8 +68,9 @@ def update_profile():
 @driver_blueprint.route('/', methods=['GET'])
 @login_required
 def view_driver_registration():
-    driver = Driver.get_driver(current_user.get_id())
-    if(driver is not None):
+    driver = Driver.load(username=current_user.get_id())
+
+    if driver:
         return redirect(url_for('driver.get_profile'))
 
     return render_template(
