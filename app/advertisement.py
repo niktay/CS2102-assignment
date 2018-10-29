@@ -18,7 +18,7 @@ advertisement_blueprint = Blueprint(
 )
 
 
-@advertisement_blueprint.route('/view/all', methods=['GET', 'POST'])
+@advertisement_blueprint.route('/view', methods=['GET', 'POST'])
 @login_required
 def view_advertisements():
     driver = Driver.load(username=current_user.get_id())
@@ -58,29 +58,12 @@ def bid():
     driver = Driver.load(username=current_user.get_id())
 
     if request.method != 'POST':
-        advertisements = Advertisement.fetch()
-
-        if driver:
-            advertisements = filter(
-                lambda advert: advert.license_number != driver.license_number,
-                advertisements,
-            )
-
-        return render_template(
-            'view_advertisement.tpl',
-            advertisements=advertisements, driver=driver,
-        )
+        return redirect(url_for('advertisement.view_advertisements'))
 
     advertisement = Advertisement.init_using_form(**request.form)
 
-    # We check if advertisement has a car to verify if it exists since every
-    # advertisement must have a car tied to it.
-    if advertisement.car() is None:
-        return redirect(url_for('advertisement.view_advertisements'))
-
     return render_template(
-        'advertisement.tpl', is_view=True, driver=driver,
-        is_success=True, advertisement=advertisement, is_alert=False,
+      'make_bid.tpl', advertisement=advertisement, driver=driver,
     )
 
 
