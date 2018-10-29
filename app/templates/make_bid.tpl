@@ -7,6 +7,7 @@
     <meta name="author" content="">
 	<link rel="icon" type="image/png" href="{{ url_for('static', filename='assets/favicon-32x32.png') }}" sizes="32x32" />
 	<link rel="icon" type="image/png" href="{{ url_for('static', filename='assets/favicon-16x16.png') }}" sizes="16x16" />
+
     <title>Zoom Dashboard</title>
 
     <!-- Bootstrap core CSS -->
@@ -34,7 +35,7 @@
           <div class="sidebar-sticky">
             <ul class="nav flex-column">
               <li class="nav-item">
-                <a class="nav-link active" href="{{ url_for('profile.view_profile') }}">
+                <a class="nav-link" href="{{ url_for('profile.view_profile') }}">
                   <span data-feather="user"></span>
                   My Profile <span class="sr-only">(current)</span>
                 </a>
@@ -46,7 +47,7 @@
                 </a>
               </li>
               <li class="nav-item">
-                <a class="nav-link" href="{{ url_for('advertisement.view_advertisements') }}">
+                <a class="nav-link" href="{{ url_for('advertisement.bid') }}">
                   <span data-feather="map-pin"></span>
                   	Place Bids<span class="sr-only"></span>
                 </a>
@@ -63,12 +64,6 @@
                   	Ride History<span class="sr-only"></span>
                 </a>
               </li>
-              <li class="nav-item">
-                <a class="nav-link" href="{{ url_for('advertisement.view_own_advertisements') }}">
-                  <span data-feather="tv"></span>
-                  	Advertise Ride<span class="sr-only"></span>
-                </a>
-              </li>
             </ul>
             <h6 class="sidebar-heading d-flex justify-content-between align-items-center px-3 mt-4 mb-1 text-muted">
             	<!--<span>Driver Dashboard</span>-->
@@ -77,27 +72,52 @@
         </nav>
 
         <main role="main" class="col-md-9 ml-sm-auto col-lg-10 px-4">
-		<div class="row justify-content-center">
-            <div class="col-md-8">
-            <div class="card" style="margin-top: 3%">
-            <header class="card-header" style="background: #3b4249; color: white; font-weight: bold;">
-                <h4 class="card-title mt-2">My Profile</h4>
-            </header>
-            <article class="card-body" style="font-weight: bold;">
-			<p>Name: {{ account.name }} ({{ account.username }})</p>
-			<p>DOB: {{ account.date_of_birth }}</p>
-			<p>Contact: {{ account.contact }}</p>
-			<p>Email: {{ account.email }}</p>
-            <form action="" method="POST">
-            </form>
-            </article> <!-- card-body end .// -->
-            </div> <!-- col.//-->
-        </div> <!-- row.//-->
+          <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
+          </div>
+<div class="row justify-content-center">
+<div class="col-md-6">
+<div class="card">
+<header class="card-header" style="background: #3b4249; color: white; font-weight: bold;">
+    <h4 class="card-title mt-2">
+        Bid for Ride
+    </h4>
+</header>
+<article class="card-body">
+<form action="{{ url_for('advertisement.create_advertisement') }}" method="POST">
+	<label>Date and Time</label>
+	<p id="datetime" name="datetime">{{ advertisement.start_timestamp }}</p>
+	<label>Origin</label>
+	<p id="origin" name="origin">{{ advertisement.origin }}</p>
+	<label>Destination</label>
+    <p id="destination" name="destination">{{ advertisement.destination }}</p>
+	<label>Driver's License Plate</label>
+	<p name="license-plate" id="license-plate">{{ advertisement.car().license_plate }}</p>
+	<label>Brand of Car</label>
+	<p name="brand" id="brand">{{ advertisement.car().brand }}</p>
+	<label>Model of Car</label>
+	<p name="model" id="model">{{ advertisement.car().model }}</p>
+
+     <div class="form-row">
+		<div class="col form-group">
+			<label>Bid</label>
+			<input id="bid_value" name="bid_value" type="number" step="1.0" class="form-control" required>
+			<br/>
+			<button type="submit" class="btn btn-secondary btn-block">Submit</button>
+		</div> <!-- form-group// -->
+    </div>
+</form>
+</article> <!-- card-body end .// -->
+</div>
+</div> <!-- col.//-->
+
+</div> <!-- row.//-->
+
 
 </div>
         </main>
       </div>
     </div>
+
     <!-- Bootstrap core JavaScript
     ================================================== -->
     <!-- Placed at the end of the document so the pages load faster -->
@@ -105,6 +125,7 @@
     <script>window.jQuery || document.write('<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>')</script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.4/popper.min.js" integrity="sha384-zPwDDZkj9/CM2d74L+dd2WTHeYF/A9Ofy7JjxlVASlm7rwhH1lL5dfWqHwYALj/7" crossorigin="anonymous"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js" integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy" crossorigin="anonymous"></script>
+
     <!-- Icons -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/feather-icons/4.7.3/feather.min.js" integrity="sha384-J9NDmNXQWiLtHyKfNbrfzB4OSGV7bvmYyJchj3hOqsiBgxrYNkRIeo5b+9ivqw0d" crossorigin="anonymous"></script>
     <script>
