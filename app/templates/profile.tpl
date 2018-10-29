@@ -63,12 +63,16 @@
                   	Ride History<span class="sr-only"></span>
                 </a>
               </li>
+
+              {% if driver %}
               <li class="nav-item">
                 <a class="nav-link" href="{{ url_for('advertisement.view_own_advertisements') }}">
                   <span data-feather="tv"></span>
                   	Advertise Ride<span class="sr-only"></span>
                 </a>
               </li>
+              {% endif %}
+
             </ul>
             <h6 class="sidebar-heading d-flex justify-content-between align-items-center px-3 mt-4 mb-1 text-muted">
             	<!--<span>Driver Dashboard</span>-->
@@ -91,8 +95,38 @@
             <form action="" method="POST">
             </form>
             </article> <!-- card-body end .// -->
+
             </div> <!-- col.//-->
         </div> <!-- row.//-->
+
+        <div class="col-md-8">
+        {% if driver %}
+        <div class="card" style="margin-top: 3%">
+                <header class="card-header" style="background: #3b4249; color: white; font-weight: bold;">
+                    <h4 class="card-title mt-2">Driver Information</h4>
+                </header>
+                <article class="card-body" style="font-weight: bold;">
+			    <p>License Number: {{ driver.license_number }} </p>
+			    <p>Zooming Since: {{ driver.driving_since }}</p>
+			    <p>License Plate: {{ car.license_plate }}</p>
+			    <p>Brand: {{ car.brand }}</p>
+			    <p>Model: {{ car.model }}</p>
+			    <p>Bio: {{ driver.bio }}</p>
+                <form action="" method="POST">
+                </form>
+                </article> <!-- card-body end .// -->
+        <div class="border-top card-body text-center" style="solid #444444!important; font-weight: bold;"><a href="{{ url_for('driver.get_profile') }}"> Edit your driver info</a></div>
+        </div>
+
+        </div>
+        {% else %}
+
+        <div class="border-top card-body text-center" style="solid #444444!important; font-weight: bold;">Not a driver yet? <a href="{{ url_for('driver.view_driver_registration') }}" style="color: #ffcc00;"> Zoom as a driver!</a></div>
+        </div>
+
+        {% endif %}
+
+    </div>
 
 </div>
         </main>
