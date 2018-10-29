@@ -32,7 +32,8 @@ def view_advertisements():
         )
 
     return render_template(
-        'view_advertisement.tpl', advertisements=advertisements, driver=driver,
+        'view_advertisement.tpl', 
+        advertisements=advertisements, driver=driver,
     )
 
 
