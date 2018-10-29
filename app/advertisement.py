@@ -32,7 +32,7 @@ def view_advertisements():
         )
 
     return render_template(
-        'view_advertisement.tpl', advertisements=advertisements,
+        'view_advertisement.tpl', advertisements=advertisements, driver=driver,
     )
 
 
@@ -48,16 +48,16 @@ def view_own_advertisements():
 
     return render_template(
         'advertise_rides.tpl',
-        advertisements=advertisements,
+        advertisements=advertisements, driver=driver,
     )
 
 
 @advertisement_blueprint.route('/view/bid', methods=['GET', 'POST'])
 @login_required
 def bid():
-    if request.method != 'POST':
-        driver = Driver.load(username=current_user.get_id())
+    driver = Driver.load(username=current_user.get_id())
 
+    if request.method != 'POST':
         advertisements = Advertisement.fetch()
 
         if driver:
@@ -68,7 +68,7 @@ def bid():
 
         return render_template(
             'view_advertisement.tpl',
-            advertisements=advertisements,
+            advertisements=advertisements, driver=driver,
         )
 
     advertisement = Advertisement.init_using_form(**request.form)
@@ -79,7 +79,7 @@ def bid():
         return redirect(url_for('advertisement.view_advertisements'))
 
     return render_template(
-        'advertisement.tpl', is_view=True,
+        'advertisement.tpl', is_view=True, driver=driver,
         is_success=True, advertisement=advertisement, is_alert=False,
     )
 
@@ -87,10 +87,10 @@ def bid():
 @advertisement_blueprint.route('/create', methods=['GET', 'POST'])
 @login_required
 def create_advertisement():
-    if request.method != 'POST':
-        return render_template('advertisement.tpl')
-
     driver = Driver.load(username=current_user.get_id())
+
+    if request.method != 'POST':
+        return render_template('advertisement.tpl', driver=driver)
 
     if driver is None:
         return redirect(url_for('driver.view_driver_registration'))
@@ -110,4 +110,7 @@ def view_advertisement_creation():
     if driver is None:
         return redirect(url_for('driver.view_driver_registration'))
 
-    return render_template('advertisement.tpl', is_view=False)
+    return render_template(
+        'advertisement.tpl', is_view=False,
+        driver=driver,
+    )

@@ -7,25 +7,25 @@
     <meta name="author" content="">
 	<link rel="icon" type="image/png" href="{{ url_for('static', filename='assets/favicon-32x32.png') }}" sizes="32x32" />
 	<link rel="icon" type="image/png" href="{{ url_for('static', filename='assets/favicon-16x16.png') }}" sizes="16x16" />
-
     <title>Zoom Dashboard</title>
 
     <!-- Bootstrap core CSS -->
     <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
 
     <!-- Custom styles for this template -->
-      <link href="{{ url_for('static',filename='styles/dashboard.css') }}" rel="stylesheet">
-   </head>
-   <body style="background: #f7f7f7;">
+    <link href="{{ url_for('static',filename='styles/dashboard.css') }}" rel="stylesheet">
+  </head>
+
+  <body style="background: #f7f7f7;">
     <nav class="navbar navbar-dark fixed-top bg-dark flex-md-nowrap p-0 shadow">
       <a class="navbar-brand col-sm-1 col-md-1 mr-0" style="padding-left: 5px; font-family: 'Nova Flat'!important" href="#">
 		<img src="{{ url_for('static', filename='assets/zooom-logo-white@3x.png') }}" style="max-height: 35px; max-width: 35px; padding-left: 10px; margin-top: -5px;"/>
 		ZOOOM</a>
-		<ul class="navbar-nav px-3">
-			<li class="nav-item text-nowrap">
-			  <a class="nav-link" href="{{ url_for('login.process_logout') }}">Log out</a>
-			</li>
-		</ul>
+	<ul class="navbar-nav px-3">
+		<li class="nav-item text-nowrap">
+		  <a class="nav-link" href="{{ url_for('login.process_logout') }}">Log out</a>
+		</li>
+    </ul>
     </nav>
 
     <div class="container-fluid">
@@ -63,6 +63,16 @@
                   	Ride History<span class="sr-only"></span>
                 </a>
               </li>
+
+              {% if driver %}
+              <li class="nav-item">
+                <a class="nav-link" href="{{ url_for('advertisement.view_own_advertisements') }}">
+                  <span data-feather="tv"></span>
+                  	Advertise Ride<span class="sr-only"></span>
+                </a>
+              </li>
+              {% endif %}
+
             </ul>
             <h6 class="sidebar-heading d-flex justify-content-between align-items-center px-3 mt-4 mb-1 text-muted">
             	<!--<span>Driver Dashboard</span>-->
@@ -74,14 +84,15 @@
             <main role="main" class="col-md-9 ml-sm-auto col-lg-10 px-4">
                <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
                </div>
+
                <div class="row justify-content-center">
                   <div class="col-md-12">
+                  <div class="card" style="margin-top: 3%">
+                    <header class="card-header" style="background: #3b4249; color: white; font-weight: bold;">
+                    <h4 class="card-title mt-2">Advertisements</h4>
+                </header>
                      <table class="table table-striped table-sm">
-                        <thead style="background: #3b4249; color: white; font-weight: bold;">
-                           <tr>
-                              <h4 class="table-title mt-2">Advertisements</h4>
-                           </tr>
-                        </thead>
+
                         <tbody>
                             {% if advertisements %}
                                 <tr>
@@ -124,6 +135,7 @@
 
                          </div>
                      {% endif %}-->
+                     </div>
                   </div>
                </div>
                <!-- col.//-->

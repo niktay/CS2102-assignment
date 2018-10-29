@@ -63,6 +63,15 @@
                   	Ride History<span class="sr-only"></span>
                 </a>
               </li>
+              {% if driver %}
+              <li class="nav-item">
+                <a class="nav-link" href="{{ url_for('advertisement.view_own_advertisements') }}">
+                  <span data-feather="tv"></span>
+                  	Advertise Ride<span class="sr-only"></span>
+                </a>
+              </li>
+              {% endif %}
+
             </ul>
             <h6 class="sidebar-heading d-flex justify-content-between align-items-center px-3 mt-4 mb-1 text-muted">
             	<!--<span>Driver Dashboard</span>-->
@@ -76,13 +85,13 @@
                </div>
                <div class="row justify-content-center">
                   <div class="col-md-12">
+                  <div class="card" style="margin-top: 3%">
+                    <header class="card-header" style="background: #3b4249; color: white; font-weight: bold;">
+                    <h4 class="card-title mt-2">My Advertisements</h4>
+
+                </header>
                      <table class="table table-striped table-sm">
-                        <thead style="background: #3b4249; color: white; font-weight: bold;">
-                           <tr>
-                              <h4 class="table-title mt-2">My Advertisements</h4>
-                           </tr>
-							<a href="{{ url_for('advertisement.create_advertisement') }}">Create Advertisement</a>
-                        </thead>
+
                         <tbody>
                             {% if advertisements %}
                                 <tr>
@@ -100,10 +109,6 @@
                                   <td>{{ advertisement.destination }}</td>
                                </tr>
                                {% endfor %}
-                           {% else %}
-                                <tr>
-                                  No advertisements
-                               </tr>
                            {% endif %}
                         </tbody>
                      </table><!--
@@ -112,6 +117,10 @@
 
                          </div>
                      {% endif %}-->
+
+                     <div class="border-top card-body text-center" style="solid #444444!important; font-weight: bold;"><a href="{{ url_for('advertisement.create_advertisement') }}">Create Advertisement</a></div>
+                    </div>
+                     </div>
                   </div>
                </div>
                <!-- col.//-->

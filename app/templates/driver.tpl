@@ -7,8 +7,7 @@
     <meta name="author" content="">
 	<link rel="icon" type="image/png" href="{{ url_for('static', filename='assets/favicon-32x32.png') }}" sizes="32x32" />
 	<link rel="icon" type="image/png" href="{{ url_for('static', filename='assets/favicon-16x16.png') }}" sizes="16x16" />
-
-    <title>CS2102</title>
+    <title>Zoom Dashboard</title>
 
     <!-- Bootstrap core CSS -->
     <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
@@ -17,9 +16,16 @@
     <link href="{{ url_for('static',filename='styles/dashboard.css') }}" rel="stylesheet">
   </head>
 
-  <body>
+  <body style="background: #f7f7f7;">
     <nav class="navbar navbar-dark fixed-top bg-dark flex-md-nowrap p-0 shadow">
-      <a class="navbar-brand col-sm-3 col-md-2 mr-0" href="#">CS2102</a>
+      <a class="navbar-brand col-sm-1 col-md-1 mr-0" style="padding-left: 5px; font-family: 'Nova Flat'!important" href="#">
+		<img src="{{ url_for('static', filename='assets/zooom-logo-white@3x.png') }}" style="max-height: 35px; max-width: 35px; padding-left: 10px; margin-top: -5px;"/>
+		ZOOOM</a>
+	<ul class="navbar-nav px-3">
+		<li class="nav-item text-nowrap">
+		  <a class="nav-link" href="{{ url_for('login.process_logout') }}">Log out</a>
+		</li>
+    </ul>
     </nav>
 
     <div class="container-fluid">
@@ -28,74 +34,94 @@
           <div class="sidebar-sticky">
             <ul class="nav flex-column">
               <li class="nav-item">
-                <a class="nav-link active" href="#">
-                  <span data-feather="users"></span>
-                  Accounts <span class="sr-only">(current)</span>
+                <a class="nav-link active" href="{{ url_for('profile.view_profile') }}">
+                  <span data-feather="user"></span>
+                  My Profile <span class="sr-only">(current)</span>
                 </a>
               </li>
+              <li class="nav-item">
+                <a class="nav-link" href="#">
+                  <span data-feather="inbox"></span>
+                  	Notifications<span class="sr-only"></span>
+                </a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" href="{{ url_for('advertisement.bid') }}">
+                  <span data-feather="map-pin"></span>
+                  	Place Bids<span class="sr-only"></span>
+                </a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" href="#">
+                  <span data-feather="clock"></span>
+                  	Scheduled Rides<span class="sr-only"></span>
+                </a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" href="#">
+                  <span data-feather="archive"></span>
+                  	Ride History<span class="sr-only"></span>
+                </a>
+              </li>
+
+              {% if driver %}
+              <li class="nav-item">
+                <a class="nav-link" href="{{ url_for('advertisement.view_own_advertisements') }}">
+                  <span data-feather="tv"></span>
+                  	Advertise Ride<span class="sr-only"></span>
+                </a>
+              </li>
+              {% endif %}
+
             </ul>
             <h6 class="sidebar-heading d-flex justify-content-between align-items-center px-3 mt-4 mb-1 text-muted">
-              <span>Saved reports</span>
-              <a class="d-flex align-items-center text-muted" href="#">
-                <span data-feather="plus-circle"></span>
-              </a>
+            	<!--<span>Driver Dashboard</span>-->
             </h6>
           </div>
         </nav>
 
         <main role="main" class="col-md-9 ml-sm-auto col-lg-10 px-4">
-          <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
-          </div>
-     <div class="row justify-content-center">
+        <div class="row justify-content-center">
             <div class="col-md-6">
-            <div class="card">
-            <header class="card-header">
+            <div class="card" style="margin-top: 3%">
+            <header class="card-header" style="background: #3b4249; color: white; font-weight: bold;">
                 <h4 class="card-title mt-2">{{title}}</h4>
             </header>
 
-            {% if is_view %}
-                {% if is_success %}
-                <div class="alert alert-success" role="alert">
-                    You have successfully registered with us since {{driver.driving_since}}
-                </div>
+            <article class="card-body">
+                {% if title not in "Driver Registration" %}
 
-                {% else %}
-                <div class="alert alert-danger" role="alert">
-                    An error has occured.
-                </div>
+                    <div>
+                        Zooming since <strong>{{driver.driving_since}}</strong>
+                    </div>
 
                 {% endif %}
-
-            {% endif %}
-
-            <article class="card-body">
             {% if title in "Driver Registration" %}
             <form action="{{ url_for('driver.register_driver') }}" method="POST">
             {% else %}
             <form action="{{ url_for('driver.update_profile') }}" method="POST">
             {% endif %}
-
                 <div class="form-row">
                     <div class="col form-group">
-                        <label>License Number</label>
+                        <label>License Number: </label>
                         {% if title in "Driver Registration" %}
                             <input name="license-number" id="license-number" type="text" class="form-control" required>
                         {% else %}
-                            <input name="license-number" id="license-number" type="text" value ="{{ driver.license_number }}" class="form-control" readonly>
+                            <input name="license-number" id="license-number" type="text" class="form-control" value="{{ driver.license_number }}"readonly>
                         {% endif %}
                     </div> <!-- form-group end.// -->
                 </div> <!-- form-row end.// -->
                 <div class="form-group">
-                        <label>License Plate</label>
+                        <label>License Plate: </label>
                         {% if title in "Driver Registration" %}
                         <input name="license-plate" id="license-plate" type="text" class="form-control" placeholder="SXX1234A" required>
                         {% else %}
-                        <input name = "license-plate" id="license-plate" type="text" class="form-control" value="{{ car.license_plate }}" readonly>
+                        <input name="license-plate" id="license-plate" type="text" class="form-control" placeholder="SXX1234A" value="{{ car.license_plate }}" readonly>
                         {% endif %}
                 </div> <!-- form-group end.// -->
                 <div class="form-row">
                     <div class="form-group col-md-6">
-                          <label>Brand of Car</label>
+                          <label>Brand: </label>
                           {% if title in "Driver Registration" %}
                                 <input name="brand" id="brand" type="text" class="form-control" required>
                           {% else %}
@@ -104,7 +130,7 @@
 
                     </div> <!-- form-group end.// -->
                     <div class="form-group col-md-6">
-                          <label>Model of Car</label>
+                          <label>Model: </label>
                           {% if title in "Driver Registration" %}
                                 <input name="model" id="model" type="text" class="form-control" required>
                           {% else %}
@@ -115,16 +141,18 @@
                 </div>
                 <div class="form-group">
                     <div class="form-group">
-                        <label>(Optional) Bio</label>
+                        <label>(Optional) Bio: </label>
                         {% if title in "Driver Registration" %}
                             <textarea name="optional-bio" id="optional-bio" class="form-control" type="text" rows="3"></textarea>
                         {% else %}
-                            <textarea name="optional-bio" id="optional-bio" class="form-control" type="text" rows="3">{{ driver.optional_bio }}</textarea>
+                            <textarea name="optional-bio" id="optional-bio" class="form-control" type="text" rows="3">{% if driver.optional_bio not in "None" %}
+                                {{ driver.optional_bio }}
+                            {% endif %}</textarea>
                         {% endif %}
                     </div>
                 </div>
                 <div class="form-group">
-                    <button type="submit" class="btn btn-primary btn-block">
+                    <button type="submit" class="btn btn-secondary btn-block">
                         {% if title in "Driver Registration" %}
                             Register as Driver
                         {% else %}
