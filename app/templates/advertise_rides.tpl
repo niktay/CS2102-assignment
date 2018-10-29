@@ -91,7 +91,12 @@
 
                 </header>
                      <table class="table table-striped table-sm">
-
+                        <thead style="background: #3b4249; color: white; font-weight: bold;">
+                           <tr>
+                              <h4 class="table-title mt-2">Manage Advertisements</h4>
+                           </tr>
+							<a href="{{ url_for('advertisement.create_advertisement') }}">Create Advertisement</a>
+                        </thead>
                         <tbody>
                             {% if advertisements %}
                                 <tr>
@@ -99,7 +104,8 @@
                                   <td>Date and Time</td>
                                   <td>Origin</td>
                                   <td>Destination</td>
-
+                                  <td>Status</td>
+                                  <td>End Bidding</td>
                                </tr>
 
                                {% for advertisement in advertisements %}
@@ -107,6 +113,8 @@
                                   <td>{{ advertisement.start_timestamp }}</td>
                                   <td>{{ advertisement.origin }}</td>
                                   <td>{{ advertisement.destination }}</td>
+                                  <td><span class="badge badge-pill badge-success">Open</span></td>
+                                  <td><a href="#"><spn data-feather="stop-circle"></span></a></td>
                                </tr>
                                {% endfor %}
                            {% endif %}
