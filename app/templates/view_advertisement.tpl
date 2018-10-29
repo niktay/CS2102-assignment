@@ -101,7 +101,7 @@
                                   <td>{{ advertisement.origin }}</td>
                                   <td>{{ advertisement.destination }}</td>
                                   <td>
-                                    <form action="bid" method="POST">
+                                    <form action="{{ url_for('advertisement.bid') }}" method="POST">
                                         <input type="hidden" name="start-timestamp" value="{{ advertisement.start_timestamp }}" />
                                         <input type="hidden" name="license-number" value="{{ advertisement.license_number }}" />
 										<input type="hidden" name="origin" value="{{ advertisement.origin }}" />

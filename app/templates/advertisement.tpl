@@ -66,7 +66,6 @@
               </li>
             </ul>
             <h6 class="sidebar-heading d-flex justify-content-between align-items-center px-3 mt-4 mb-1 text-muted">
-            	<!--<span>Driver Dashboard</span>-->
             </h6>
           </div>
         </nav>
@@ -79,99 +78,35 @@
 <div class="card">
 <header class="card-header" style="background: #3b4249; color: white; font-weight: bold;">
     <h4 class="card-title mt-2">
-    {% if is_view and is_success %}
-        Advertisement
-    {% else %}
-        Create advertisement
-    {% endif %}
-
+        Create Advertisement
     </h4>
 </header>
 <article class="card-body">
 <form action="{{ url_for('advertisement.create_advertisement') }}" method="POST">
-    {% if is_view and is_alert %}
-        {% if is_success %}
-        <div class="alert alert-success" role="alert">
-            You have successfully submitted the advertisement
-        </div>
-
-        {% else %}
-        <div class="alert alert-danger" role="alert">
-            An error has occured.
-        </div>
-
-        {% endif %}
-
-    {% endif %}
     <div class="form-row">
         <div class="col form-group">
             <label>Date and Time</label>
-              {% if is_view and is_success %}
-                <input id="datetime" name="datetime" type="text" class="form-control" value="{{ advertisement.start_timestamp }}" readonly>
-              {% else %}
                 <input id="date" name="date" type="date" class="form-control" required>
                 <input id="time" name="time" type="time" class="form-control" required>
-              {% endif %}
-
         </div> <!-- form-group end.// -->
     </div> <!-- form-row end.// -->
     <div class="form-row">
         <div class="col form-group">
             <label>Origin</label>
-            {% if is_view and is_success %}
-                <input id="origin" name="origin" type="text" class="form-control" value="{{ advertisement.origin }}" readonly>
-
-              {% else %}
                 <input id="origin" name="origin" type="text" class="form-control" placeholder="" required>
-
-            {% endif %}
         </div> <!-- form-group end.// -->
     </div> <!-- form-row end.// -->
         <div class="form-row">
             <div class="col form-group">
                 <label>Destination</label>
-                {% if is_view and is_success %}
-                  <input id="destination" name="destination" type="text" class="form-control" value="{{ advertisement.destination }}" readonly>
-                {% else %}
                   <input id="destination" name="destination" type="text" class="form-control" placeholder="" required>
-                {% endif %}
             </div> <!-- form-group end.// -->
     </div> <!-- form-row end.// -->
 
-    {% if is_view and is_success %}
-    <div class="form-row">
-        <div class="col form-group">
-            <label>Driver's License Plate</label>
-            <input name = "license-plate" id="license-plate" type="text" class="form-control" value="{{ advertisement.car().license_plate }}" readonly>
-        </div>
-    </div> <!-- form-row end.// -->
-    <div class="form-row">
-        <div class="form-group col-md-6">
-              <label>Brand of Car</label>
-                <input name="brand" id="brand" type="text" value="{{ advertisement.car().brand }}" class="form-control" readonly>
-        </div> <!-- form-group end.// -->
-
-        <div class="form-group col-md-6">
-              <label>Model of Car</label>
-                <input name="model" id="model" type="text" value="{{ advertisement.car().model }}" class="form-control" readonly>
-        </div> <!-- form-group end.// -->
-    </div>
-        {% endif %}
-
-
      <div class="form-row">
-        {% if not (is_view and is_success) %}
-            <div class="col form-group">
-                <button type="submit" class="btn btn-secondary btn-block">Create</button>
-            </div> <!-- form-group// -->
-        {% else %}
-            <div class="col form-group">
-                <label>Your bid</label>
-                <input id="bid_value" name="bid_value" type="number" step="1.0" class="form-control" required>
-                <br/>
-                <button type="submit" class="btn btn-secondary btn-block">Submit</button>
-            </div> <!-- form-group// -->
-    {% endif %}
+		<div class="col form-group">
+			<button type="submit" class="btn btn-secondary btn-block">Create</button>
+		</div> <!-- form-group// -->
     </div>
 </form>
 </article> <!-- card-body end .// -->
