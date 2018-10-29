@@ -30,9 +30,8 @@ def view_advertisements():
             lambda advert: advert.license_number != driver.license_number,
             advertisements,
         )
-
     return render_template(
-        'view_advertisement.tpl', 
+        'view_advertisement.tpl',
         advertisements=advertisements, driver=driver,
     )
 
@@ -64,7 +63,7 @@ def bid():
     advertisement = Advertisement.init_using_form(**request.form)
 
     return render_template(
-      'make_bid.tpl', advertisement=advertisement, driver=driver,
+        'make_bid.tpl', advertisement=advertisement, driver=driver,
     )
 
 
