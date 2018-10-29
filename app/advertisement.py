@@ -1,3 +1,5 @@
+from logging import getLogger
+
 from flask import Blueprint
 from flask import redirect
 from flask import render_template
@@ -8,6 +10,8 @@ from flask_login import login_required
 from model import Advertisement
 from model import Driver
 
+logger = getLogger(__name__)
+
 
 advertisement_blueprint = Blueprint(
     'advertisement', __name__, template_folder='templates',
@@ -17,44 +21,66 @@ advertisement_blueprint = Blueprint(
 @advertisement_blueprint.route('/view/all', methods=['GET', 'POST'])
 @login_required
 def view_advertisements():
-    results = Advertisement.get_all()
+    driver = Driver.load(username=current_user.get_id())
+
+    advertisements = Advertisement.fetch()
+
+    if driver:
+        advertisements = filter(
+            lambda advert: advert.license_number != driver.license_number,
+            advertisements,
+        )
 
     return render_template(
-        'view_advertisement.tpl', results=results,
+        'view_advertisement.tpl', advertisements=advertisements,
     )
 
 
-@advertisement_blueprint.route('/view/user', methods=['GET', 'POST'])
+@advertisement_blueprint.route('/view/self', methods=['GET', 'POST'])
 @login_required
-def view_my_advertisements():
+def view_own_advertisements():
     driver = Driver.load(username=current_user.get_id())
 
     if driver is None:
         return redirect(url_for('driver.view_driver_registration'))
 
-    results = Advertisement.get_mine(driver.license_number)
+    advertisements = Advertisement.fetch(license_number=driver.license_number)
 
-    return render_template('view_advertisement.tpl', results=results)
+    return render_template(
+        'advertise_rides.tpl',
+        advertisements=advertisements,
+    )
 
 
 @advertisement_blueprint.route('/view/bid', methods=['GET', 'POST'])
 @login_required
 def bid():
     if request.method != 'POST':
-        results = Advertisement.get_all()
-        return render_template('view_advertisement.tpl', results=results)
+        driver = Driver.load(username=current_user.get_id())
 
-    advert_start = request.form['advert_start_timestamp']
-    advert_license = request.form['advert_license_number']
+        advertisements = Advertisement.fetch()
 
-    advert = Advertisement.get_advert(advert_start, advert_license)
+        if driver:
+            advertisements = filter(
+                lambda advert: advert.license_number != driver.license_number,
+                advertisements,
+            )
 
-    if advert is None:
+        return render_template(
+            'view_advertisement.tpl',
+            advertisements=advertisements,
+        )
+
+    advertisement = Advertisement.init_using_form(**request.form)
+
+    # We check if advertisement has a car to verify if it exists since every
+    # advertisement must have a car tied to it.
+    if advertisement.car() is None:
         return redirect(url_for('advertisement.view_advertisements'))
 
     return render_template(
         'advertisement.tpl', is_view=True,
-        is_success=True, advert=advert, is_alert=False,
+        is_success=True, advertisement=advertisement, is_alert=False,
     )
 
 
@@ -69,9 +95,11 @@ def create_advertisement():
     if driver is None:
         return redirect(url_for('driver.view_driver_registration'))
 
-    Advertisement(driver.license_number, **request.form)
+    advertisement = Advertisement.init_using_form(**request.form)
+    advertisement.license_number = driver.license_number
+    advertisement.save()
 
-    return redirect(url_for('advertisement.view_advertisements'))
+    return redirect(url_for('advertisement.view_own_advertisements'))
 
 
 @advertisement_blueprint.route('/', methods=['GET'])

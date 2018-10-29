@@ -79,42 +79,30 @@
                      <table class="table table-striped table-sm">
                         <thead style="background: #3b4249; color: white; font-weight: bold;">
                            <tr>
-                              <h4 class="table-title mt-2">Advertisements</h4>
+                              <h4 class="table-title mt-2">My Advertisements</h4>
                            </tr>
+							<a href="{{ url_for('advertisement.create_advertisement') }}">Create Advertisement</a>
                         </thead>
                         <tbody>
                             {% if advertisements %}
                                 <tr>
 
                                   <td>Date and Time</td>
-                                  <td>License Plate</td>
                                   <td>Origin</td>
                                   <td>Destination</td>
-                                  <td></td>
+
                                </tr>
 
                                {% for advertisement in advertisements %}
                                <tr>
-
                                   <td>{{ advertisement.start_timestamp }}</td>
-                                  <td>{{ advertisement.car().license_plate }}</td>
                                   <td>{{ advertisement.origin }}</td>
                                   <td>{{ advertisement.destination }}</td>
-                                  <td>
-                                    <form action="bid" method="POST">
-                                        <input type="hidden" name="start-timestamp" value="{{ advertisement.start_timestamp }}" />
-                                        <input type="hidden" name="license-number" value="{{ advertisement.license_number }}" />
-										<input type="hidden" name="origin" value="{{ advertisement.origin }}" />
-										<input type="hidden" name="destination" value = "{{ advertisement.destination }}" />
-
-                                        <input type="submit" name="bid" value="Bid" class="btn btn-secondary btn-block"/>
-                                    </form>
-                                   </td>
                                </tr>
                                {% endfor %}
                            {% else %}
                                 <tr>
-                                  No advertisements found.
+                                  No advertisements
                                </tr>
                            {% endif %}
                         </tbody>

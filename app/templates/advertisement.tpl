@@ -107,9 +107,10 @@
         <div class="col form-group">
             <label>Date and Time</label>
               {% if is_view and is_success %}
-                <input id="date-and-time" name="date-and-time" type="text" class="form-control" value={{advert[0]}} readonly>
+                <input id="datetime" name="datetime" type="text" class="form-control" value="{{ advertisement.start_timestamp }}" readonly>
               {% else %}
-                <input id="date-and-time" name="date-and-time" type="datetime" class="form-control" placeholder="YYYY-MM-DD hh:mm" required>
+                <input id="date" name="date" type="date" class="form-control" required>
+                <input id="time" name="time" type="time" class="form-control" required>
               {% endif %}
 
         </div> <!-- form-group end.// -->
@@ -118,7 +119,7 @@
         <div class="col form-group">
             <label>Origin</label>
             {% if is_view and is_success %}
-                <input id="origin" name="origin" type="text" class="form-control" value={{advert[1]}} readonly>
+                <input id="origin" name="origin" type="text" class="form-control" value="{{ advertisement.origin }}" readonly>
 
               {% else %}
                 <input id="origin" name="origin" type="text" class="form-control" placeholder="" required>
@@ -130,7 +131,7 @@
             <div class="col form-group">
                 <label>Destination</label>
                 {% if is_view and is_success %}
-                  <input id="destination" name="destination" type="text" class="form-control" value={{advert[2]}} readonly>
+                  <input id="destination" name="destination" type="text" class="form-control" value="{{ advertisement.destination }}" readonly>
                 {% else %}
                   <input id="destination" name="destination" type="text" class="form-control" placeholder="" required>
                 {% endif %}
@@ -141,18 +142,18 @@
     <div class="form-row">
         <div class="col form-group">
             <label>Driver's License Plate</label>
-            <input name = "license-plate" id="license-plate" type="text" class="form-control" value={{advert[3]}} readonly>
+            <input name = "license-plate" id="license-plate" type="text" class="form-control" value="{{ advertisement.car().license_plate }}" readonly>
         </div>
     </div> <!-- form-row end.// -->
     <div class="form-row">
         <div class="form-group col-md-6">
               <label>Brand of Car</label>
-                <input name="brand" id="brand" type="text" value={{advert[4]}} class="form-control" readonly>
+                <input name="brand" id="brand" type="text" value="{{ advertisement.car().brand }}" class="form-control" readonly>
         </div> <!-- form-group end.// -->
 
         <div class="form-group col-md-6">
               <label>Model of Car</label>
-                <input name="brand" id="brand" type="text" value={{advert[5]}} class="form-control" readonly>
+                <input name="model" id="model" type="text" value="{{ advertisement.car().model }}" class="form-control" readonly>
         </div> <!-- form-group end.// -->
     </div>
         {% endif %}
