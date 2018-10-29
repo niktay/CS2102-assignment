@@ -1,4 +1,3 @@
-
 <!doctype html>
 <html lang="en">
   <head>
@@ -62,6 +61,12 @@
                 <a class="nav-link" href="#">
                   <span data-feather="archive"></span>
                   	Ride History<span class="sr-only"></span>
+                </a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" href="{{ url_for('advertisement.view_own_advertisements') }}">
+                  <span data-feather="tv"></span>
+                  	Advertise Ride<span class="sr-only"></span>
                 </a>
               </li>
             </ul>

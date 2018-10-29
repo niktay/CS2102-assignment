@@ -83,29 +83,29 @@
                            </tr>
                         </thead>
                         <tbody>
-                            {% if results is not none %}
+                            {% if advertisements %}
                                 <tr>
 
                                   <td>Date and Time</td>
-                                  <td>Driver License Number</td>
+                                  <td>License Plate</td>
                                   <td>Origin</td>
                                   <td>Destination</td>
                                   <td></td>
-
                                </tr>
 
-                               {% for ad in results %}
+                               {% for advertisement in advertisements %}
                                <tr>
-                                  {% for field in ad %}
 
-                                  <td>{{field}}</td>
-
-                                  {% endfor %}
-
+                                  <td>{{ advertisement.start_timestamp }}</td>
+                                  <td>{{ advertisement.car().license_plate }}</td>
+                                  <td>{{ advertisement.origin }}</td>
+                                  <td>{{ advertisement.destination }}</td>
                                   <td>
                                     <form action="bid" method="POST">
-                                        <input type="hidden" name="advert_start_timestamp" value="{{ad[0]}}" />
-                                        <input type="hidden" name="advert_license_number" value="{{ad[1]}}" />
+                                        <input type="hidden" name="start-timestamp" value="{{ advertisement.start_timestamp }}" />
+                                        <input type="hidden" name="license-number" value="{{ advertisement.license_number }}" />
+										<input type="hidden" name="origin" value="{{ advertisement.origin }}" />
+										<input type="hidden" name="destination" value = "{{ advertisement.destination }}" />
 
                                         <input type="submit" name="bid" value="Bid" class="btn btn-secondary btn-block"/>
                                     </form>
@@ -118,12 +118,12 @@
                                </tr>
                            {% endif %}
                         </tbody>
-                     </table>
+                     </table><!--
                      {% if results is not none %}
                          <div class="form-group">
 
                          </div>
-                     {% endif %}
+                     {% endif %}-->
                   </div>
                </div>
                <!-- col.//-->
