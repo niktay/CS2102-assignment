@@ -5,6 +5,8 @@ from flask import render_template
 from flask_login import current_user
 from flask_login import login_required
 from model import Account
+from model import Car
+from model import Driver
 
 
 logger = getLogger(__name__)
@@ -18,7 +20,16 @@ def view_profile():
     account = Account.load(current_user.get_id())
 
     if account:
-        return render_template('profile.tpl', account=account)
+        driver = Driver.load(current_user.get_id())
+
+        car = None
+        if driver:
+            car = Car.load(driver.license_number)
+
+        return render_template(
+            'profile.tpl', account=account,
+            driver=driver, car=car,
+        )
 
     logger.warning('Failed to load current user')
     logger.debug(current_user.get_id())

@@ -24,7 +24,7 @@ def register_driver():
     # todo(Nik): Handle case when driver is created but car fails to create
     #            try-except and do rollback
     if(new_driver.save() and new_car.save()):
-        return redirect(url_for('driver.get_profile'))
+        return redirect(url_for('profile.view_profile'))
     else:
         return render_template(
             'driver.tpl', is_view=True, is_success=False,

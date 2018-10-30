@@ -7,7 +7,6 @@
     <meta name="author" content="">
 	<link rel="icon" type="image/png" href="{{ url_for('static', filename='assets/favicon-32x32.png') }}" sizes="32x32" />
 	<link rel="icon" type="image/png" href="{{ url_for('static', filename='assets/favicon-16x16.png') }}" sizes="16x16" />
-
     <title>Zoom Dashboard</title>
 
     <!-- Bootstrap core CSS -->
@@ -47,7 +46,7 @@
                 </a>
               </li>
               <li class="nav-item">
-                <a class="nav-link" href="{{ url_for('advertisement.bid') }}">
+                <a class="nav-link active" href="{{ url_for('advertisement.bid') }}">
                   <span data-feather="map-pin"></span>
                   	Place Bids<span class="sr-only"></span>
                 </a>
@@ -64,6 +63,16 @@
                   	Ride History<span class="sr-only"></span>
                 </a>
               </li>
+
+              {% if driver %}
+              <li class="nav-item">
+                <a class="nav-link" href="{{ url_for('advertisement.view_own_advertisements') }}">
+                  <span data-feather="tv"></span>
+                  	Advertise Ride<span class="sr-only"></span>
+                </a>
+              </li>
+              {% endif %}
+
             </ul>
             <h6 class="sidebar-heading d-flex justify-content-between align-items-center px-3 mt-4 mb-1 text-muted">
             </h6>

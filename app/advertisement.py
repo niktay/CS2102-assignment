@@ -30,10 +30,9 @@ def view_advertisements():
             lambda advert: advert.license_number != driver.license_number,
             advertisements,
         )
-
     return render_template(
         'view_advertisement.tpl',
-        advertisements=advertisements,
+        advertisements=advertisements, driver=driver,
     )
 
 
@@ -49,28 +48,32 @@ def view_own_advertisements():
 
     return render_template(
         'advertise_rides.tpl',
-        advertisements=advertisements,
+        advertisements=advertisements, driver=driver,
     )
 
 
 @advertisement_blueprint.route('/view/bid', methods=['GET', 'POST'])
 @login_required
 def bid():
+    driver = Driver.load(username=current_user.get_id())
+
     if request.method != 'POST':
         return redirect(url_for('advertisement.view_advertisements'))
 
     advertisement = Advertisement.init_using_form(**request.form)
 
-    return render_template('make_bid.tpl', advertisement=advertisement)
+    return render_template(
+        'make_bid.tpl', advertisement=advertisement, driver=driver,
+    )
 
 
 @advertisement_blueprint.route('/create', methods=['GET', 'POST'])
 @login_required
 def create_advertisement():
-    if request.method != 'POST':
-        return render_template('advertisement.tpl')
-
     driver = Driver.load(username=current_user.get_id())
+
+    if request.method != 'POST':
+        return render_template('advertisement.tpl', driver=driver)
 
     if driver is None:
         return redirect(url_for('driver.view_driver_registration'))
@@ -90,4 +93,7 @@ def view_advertisement_creation():
     if driver is None:
         return redirect(url_for('driver.view_driver_registration'))
 
-    return render_template('advertisement.tpl', is_view=False)
+    return render_template(
+        'advertisement.tpl', is_view=False,
+        driver=driver,
+    )
