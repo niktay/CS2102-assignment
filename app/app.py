@@ -17,6 +17,7 @@ logger.info(f'Initialized LoginManager()')
 # Defer import of blueprints as they require login_manager to be defined
 from admin import admin_blueprint  # noqa: E402
 from adminitise import adminitise_blueprint  # noqa: E402
+from bid import bid_blueprint  # noqa: E402
 from driver import driver_blueprint  # noqa: E402
 from registration import registration_blueprint  # noqa: E402
 from advertisement import advertisement_blueprint  # noqa: E402
@@ -27,6 +28,7 @@ try:
     logger.info(f'Registering blueprints')
 
     app.register_blueprint(driver_blueprint, url_prefix='/driver')
+    app.register_blueprint(bid_blueprint, url_prefix='/bid')
     app.register_blueprint(login_blueprint, url_prefix='/login')
     app.register_blueprint(registration_blueprint, url_prefix='/register')
     app.register_blueprint(admin_blueprint, url_prefix='/admin')

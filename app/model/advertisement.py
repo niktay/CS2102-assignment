@@ -4,8 +4,10 @@ from logging import getLogger
 
 import psycopg2
 
+from app.model.bid import Bid
 from app.model.car import Car
 from app.model.database import connection_required
+from app.model.ride import Ride
 
 
 logger = getLogger(__name__)
@@ -15,15 +17,38 @@ class Advertisement(object):
 
     def __init__(
         self, start_timestamp=None, origin=None, destination=None,
-        license_number=None,
+        license_number=None, active=None,
     ):
 
         self.start_timestamp = start_timestamp
         self.origin = origin
         self.destination = destination
         self.license_number = license_number
+        self.active = active
 
         logger.debug(self)
+
+    @property
+    def active(self):
+        return self._active
+
+    @active.setter
+    def active(self, active):
+        if type(active) == bool:
+            self._active = active
+        elif active is None:
+            self._active = None
+        elif type(active) == str:
+            allowed_str = ['True', 'TRUE', 'true', 'False', 'FALSE', 'false']
+
+            if active not in allowed_str:
+                logger.debug(active)
+                raise ValueError(f'active not in: {allowed_str}')
+
+            self._active = (active.lower() == 'true')
+        else:
+            logger.debug(type(active))
+            raise TypeError('active can only be assigned types: bool, str')
 
     @classmethod
     def init_using_form(cls, **kwargs):
@@ -138,9 +163,9 @@ class Advertisement(object):
             cursor = conn.cursor()
             cursor.execute(
                 "INSERT INTO Advertisement (start_timestamp, license_number,"
-                f"origin, destination) VALUES ('{self.start_timestamp}', "
-                f"'{self.license_number}', '{self.origin}', "
-                f"'{self.destination}');",
+                f"origin, destination, active) VALUES ( "
+                f"'{self.start_timestamp}', '{self.license_number}', "
+                f"'{self.origin}', '{self.destination}', true);",
             )
             logger.debug(self)
             conn.commit()
@@ -171,20 +196,27 @@ class Advertisement(object):
 
     @classmethod
     @connection_required
-    def fetch(cls, license_number=None, conn=None):
+    def fetch(cls, license_number=None, start_timestamp=None, conn=None):
         try:
             cursor = conn.cursor()
 
+            if license_number and start_timestamp:
+                cursor.execute(
+                    "SELECT start_timestamp, license_number, "
+                    "origin, destination, active FROM advertisement "
+                    f"WHERE license_number='{license_number}'"
+                    f"and start_timestamp='{start_timestamp}';",
+                )
             if license_number:
                 cursor.execute(
                     "SELECT start_timestamp, license_number, "
-                    "origin, destination FROM advertisement "
-                    f"WHERE license_number='{license_number}'",
+                    "origin, destination, active FROM advertisement "
+                    f"WHERE license_number='{license_number}';",
                 )
             else:
                 cursor.execute(
                     'SELECT start_timestamp, license_number, '
-                    'origin, destination FROM advertisement;',
+                    'origin, destination, active FROM advertisement;',
                 )
 
             results = cursor.fetchall()
@@ -196,6 +228,7 @@ class Advertisement(object):
                     'license_number': result[1],
                     'origin': result[2],
                     'destination': result[3],
+                    'active': result[4],
                 }
                 advertisements.append(cls(**advertisement_details))
 
@@ -225,6 +258,47 @@ class Advertisement(object):
             logger.debug(conn)
             raise
 
+    @connection_required
+    def make_inactive(self, conn=None):
+        try:
+            cursor = conn.cursor()
+            cursor.execute(
+                "UPDATE advertisement SET active=false WHERE "
+                f"license_number='{self.license_number}' and "
+                f"start_timestamp='{self.start_timestamp}';",
+            )
+            conn.commit()
+
+            logger.info(f'Advertisment made inactive')
+
+        except AttributeError:
+            logger.error(
+                'Unable to make advertisement inactive, '
+                'did you pass in a connection?',
+            )
+            logger.debug(conn)
+            raise
+
+        except psycopg2.InterfaceError:
+            logger.error(
+                'Unable to make advertisement inactive, '
+                'is connection open?',
+            )
+            logger.debug(conn)
+            raise
+
+        except psycopg2.OperationalError:
+            logger.error(
+                'Unable to make advertisement inactive, '
+                'is database running?',
+            )
+            raise
+
+    def close_bidding(self):
+        highest_bid = Bid.get_highest(advertisement=self)
+        Ride.confirm(bid=highest_bid)
+        self.make_inactive()
+
     def __str__(self):
         output = f"""
 --------------------------------------------------------------------------------
@@ -234,6 +308,7 @@ start_timestamp: {self.start_timestamp}
 license_number: {self.license_number}
 origin: {self.origin}
 destination: {self.destination}
+active: {self.active}
 --------------------------------------------------------------------------------
 """
         return output
