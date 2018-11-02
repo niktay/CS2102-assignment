@@ -5,9 +5,9 @@ from logging import getLogger
 import psycopg2
 
 from app.model.bid import Bid
-from app.model.bid import Ride
 from app.model.car import Car
 from app.model.database import connection_required
+from app.model.ride import Ride
 
 
 logger = getLogger(__name__)
