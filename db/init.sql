@@ -27,6 +27,7 @@ start_timestamp TIMESTAMP NOT NULL,
 license_number VARCHAR(64) NOT NULL,
 origin VARCHAR(255) NOT NULL,
 destination VARCHAR(255) NOT NULL,
+active BOOLEAN NOT NULL,
 PRIMARY KEY (start_timestamp, license_number),
 FOREIGN KEY (license_number) REFERENCES driver (license_number),
 CONSTRAINT origin_destination_different CHECK (origin != destination)
@@ -44,7 +45,7 @@ FOREIGN KEY (license_number) REFERENCES driver (license_number)
 
 CREATE TABLE bid
 (
-bid_id INTEGER NOT NULL,
+bid_id SERIAL NOT NULL,
 price DECIMAL(19,4) NOT NULL,
 username VARCHAR(64) NOT NULL,
 start_timestamp TIMESTAMP NOT NULL,

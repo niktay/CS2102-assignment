@@ -83,24 +83,30 @@
     </h4>
 </header>
 <article class="card-body">
-<form action="{{ url_for('advertisement.create_advertisement') }}" method="POST">
+<form action="{{ url_for('bid.create_bid') }}" method="POST">
 	<label>Date and Time</label>
 	<p id="datetime" name="datetime">{{ advertisement.start_timestamp }}</p>
+	<input type="hidden" name="datetime" value="{{ advertisement.start_timestamp }}" />
 	<label>Origin</label>
 	<p id="origin" name="origin">{{ advertisement.origin }}</p>
+	<input type="hidden" name="origin" value="{{ advertisement.origin }}" />
 	<label>Destination</label>
     <p id="destination" name="destination">{{ advertisement.destination }}</p>
+	<input type="hidden" name="destination" value="{{ advertisement.destination }}" />
 	<label>Driver's License Plate</label>
 	<p name="license-plate" id="license-plate">{{ advertisement.car().license_plate }}</p>
+	<input type="hidden" name="license-plate" value="{{ advertisement.car().license_plate }}" />
 	<label>Brand of Car</label>
 	<p name="brand" id="brand">{{ advertisement.car().brand }}</p>
+	<input type="hidden" name="brand" value="{{ advertisement.car().brand }}" />
 	<label>Model of Car</label>
 	<p name="model" id="model">{{ advertisement.car().model }}</p>
+	<input type="hidden" name="model" value="{{ advertisement.car().model }}" />
 
      <div class="form-row">
 		<div class="col form-group">
 			<label>Bid</label>
-			<input id="bid_value" name="bid_value" type="number" step="1.0" class="form-control" required>
+			<input id="price" name="price" type="number" step="1.0" class="form-control" required>
 			<br/>
 			<button type="submit" class="btn btn-secondary btn-block">Submit</button>
 		</div> <!-- form-group// -->

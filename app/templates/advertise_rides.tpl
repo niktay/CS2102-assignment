@@ -104,6 +104,7 @@
                                   <td>Date and Time</td>
                                   <td>Origin</td>
                                   <td>Destination</td>
+                                  <td>Highest Bid</td>
                                   <td>Status</td>
                                   <td>End Bidding</td>
                                </tr>
@@ -113,8 +114,20 @@
                                   <td>{{ advertisement.start_timestamp }}</td>
                                   <td>{{ advertisement.origin }}</td>
                                   <td>{{ advertisement.destination }}</td>
-                                  <td><span class="badge badge-pill badge-success">Open</span></td>
-                                  <td><a href="#"><spn data-feather="stop-circle"></span></a></td>
+                                  <td>{{ highest_bid(advertisement).price }}</td>
+                                  <td>{% if advertisement.active %}
+										<span class="badge badge-pill badge-success">Open</span>
+									  {% else %}
+										<span class="badge badge-pill badge-danger">Closed</span>
+									  {% endif %}
+								  </td>
+                                  <td>
+									<form action="{{ url_for('advertisement.end_bidding') }}" method="POST">
+										<input type="hidden" name="start-timestamp" value="{{ advertisement.start_timestamp }}" />
+										<input type="hidden" name="license-number" value="{{ advertisement.license_number }}" />
+										<input type="submit" value="End Bidding" class="btn btn-secondary btn-block"/>
+									</form>
+								</td>
                                </tr>
                                {% endfor %}
                            {% endif %}

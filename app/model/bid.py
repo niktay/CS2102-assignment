@@ -6,7 +6,6 @@ import psycopg2
 
 from app.model.database import connection_required
 
-
 logger = getLogger(__name__)
 
 
@@ -74,7 +73,7 @@ class Bid(object):
         bid_id = kwargs.get('bid-id', None)
         price = kwargs.get('price', None)
         username = kwargs.get('username', None)
-        start_timestamp = kwargs.get('start-timestamp', None)
+        start_timestamp = kwargs.get('datetime', None)
         license_number = kwargs.get('license-number', None)
 
         bid = cls(
@@ -87,29 +86,49 @@ class Bid(object):
 
     @connection_required
     def save(self, conn=None):
+        from app.model.advertisement import Advertisement
+
         required_parameters = [
             self.price, self.username, self.start_timestamp,
             self.license_number,
         ]
 
+        logger.debug(f'Attempting to save:\n{self}')
         if not all(required_parameters):
             logger.warning('Insufficient fields provided to create Bid')
             return False
 
-        if self.price <= self.get_highest().price:
-            logger.warning('Bid price too low')
-            return False
+        try:
+            advertisement = Advertisement(
+                license_number=self.license_number,
+                start_timestamp=self.start_timestamp,
+            )
+            if (
+                self.price <=
+                self.get_highest(advertisement=advertisement).price
+            ):
+                logger.warning('Bid price too low')
+                return False
+        except AttributeError:
+            """
+            if self.get_highest() is None, we infer that it is the only bid.
+            Therefore it self.price is the highest bid, so we accept it.
+            """
+            if self.price:  # Verify that self.price is not None
+                pass
 
         try:
             cursor = conn.cursor()
 
             cursor.execute(
-                "INSERT INTO bid (price, username, start_timestamp, "
-                f"license_number) VALUES ('{self.price}', '{self.username}', "
-                f"'{self.start_timestamp}', '{self.license_number}');",
+                "INSERT INTO bid (bid_id, price, username, start_timestamp, "
+                f"license_number) VALUES (default, '{self.price}', "
+                f"'{self.username}', '{self.start_timestamp}', "
+                f"'{self.license_number}');",
             )
 
             conn.commit()
+            logger.debug(self)
 
             return True
 
@@ -136,14 +155,17 @@ class Bid(object):
 
     @classmethod
     @connection_required
-    def get_highest(cls, conn=None):
+    def get_highest(cls, advertisement=None, conn=None):
         try:
             cursor = conn.cursor()
 
             cursor.execute(
-                'SELECT bid_id, price, username, start_timestamp, '
-                'license_number FROM bid WHERE price = (SELECT '
-                'max(price) FROM bid;);',
+                "SELECT bid_id, price, username, start_timestamp, "
+                "license_number FROM bid WHERE price = (SELECT "
+                "max(price) FROM (SELECT price FROM bid WHERE "
+                f"license_number='{advertisement.license_number}' "
+                f"and start_timestamp='{advertisement.start_timestamp}') "
+                " AS advertisement_bids);",
             )
 
             bid_found = cursor.fetchone()
@@ -177,3 +199,16 @@ class Bid(object):
         except psycopg2.OperationalError:
             logger.error('Unable to fetch bid, is database running?')
             raise
+
+    def __str__(self):
+        output = f"""
+--------------------------------------------------------------------------------
+                               Bid
+--------------------------------------------------------------------------------
+license_number: {self.license_number}
+username: {self.username}
+start_timestamp: {self.start_timestamp}
+price: {self.price}
+--------------------------------------------------------------------------------
+"""
+        return output

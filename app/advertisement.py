@@ -8,6 +8,7 @@ from flask import url_for
 from flask_login import current_user
 from flask_login import login_required
 from model import Advertisement
+from model import Bid
 from model import Driver
 
 logger = getLogger(__name__)
@@ -45,10 +46,14 @@ def view_own_advertisements():
         return redirect(url_for('driver.view_driver_registration'))
 
     advertisements = Advertisement.fetch(license_number=driver.license_number)
+    highest_bid = Bid.get_highest
+
+    if highest_bid is None:
+        highest_bid = 'No Bids'
 
     return render_template(
         'advertise_rides.tpl',
-        advertisements=advertisements, driver=driver,
+        advertisements=advertisements, driver=driver, highest_bid=highest_bid,
     )
 
 
@@ -97,3 +102,21 @@ def view_advertisement_creation():
         'advertisement.tpl', is_view=False,
         driver=driver,
     )
+
+
+@advertisement_blueprint.route('/close', methods=['GET', 'POST'])
+@login_required
+def end_bidding():
+    if request.method != 'POST':
+        return redirect(request.referrer)
+
+    license_number = request.form.get('license-number', None)
+    start_timestamp = request.form.get('start-timestamp', None)
+    advertisement = Advertisement.fetch(
+        license_number=license_number,
+        start_timestamp=start_timestamp,
+    )[0]
+
+    advertisement.close_bidding()
+
+    return redirect(request.referrer)
