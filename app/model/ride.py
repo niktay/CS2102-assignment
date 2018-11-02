@@ -60,7 +60,7 @@ class Ride(object):
 
             return True
 
-        except psycopg2.IntegrityError as e:
+        except psycopg2.IntegrityError:
             logger.warning('Unable to confirm, bid_id does not exist')
             raise
 
