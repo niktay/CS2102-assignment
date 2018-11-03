@@ -1,13 +1,24 @@
 import psycopg2
 from flask import Blueprint
 from flask import render_template
+from model import Account
+from model import Advertisement
+from model import Bid
+from model import Ride
 
 admin_blueprint = Blueprint('admin', __name__, template_folder='templates')
 
 
 @admin_blueprint.route('/', methods=['GET', 'POST'])
 def view_dashboard():
-    return render_template('admin.tpl')
+    return render_template(
+        'admin.tpl',
+        bid_count=Advertisement.total_by_month(),
+        ride_count=Ride.total_by_month(),
+        active_count=Account.active_count(),
+        inactive_count=Account.inactive_count(),
+        bid_hourly_data=Bid.dump_hourly_jinja(),
+    )
 
 
 @admin_blueprint.route('/view/<string:table_name>', methods=['GET', 'POST'])

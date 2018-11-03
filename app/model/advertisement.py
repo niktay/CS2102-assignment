@@ -207,7 +207,7 @@ class Advertisement(object):
                     f"WHERE license_number='{license_number}'"
                     f"and start_timestamp='{start_timestamp}';",
                 )
-            if license_number:
+            elif license_number:
                 cursor.execute(
                     "SELECT start_timestamp, license_number, "
                     "origin, destination, active FROM advertisement "
@@ -220,7 +220,7 @@ class Advertisement(object):
                 )
 
             results = cursor.fetchall()
-
+            logger.debug(results)
             advertisements = []
             for result in results:
                 advertisement_details = {
@@ -270,6 +270,63 @@ class Advertisement(object):
             conn.commit()
 
             logger.info(f'Advertisment made inactive')
+
+        except AttributeError:
+            logger.error(
+                'Unable to make advertisement inactive, '
+                'did you pass in a connection?',
+            )
+            logger.debug(conn)
+            raise
+
+        except psycopg2.InterfaceError:
+            logger.error(
+                'Unable to make advertisement inactive, '
+                'is connection open?',
+            )
+            logger.debug(conn)
+            raise
+
+        except psycopg2.OperationalError:
+            logger.error(
+                'Unable to make advertisement inactive, '
+                'is database running?',
+            )
+            raise
+
+    @classmethod
+    @connection_required
+    def total_by_month(cls, conn=None):
+        try:
+            cursor = conn.cursor()
+            cursor.execute(
+                "SELECT myMon, COUNT(*) FROM (SELECT to_char(start_timestamp, "
+                "'Mon') as myMon FROM advertisement WHERE extract(year from "
+                "start_timestamp) = extract(year from NOW())) As foo GROUP BY "
+                "myMon;",
+            )
+
+            bid_per_month = cursor.fetchall()
+            bid_count = {
+                'Jan': 0,
+                'Feb': 0,
+                'Mar': 0,
+                'Apr': 0,
+                'May': 0,
+                'Jun': 0,
+                'Jul': 0,
+                'Aug': 0,
+                'Sep': 0,
+                'Oct': 0,
+                'Nov': 0,
+                'Dec': 0,
+            }
+            for month, bid in bid_per_month:
+                bid_count[month] = int(bid)
+
+            logger.debug(bid_count)
+
+            return bid_count
 
         except AttributeError:
             logger.error(

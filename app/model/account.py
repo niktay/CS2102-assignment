@@ -285,6 +285,83 @@ class Account(UserMixin, object):
             logger.error('Unable to save, is database running?')
             raise
 
+    @classmethod
+    @connection_required
+    def inactive_count(cls, conn=None):
+        try:
+            cursor = conn.cursor()
+            cursor.execute(
+                "SELECT account.username as "
+                "inactive_rider FROM account LEFT JOIN bid ON bid.username = "
+                "account.username WHERE bid.username IS NULL;",
+            )
+
+            inactive_riders = [rider[0] for rider in cursor.fetchall()]
+            logger.debug(inactive_riders)
+
+            cursor.execute(
+                "SELECT driver.username as inactive_driver FROM driver LEFT "
+                "JOIN advertisement ON advertisement.license_number = "
+                "driver.license_number WHERE advertisement.license_number IS "
+                "NULL;",
+            )
+
+            inactive_drivers = [driver[0] for driver in cursor.fetchall()]
+            logger.debug(inactive_drivers)
+
+            inactive_accounts = []
+            inactive_accounts.extend(inactive_riders)
+            inactive_accounts.extend(inactive_drivers)
+
+            return len(set(inactive_accounts))
+
+        except psycopg2.IntegrityError:
+            logger.warning('Unable to save, username already exists')
+            raise
+
+        except AttributeError:
+            logger.error('Unable to save, did you pass in a connection?')
+            logger.debug(conn)
+            raise
+
+        except psycopg2.InterfaceError:
+            logger.error('Unable to save, is connection open?')
+            logger.debug(conn)
+            raise
+
+        except psycopg2.OperationalError:
+            logger.error('Unable to save, is database running?')
+            raise
+
+    @classmethod
+    @connection_required
+    def active_count(cls, conn=None):
+        try:
+            cursor = conn.cursor()
+            cursor.execute("SELECT COUNT(*) FROM account;")
+            count = cursor.fetchone()
+            logger.debug(count)
+
+            return int(count[0]) - cls.inactive_count()
+
+        except psycopg2.IntegrityError:
+            logger.warning('Unable to save, username already exists')
+            raise
+
+        except AttributeError:
+            logger.error('Unable to save, did you pass in a connection?')
+            logger.debug(conn)
+            raise
+
+        except psycopg2.InterfaceError:
+            logger.error('Unable to save, is connection open?')
+            logger.debug(conn)
+            raise
+
+        except psycopg2.OperationalError:
+            logger.error('Unable to save, is database running?')
+            raise
+
     def __str__(self):
         output = f"""
 --------------------------------------------------------------------------------
