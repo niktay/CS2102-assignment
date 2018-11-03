@@ -77,3 +77,61 @@ class Ride(object):
         except psycopg2.OperationalError:
             logger.error('Unable to confirm, is database running?')
             raise
+
+    @classmethod
+    @connection_required
+    def total_by_month(cls, conn=None):
+        try:
+            cursor = conn.cursor()
+            cursor.execute(
+                "SELECT myMon, COUNT(*) FROM(SELECT "
+                "to_char(bid.start_timestamp, 'Mon') as myMon from ride, bid "
+                "WHERE ride.bid_id=bid.bid_id AND extract(year from "
+                "bid.start_timestamp) = extract(year from NOW())) as foo "
+                "GROUP BY myMon;",
+            )
+
+            ride_per_month = cursor.fetchall()
+            ride_count = {
+                'Jan': 0,
+                'Feb': 0,
+                'Mar': 0,
+                'Apr': 0,
+                'May': 0,
+                'Jun': 0,
+                'Jul': 0,
+                'Aug': 0,
+                'Sep': 0,
+                'Oct': 0,
+                'Nov': 0,
+                'Dec': 0,
+            }
+            for month, ride in ride_per_month:
+                ride_count[month] = int(ride)
+
+            logger.debug(ride_count)
+
+            return ride_count
+
+        except AttributeError:
+            logger.error(
+                'Unable to make advertisement inactive, '
+                'did you pass in a connection?',
+            )
+            logger.debug(conn)
+            raise
+
+        except psycopg2.InterfaceError:
+            logger.error(
+                'Unable to make advertisement inactive, '
+                'is connection open?',
+            )
+            logger.debug(conn)
+            raise
+
+        except psycopg2.OperationalError:
+            logger.error(
+                'Unable to make advertisement inactive, '
+                'is database running?',
+            )
+            raise

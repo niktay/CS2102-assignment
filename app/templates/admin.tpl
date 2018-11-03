@@ -15,6 +15,8 @@
 
     <!-- Custom styles for this template -->
     <link href="{{ url_for('static',filename='styles/dashboard.css') }}" rel="stylesheet">
+<link rel="stylesheet" href="//cdn.jsdelivr.net/chartist.js/latest/chartist.min.css">
+    <script src="//cdn.jsdelivr.net/chartist.js/latest/chartist.min.js"></script>
   </head>
 
   <body>
@@ -87,20 +89,10 @@
         </nav>
 
         <main role="main" class="col-md-9 ml-sm-auto col-lg-10 px-4">
-          <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
-            <h1 class="h2">{{table_name}}</h1>
-            <div class="btn-toolbar mb-2 mb-md-0">
-              <div class="btn-group mr-2">
-                <button type="button" class="btn btn-sm btn-outline-secondary">Share</button>
-                <button type="button" class="btn btn-sm btn-outline-secondary">Export</button>
-              </div>
-              <button type="button" class="btn btn-sm btn-outline-secondary dropdown-toggle">
-                <span data-feather="calendar"></span>
-                This week
-              </button>
-            </div>
+          <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3">
+			<div class="ride-bid-by-month-chart ct-octave col-lg-5"></div>
+			<div class="inactive-active-chart ct-octave col-lg-5"></div>
           </div>
-         <canvas class="my-4 w-100" id="myChart" width="900" height="380"></canvas>
         </main>
 
  <!-- Bootstrap core JavaScript
@@ -117,35 +109,47 @@
       feather.replace()
     </script>
 <!-- Graphs -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.7.1/Chart.min.js"></script>
-    <script>
-      var ctx = document.getElementById("myChart");
-      var myChart = new Chart(ctx, {
-        type: 'line',
-        data: {
-          labels: ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"],
-          datasets: [{
-            data: [15339, 21345, 18483, 24003, 23489, 24092, 12034],
-            lineTension: 0,
-            backgroundColor: 'transparent',
-            borderColor: '#007bff',
-            borderWidth: 4,
-            pointBackgroundColor: '#007bff'
-          }]
-        },
-        options: {
-          scales: {
-            yAxes: [{
-              ticks: {
-                beginAtZero: false
-              }
-            }]
-          },
-          legend: {
-            display: false,
-          }
-        }
-      });
-    </script>
+	<script>
+	var data = {
+	  labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'],
+	  series: [
+		[{{ bid_count['Jan'] }}, {{ bid_count['Feb'] }}, {{ bid_count['Mar'] }}, {{ bid_count['Apr'] }}, {{ bid_count['May'] }}, {{ bid_count['Jun'] }}, {{ bid_count['Jul'] }}, {{ bid_count['Aug'] }}, {{ bid_count['Sep'] }}, {{ bid_count['Oct'] }}, {{ bid_count['Nov'] }}, {{ bid_count['Dec'] }}],
+		[{{ ride_count['Jan'] }}, {{ ride_count['Feb'] }}, {{ ride_count['Mar'] }}, {{ ride_count['Apr'] }}, {{ ride_count['May'] }}, {{ ride_count['Jun'] }}, {{ ride_count['Jul'] }}, {{ ride_count['Aug'] }}, {{ ride_count['Sep'] }}, {{ ride_count['Oct'] }}, {{ ride_count['Nov'] }}, {{ ride_count['Dec'] }}]
+	  ]
+	};
+
+	var options = {
+	  seriesBarDistance: 10,
+	  axisY: {
+		onlyInteger: true,
+	  }
+	};
+
+	var responsiveOptions = [
+	  ['screen and (max-width: 640px)', {
+		seriesBarDistance: 5,
+		axisX: {
+		  labelInterpolationFnc: function (value) {
+			return value[0];
+		  }
+		}
+	  }]
+	];
+
+	new Chartist.Bar('.ride-bid-by-month-chart', data, options, responsiveOptions);
+	</script>
+	<script>
+		var data = {
+		  series: [{{ active_count }}, {{ inactive_count }}]
+		};
+
+		var sum = function(a, b) { return a + b };
+
+		new Chartist.Pie('.inactive-active-chart', data, {
+		  labelInterpolationFnc: function(value) {
+			return Math.round(value / data.series.reduce(sum) * 100) + '%';
+		  }
+		});
+	</script>
   </body>
 </html>
