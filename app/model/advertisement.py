@@ -207,7 +207,7 @@ class Advertisement(object):
                     f"WHERE license_number='{license_number}'"
                     f"and start_timestamp='{start_timestamp}';",
                 )
-            if license_number:
+            elif license_number:
                 cursor.execute(
                     "SELECT start_timestamp, license_number, "
                     "origin, destination, active FROM advertisement "
@@ -220,7 +220,7 @@ class Advertisement(object):
                 )
 
             results = cursor.fetchall()
-
+            logger.debug(results)
             advertisements = []
             for result in results:
                 advertisement_details = {

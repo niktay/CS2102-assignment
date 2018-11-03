@@ -167,8 +167,9 @@ class Bid(object):
                 f"and start_timestamp='{advertisement.start_timestamp}') "
                 " AS advertisement_bids);",
             )
-
+            logger.debug(advertisement)
             bid_found = cursor.fetchone()
+            logger.debug(bid_found)
 
             if bid_found is None:
                 return None
@@ -199,6 +200,51 @@ class Bid(object):
         except psycopg2.OperationalError:
             logger.error('Unable to fetch bid, is database running?')
             raise
+
+    @classmethod
+    @connection_required
+    def dump_hourly(cls, conn=None):
+        try:
+            cursor = conn.cursor()
+            cursor.execute(
+                "SELECT bid.price, extract(hour from bid.start_timestamp) FROM"
+                " bid,ride WHERE bid.bid_id=ride.bid_id GROUP BY extract(hour "
+                "from bid.start_timestamp), bid.price;",
+            )
+            bid_data = cursor.fetchall()
+
+            logger.debug(bid_data)
+
+            bid_information = []
+            for bid, bid_hour in bid_data:
+                bid_information.append((int(bid_hour), int(bid)))
+
+            logger.debug(bid_information)
+            return bid_information
+
+        except AttributeError:
+            logger.error('Unable to fetch bid, did you pass in a connection?')
+            logger.debug(conn)
+            raise
+
+        except psycopg2.InterfaceError:
+            logger.error('Unable to fetch bid, is connection open?')
+            logger.debug(conn)
+            raise
+
+        except psycopg2.OperationalError:
+            logger.error('Unable to fetch bid, is database running?')
+            raise
+
+    @classmethod
+    def dump_hourly_jinja(cls):
+        hourly_data = cls.dump_hourly()
+
+        formatted_data = []
+        for hour, bid in hourly_data:
+            formatted_data.append(f'{{ x:{hour}, y:{bid} }}')
+        logger.debug(formatted_data)
+        return ', '.join(formatted_data)
 
     def __str__(self):
         output = f"""
