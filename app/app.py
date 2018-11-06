@@ -1,5 +1,6 @@
 from flask import Flask
 from flask import redirect
+from flask import render_template
 from flask import url_for
 from flask_login import current_user
 from flask_login import LoginManager
@@ -19,6 +20,7 @@ from admin import admin_blueprint  # noqa: E402
 from adminitise import adminitise_blueprint  # noqa: E402
 from bid import bid_blueprint  # noqa: E402
 from driver import driver_blueprint  # noqa: E402
+from ride import ride_blueprint  # noqa: E402
 from registration import registration_blueprint  # noqa: E402
 from advertisement import advertisement_blueprint  # noqa: E402
 from profile import profile_blueprint  # noqa: E402
@@ -32,6 +34,7 @@ try:
     app.register_blueprint(login_blueprint, url_prefix='/login')
     app.register_blueprint(registration_blueprint, url_prefix='/register')
     app.register_blueprint(admin_blueprint, url_prefix='/admin')
+    app.register_blueprint(ride_blueprint, url_prefix='/ride')
     app.register_blueprint(adminitise_blueprint, url_prefix='/adminitise')
     app.register_blueprint(
         advertisement_blueprint,
@@ -55,6 +58,11 @@ def landing_page():
     if current_user:
         return redirect(url_for('profile.view_profile'))
     return redirect(url_for('login.view_login_form'))
+
+
+@app.errorhandler(404)
+def page_not_found(e):
+    return render_template('404.html'), 404
 
 
 def run():

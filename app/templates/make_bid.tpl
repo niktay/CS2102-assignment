@@ -41,12 +41,6 @@
                 </a>
               </li>
               <li class="nav-item">
-                <a class="nav-link" href="#">
-                  <span data-feather="inbox"></span>
-                  	Notifications<span class="sr-only"></span>
-                </a>
-              </li>
-              <li class="nav-item">
                 <a class="nav-link" href="{{ url_for('advertisement.bid') }}">
                   <span data-feather="map-pin"></span>
                   	Place Bids<span class="sr-only"></span>

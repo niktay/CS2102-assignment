@@ -40,19 +40,19 @@
                 </a>
               </li>
               <li class="nav-item">
-                <a class="nav-link active" href="{{ url_for('advertisement.bid') }}">
+                <a class="nav-link" href="{{ url_for('advertisement.bid') }}">
                   <span data-feather="map-pin"></span>
                   	Place Bids<span class="sr-only"></span>
                 </a>
               </li>
               <li class="nav-item">
-                <a class="nav-link" href="#">
+                <a class="nav-link active" href="#">
                   <span data-feather="clock"></span>
                   	Scheduled Rides<span class="sr-only"></span>
                 </a>
               </li>
               <li class="nav-item">
-                <a class="nav-link" href="#">
+                <a class="nav-link" href="{{ url_for('ride.view_history') }}">
                   <span data-feather="archive"></span>
                   	Ride History<span class="sr-only"></span>
                 </a>
@@ -81,55 +81,33 @@
                   <div class="col-md-12">
                   <div class="card" style="margin-top: 3%">
                     <header class="card-header" style="background: #3b4249; color: white; font-weight: bold;">
-                    <h4 class="card-title mt-2">Manage Advertisements</h4>
+                    <h4 class="card-title mt-2">Scheduled Rides</h4>
 
                 </header>
                      <table class="table table-striped table-sm">
                         <thead style="background: #3b4249; color: white; font-weight: bold;">
                         </thead>
                         <tbody>
-                            {% if advertisements %}
+                            {% if upcoming %}
                                 <tr>
-
                                   <td>Date and Time</td>
+                                  <td>License Plate</td>
                                   <td>Origin</td>
                                   <td>Destination</td>
-                                  <td>Highest Bid</td>
-                                  <td>Status</td>
-                                  <td>End Bidding</td>
+                                  <td>Price</td>
                                </tr>
-
-                               {% for advertisement in advertisements %}
+                               {% for advertisement, details in upcoming.items() %}
                                <tr>
                                   <td>{{ advertisement.start_timestamp }}</td>
+                                  <td>{{ details.car.license_plate }}</td>
                                   <td>{{ advertisement.origin }}</td>
                                   <td>{{ advertisement.destination }}</td>
-                                  <td>{{ highest_bid(advertisement).price }}</td>
-                                  <td>{% if advertisement.active %}
-										<span class="badge badge-pill badge-success">Open</span>
-									  {% else %}
-										<span class="badge badge-pill badge-danger">Closed</span>
-									  {% endif %}
-								  </td>
-                                  <td>
-									<form action="{{ url_for('advertisement.end_bidding') }}" method="POST">
-										<input type="hidden" name="start-timestamp" value="{{ advertisement.start_timestamp }}" />
-										<input type="hidden" name="license-number" value="{{ advertisement.license_number }}" />
-										<input type="submit" value="End Bidding" class="btn btn-secondary btn-block"/>
-									</form>
-								</td>
+                                  <td>{{ details.bid.price }}</td>
                                </tr>
                                {% endfor %}
                            {% endif %}
                         </tbody>
-                     </table><!--
-                     {% if results is not none %}
-                         <div class="form-group">
-
-                         </div>
-                     {% endif %}-->
-
-                     <div class="border-top card-body text-center" style="solid #444444!important; font-weight: bold;"><a href="{{ url_for('advertisement.create_advertisement') }}">Create Advertisement</a></div>
+                     </table>
                     </div>
                      </div>
                   </div>
