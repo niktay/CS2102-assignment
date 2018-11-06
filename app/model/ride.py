@@ -4,6 +4,7 @@ from logging import getLogger
 
 import psycopg2
 
+from app.model.bid import Bid
 from app.model.database import connection_required
 
 
@@ -45,6 +46,61 @@ class Ride(object):
                 'confirmed_timestamp can only be assigned types: str, '
                 'datetime.datetime',
             )
+
+    @classmethod
+    @connection_required
+    def fetch(cls, username=None, past=False, upcoming=False, conn=None):
+        try:
+            cursor = conn.cursor()
+
+            if upcoming:
+                cursor.execute(
+                    "SELECT DISTINCT bid.start_timestamp, bid.license_number, "
+                    "bid.price FROM bid, ride WHERE bid.bid_id = ride.bid_id "
+                    "and bid.start_timestamp >= now() and "
+                    f"bid.username='{username}';",
+                )
+            elif past:
+                cursor.execute(
+                    "SELECT DISTINCT bid.start_timestamp, bid.license_number, "
+                    "bid.price FROM bid, ride WHERE bid.bid_id = ride.bid_id "
+                    "and bid.start_timestamp < now() and "
+                    f"bid.username='{username}';",
+                )
+            else:
+                cursor.execute(
+                    "SELECT DISTINCT bid.start_timestamp, bid.license_number, "
+                    "bid.price FROM bid, ride WHERE bid.bid_id = ride.bid_id "
+                    f"and bid.username='{username}';",
+                )
+
+            bids_found = cursor.fetchall()
+            logger.debug(bids_found)
+
+            bids_for_upcoming_rides = []
+            for bid in bids_found:
+                bid = Bid(
+                    start_timestamp=bid[0],
+                    license_number=bid[1],
+                    price=bid[2],
+                )
+                bids_for_upcoming_rides.append(bid)
+
+            return bids_for_upcoming_rides
+
+        except AttributeError:
+            logger.error('Unable to confirm, did you pass in a connection?')
+            logger.debug(conn)
+            raise
+
+        except psycopg2.InterfaceError:
+            logger.error('Unable to confirm, is connection open?')
+            logger.debug(conn)
+            raise
+
+        except psycopg2.OperationalError:
+            logger.error('Unable to confirm, is database running?')
+            raise
 
     @classmethod
     @connection_required

@@ -40,12 +40,6 @@
                 </a>
               </li>
               <li class="nav-item">
-                <a class="nav-link" href="#">
-                  <span data-feather="inbox"></span>
-                  	Notifications<span class="sr-only"></span>
-                </a>
-              </li>
-              <li class="nav-item">
                 <a class="nav-link active" href="{{ url_for('advertisement.bid') }}">
                   <span data-feather="map-pin"></span>
                   	Place Bids<span class="sr-only"></span>
@@ -87,15 +81,11 @@
                   <div class="col-md-12">
                   <div class="card" style="margin-top: 3%">
                     <header class="card-header" style="background: #3b4249; color: white; font-weight: bold;">
-                    <h4 class="card-title mt-2">My Advertisements</h4>
+                    <h4 class="card-title mt-2">Manage Advertisements</h4>
 
                 </header>
                      <table class="table table-striped table-sm">
                         <thead style="background: #3b4249; color: white; font-weight: bold;">
-                           <tr>
-                              <h4 class="table-title mt-2">Manage Advertisements</h4>
-                           </tr>
-							<a href="{{ url_for('advertisement.create_advertisement') }}">Create Advertisement</a>
                         </thead>
                         <tbody>
                             {% if advertisements %}

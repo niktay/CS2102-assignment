@@ -40,25 +40,19 @@
                 </a>
               </li>
               <li class="nav-item">
-                <a class="nav-link" href="#">
-                  <span data-feather="inbox"></span>
-                  	Notifications<span class="sr-only"></span>
-                </a>
-              </li>
-              <li class="nav-item">
                 <a class="nav-link" href="{{ url_for('advertisement.view_advertisements') }}">
                   <span data-feather="map-pin"></span>
                   	Place Bids<span class="sr-only"></span>
                 </a>
               </li>
               <li class="nav-item">
-                <a class="nav-link" href="#">
+                <a class="nav-link" href="{{ url_for('ride.view_upcoming') }}">
                   <span data-feather="clock"></span>
                   	Scheduled Rides<span class="sr-only"></span>
                 </a>
               </li>
               <li class="nav-item">
-                <a class="nav-link" href="#">
+                <a class="nav-link" href="{{ url_for('ride.view_history') }}">
                   <span data-feather="archive"></span>
                   	Ride History<span class="sr-only"></span>
                 </a>

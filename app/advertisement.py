@@ -28,7 +28,8 @@ def view_advertisements():
 
     if driver:
         advertisements = filter(
-            lambda advert: advert.license_number != driver.license_number,
+            lambda advert: advert.license_number != driver.license_number and
+            advert.active,
             advertisements,
         )
     return render_template(
