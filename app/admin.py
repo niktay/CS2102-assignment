@@ -1,6 +1,10 @@
 import psycopg2
 from flask import Blueprint
+from flask import redirect
 from flask import render_template
+from flask import url_for
+from flask_login import current_user
+from flask_login import login_required
 from model import Account
 from model import Advertisement
 from model import Bid
@@ -10,7 +14,12 @@ admin_blueprint = Blueprint('admin', __name__, template_folder='templates')
 
 
 @admin_blueprint.route('/', methods=['GET', 'POST'])
+@login_required
 def view_dashboard():
+    account = Account.load(current_user.get_id())
+    if not account.is_admin:
+        return redirect(url_for('profile.view_profile'))
+
     return render_template(
         'admin.tpl',
         bid_count=Advertisement.total_by_month(),
@@ -22,7 +31,12 @@ def view_dashboard():
 
 
 @admin_blueprint.route('/view/<string:table_name>', methods=['GET', 'POST'])
+@login_required
 def view_table(table_name):
+    account = Account.load(current_user.get_id())
+    if not account.is_admin:
+        return redirect(url_for('profile.view_profile'))
+
     try:
         # TODO(Nik): Secrets management
         conn = psycopg2.connect(
