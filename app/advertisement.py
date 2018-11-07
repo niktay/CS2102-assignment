@@ -28,10 +28,12 @@ def view_advertisements():
 
     if driver:
         advertisements = filter(
-            lambda advert: advert.license_number != driver.license_number and
-            advert.active,
+            lambda advert: advert.license_number != driver.license_number,
             advertisements,
         )
+
+    advertisements = filter(lambda advert: advert.active, advertisements,)
+
     return render_template(
         'view_advertisement.tpl',
         advertisements=advertisements, driver=driver,

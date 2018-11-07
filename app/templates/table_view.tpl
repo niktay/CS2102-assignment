@@ -15,6 +15,7 @@
 
     <!-- Custom styles for this template -->
     <link href="{{ url_for('static',filename='styles/dashboard.css') }}" rel="stylesheet">
+<link href='https://fonts.googleapis.com/css?family=Nova+Flat' rel='stylesheet' type='text/css'>
   </head>
 
   <body>

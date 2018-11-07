@@ -15,6 +15,7 @@
 
     <!-- Custom styles for this template -->
       <link href="{{ url_for('static',filename='styles/dashboard.css') }}" rel="stylesheet">
+<link href='https://fonts.googleapis.com/css?family=Nova+Flat' rel='stylesheet' type='text/css'>
    </head>
    <body style="background: #f7f7f7;">
     <nav class="navbar navbar-dark fixed-top bg-dark flex-md-nowrap p-0 shadow">
