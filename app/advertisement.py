@@ -34,9 +34,20 @@ def view_advertisements():
 
     advertisements = filter(lambda advert: advert.active, advertisements,)
 
+    advertisement_data = {}
+    for advertisement in advertisements:
+        highest_bid = Bid.get_highest(advertisement=advertisement)
+
+        if highest_bid is None:
+            highest_bid = Bid(price=0)
+
+        advertisement_data[advertisement] = highest_bid
+
+    logger.debug(advertisement_data)
+
     return render_template(
         'view_advertisement.tpl',
-        advertisements=advertisements, driver=driver,
+        advertisements=advertisement_data, driver=driver,
     )
 
 
@@ -50,9 +61,6 @@ def view_own_advertisements():
 
     advertisements = Advertisement.fetch(license_number=driver.license_number)
     highest_bid = Bid.get_highest
-
-    if highest_bid is None:
-        highest_bid = 'No Bids'
 
     return render_template(
         'advertise_rides.tpl',

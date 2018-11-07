@@ -41,25 +41,19 @@
                 </a>
               </li>
               <li class="nav-item">
-                <a class="nav-link" href="#">
-                  <span data-feather="inbox"></span>
-                  	Notifications<span class="sr-only"></span>
-                </a>
-              </li>
-              <li class="nav-item">
                 <a class="nav-link" href="{{ url_for('advertisement.bid') }}">
                   <span data-feather="map-pin"></span>
                   	Place Bids<span class="sr-only"></span>
                 </a>
               </li>
               <li class="nav-item">
-                <a class="nav-link" href="#">
+                <a class="nav-link" href="{{ url_for('ride.view_upcoming') }}">
                   <span data-feather="clock"></span>
                   	Scheduled Rides<span class="sr-only"></span>
                 </a>
               </li>
               <li class="nav-item">
-                <a class="nav-link" href="#">
+                <a class="nav-link" href="{{ url_for('ride.view_history') }}">
                   <span data-feather="archive"></span>
                   	Ride History<span class="sr-only"></span>
                 </a>
@@ -90,13 +84,6 @@
             </header>
 
             <article class="card-body">
-                {% if title not in "Driver Registration" %}
-
-                    <div>
-                        Zooming since <strong>{{driver.driving_since}}</strong>
-                    </div>
-
-                {% endif %}
             {% if title in "Driver Registration" %}
             <form action="{{ url_for('driver.register_driver') }}" method="POST">
             {% else %}
@@ -146,9 +133,7 @@
                         {% if title in "Driver Registration" %}
                             <textarea name="optional-bio" id="optional-bio" class="form-control" type="text" rows="3"></textarea>
                         {% else %}
-                            <textarea name="optional-bio" id="optional-bio" class="form-control" type="text" rows="3">{% if driver.optional_bio not in "None" %}
-                                {{ driver.optional_bio }}
-                            {% endif %}</textarea>
+                            <textarea name="optional-bio" id="optional-bio" class="form-control" type="text" rows="3">{% if driver.optional_bio %}{{ driver.optional_bio }}{% endif %}</textarea>
                         {% endif %}
                     </div>
                 </div>

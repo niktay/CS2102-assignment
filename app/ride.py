@@ -5,6 +5,7 @@ from flask import render_template
 from flask_login import current_user
 from flask_login import login_required
 from model import Advertisement
+from model import Driver
 from model import Ride
 
 ride_blueprint = Blueprint('ride', __name__, template_folder='templates',)
@@ -28,7 +29,12 @@ def view_upcoming():
             bid=bid,
         )
 
-    return render_template('scheduled_rides.tpl', upcoming=won_advertisement)
+    driver = Driver.load(username=username)
+
+    return render_template(
+        'scheduled_rides.tpl', upcoming=won_advertisement,
+        driver=driver,
+    )
 
 
 @ride_blueprint.route('/view/past', methods=['GET', 'POST'])
@@ -49,4 +55,9 @@ def view_history():
             bid=bid,
         )
 
-    return render_template('past_rides.tpl', past=won_advertisement)
+    driver = Driver.load(username=username)
+
+    return render_template(
+        'past_rides.tpl', past=won_advertisement,
+        driver=driver,
+    )
