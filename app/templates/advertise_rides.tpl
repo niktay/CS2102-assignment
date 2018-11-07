@@ -41,26 +41,26 @@
                 </a>
               </li>
               <li class="nav-item">
-                <a class="nav-link active" href="{{ url_for('advertisement.bid') }}">
+                <a class="nav-link" href="{{ url_for('advertisement.bid') }}">
                   <span data-feather="map-pin"></span>
                   	Place Bids<span class="sr-only"></span>
                 </a>
               </li>
               <li class="nav-item">
-                <a class="nav-link" href="#">
+                <a class="nav-link" href="{{ url_for('ride.view_upcoming') }}">
                   <span data-feather="clock"></span>
                   	Scheduled Rides<span class="sr-only"></span>
                 </a>
               </li>
               <li class="nav-item">
-                <a class="nav-link" href="#">
+                <a class="nav-link" href="{{ url_for('ride.view_history') }}">
                   <span data-feather="archive"></span>
                   	Ride History<span class="sr-only"></span>
                 </a>
               </li>
               {% if driver %}
               <li class="nav-item">
-                <a class="nav-link" href="{{ url_for('advertisement.view_own_advertisements') }}">
+                <a class="nav-link active" href="{{ url_for('advertisement.view_own_advertisements') }}">
                   <span data-feather="tv"></span>
                   	Advertise Ride<span class="sr-only"></span>
                 </a>
@@ -76,60 +76,54 @@
 
 
             <main role="main" class="col-md-9 ml-sm-auto col-lg-10 px-4">
-               <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
-               </div>
                <div class="row justify-content-center">
-                  <div class="col-md-12">
-                  <div class="card" style="margin-top: 3%">
+                  <div class="col-md-10">
+                  <div class="card" style="margin-top: 2%">
                     <header class="card-header" style="background: #3b4249; color: white; font-weight: bold;">
                     <h4 class="card-title mt-2">Manage Advertisements</h4>
 
                 </header>
+					<article class="card-body">
                      <table class="table table-striped table-sm">
+						{% if advertisements %}
                         <thead style="background: #3b4249; color: white; font-weight: bold;">
+						  <th scope="col">Date and Time</th>
+						  <th scope="col">Origin</th>
+						  <th scope="col">Destination</th>
+						  <th scope="col">Highest Bid</th>
+						  <th scope="col">Status</th>
+						  <th scope="col">End Bidding</th>
                         </thead>
                         <tbody>
-                            {% if advertisements %}
-                                <tr>
-
-                                  <td>Date and Time</td>
-                                  <td>Origin</td>
-                                  <td>Destination</td>
-                                  <td>Highest Bid</td>
-                                  <td>Status</td>
-                                  <td>End Bidding</td>
-                               </tr>
-
-                               {% for advertisement in advertisements %}
-                               <tr>
-                                  <td>{{ advertisement.start_timestamp }}</td>
-                                  <td>{{ advertisement.origin }}</td>
-                                  <td>{{ advertisement.destination }}</td>
-                                  <td>{{ highest_bid(advertisement).price }}</td>
-                                  <td>{% if advertisement.active %}
-										<span class="badge badge-pill badge-success">Open</span>
-									  {% else %}
-										<span class="badge badge-pill badge-danger">Closed</span>
-									  {% endif %}
-								  </td>
-                                  <td>
-									<form action="{{ url_for('advertisement.end_bidding') }}" method="POST">
-										<input type="hidden" name="start-timestamp" value="{{ advertisement.start_timestamp }}" />
-										<input type="hidden" name="license-number" value="{{ advertisement.license_number }}" />
-										<input type="submit" value="End Bidding" class="btn btn-secondary btn-block"/>
-									</form>
-								</td>
-                               </tr>
-                               {% endfor %}
-                           {% endif %}
+						   {% for advertisement in advertisements %}
+						   <tr>
+							  <td>{{ advertisement.start_timestamp }}</td>
+							  <td>{{ advertisement.origin }}</td>
+							  <td>{{ advertisement.destination }}</td>
+							  <td>${{ highest_bid(advertisement).price if highest_bid(advertisement).price else '0' }}.00</td>
+							  <td>{% if advertisement.active %}
+									<span class="badge badge-success" style="padding: 0.3rem;">Open</span>
+								  {% else %}
+									<span class="badge badge-danger" style="padding: 0.3rem;">Closed</span>
+								  {% endif %}
+							  </td>
+							  <td>
+								<form action="{{ url_for('advertisement.end_bidding') }}" method="POST">
+									<input type="hidden" name="start-timestamp" value="{{ advertisement.start_timestamp }}" />
+									<input type="hidden" name="license-number" value="{{ advertisement.license_number }}" />
+								{% if advertisement.active %}
+									<input type="submit" value="End Bidding" class="btn btn-secondary btn-block" style="padding: 2px 6px 2px 6px; font-size: 0.9rem;"/>
+								  {% else %}
+									<input type="submit" value="End Bidding" class="btn btn-secondary btn-block" style="padding: 2px 6px 2px 6px; font-size: 0.9rem;" disabled/>
+								  {% endif %}
+								</form>
+							</td>
+						   </tr>
+						   {% endfor %}
+					   {% endif %}
                         </tbody>
-                     </table><!--
-                     {% if results is not none %}
-                         <div class="form-group">
-
-                         </div>
-                     {% endif %}-->
-
+                     </table>
+					</article>
                      <div class="border-top card-body text-center" style="solid #444444!important; font-weight: bold;"><a href="{{ url_for('advertisement.create_advertisement') }}">Create Advertisement</a></div>
                     </div>
                      </div>

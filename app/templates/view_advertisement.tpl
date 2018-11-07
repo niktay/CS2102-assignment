@@ -70,42 +70,40 @@
 
             </ul>
             <h6 class="sidebar-heading d-flex justify-content-between align-items-center px-3 mt-4 mb-1 text-muted">
-            	<!--<span>Driver Dashboard</span>-->
             </h6>
           </div>
         </nav>
 
 
             <main role="main" class="col-md-9 ml-sm-auto col-lg-10 px-4">
-               <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
-               </div>
-
                <div class="row justify-content-center">
-                  <div class="col-md-12">
-                  <div class="card" style="margin-top: 3%">
+                  <div class="col-md-10">
+                  <div class="card" style="margin-top: 2%">
                     <header class="card-header" style="background: #3b4249; color: white; font-weight: bold;">
-                    <h4 class="card-title mt-2">Advertisements</h4>
-                </header>
-                     <table class="table table-striped table-sm">
+                    <h4 class="card-title mt-2">Rides Available</h4>
+					</header>
+					<article class="card-body">
+                     <table class="table table-sm">
 
+					{% if advertisements %}
+						<thead style="background-color: #494e54; color: #fff; border-color: #32383e;">
+
+						  <th scope="col">Date and Time</th>
+						  <th scope="col">License Plate</th>
+						  <th scope="col">Origin</th>
+						  <th scope="col">Destination</th>
+						  <th scope="col">Highest Bid</th>
+						  <th scope="col"></th>
+					   </thead>
                         <tbody>
-                            {% if advertisements %}
-                                <tr>
-
-                                  <td>Date and Time</td>
-                                  <td>License Plate</td>
-                                  <td>Origin</td>
-                                  <td>Destination</td>
-                                  <td></td>
-                               </tr>
-
-                               {% for advertisement in advertisements %}
+                               {% for advertisement, bid in advertisements.items() %}
                                <tr>
 
                                   <td>{{ advertisement.start_timestamp }}</td>
                                   <td>{{ advertisement.car().license_plate }}</td>
                                   <td>{{ advertisement.origin }}</td>
                                   <td>{{ advertisement.destination }}</td>
+                                  <td>${{ bid.price }}.00</td>
                                   <td>
                                     <form action="{{ url_for('advertisement.bid') }}" method="POST">
                                         <input type="hidden" name="start-timestamp" value="{{ advertisement.start_timestamp }}" />
@@ -113,23 +111,19 @@
 										<input type="hidden" name="origin" value="{{ advertisement.origin }}" />
 										<input type="hidden" name="destination" value = "{{ advertisement.destination }}" />
 
-                                        <input type="submit" name="bid" value="Bid" class="btn btn-secondary btn-block"/>
+                                        <input type="submit" name="bid" value="Bid" class="btn btn-secondary btn-block" style="padding: 2px 6px 2px 6px; font-size: 0.9rem;"/>
                                     </form>
                                    </td>
                                </tr>
                                {% endfor %}
                            {% else %}
                                 <tr>
-                                  No advertisements found.
+                                  No rides available for bidding.
                                </tr>
                            {% endif %}
                         </tbody>
-                     </table><!--
-                     {% if results is not none %}
-                         <div class="form-group">
-
-                         </div>
-                     {% endif %}-->
+                     </table>
+					</article>
                      </div>
                   </div>
                </div>

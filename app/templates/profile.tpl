@@ -87,8 +87,6 @@
 			<p>DOB: {{ account.date_of_birth }}</p>
 			<p>Contact: {{ account.contact }}</p>
 			<p>Email: {{ account.email }}</p>
-            <form action="" method="POST">
-            </form>
             </article> <!-- card-body end .// -->
 
             </div> <!-- col.//-->
@@ -106,9 +104,7 @@
 			    <p>License Plate: {{ car.license_plate }}</p>
 			    <p>Brand: {{ car.brand }}</p>
 			    <p>Model: {{ car.model }}</p>
-			    <p>Bio: {{ driver.bio }}</p>
-                <form action="" method="POST">
-                </form>
+			    <p>Bio: {{ driver.optional_bio }}</p>
                 </article> <!-- card-body end .// -->
         <div class="border-top card-body text-center" style="solid #444444!important; font-weight: bold;"><a href="{{ url_for('driver.get_profile') }}"> Edit your driver info</a></div>
         </div>
@@ -116,7 +112,7 @@
         </div>
         {% else %}
 
-        <div class="border-top card-body text-center" style="solid #444444!important; font-weight: bold;">Not a driver yet? <a href="{{ url_for('driver.view_driver_registration') }}" style="color: #ffcc00;"> Zoom as a driver!</a></div>
+        <div class="border-top card-body text-center" style="solid #444444!important; font-weight: bold;">Not a driver yet? <a href="{{ url_for('driver.view_driver_registration') }}" style="color: #696969;"> Zoom as a driver!</a></div>
         </div>
 
         {% endif %}
