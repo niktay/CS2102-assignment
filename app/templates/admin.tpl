@@ -17,6 +17,7 @@
 
     <!-- Custom styles for this template -->
     <link href="{{ url_for('static',filename='styles/dashboard.css') }}" rel="stylesheet">
+<link href='https://fonts.googleapis.com/css?family=Nova+Flat' rel='stylesheet' type='text/css'>
     <link rel="stylesheet" href="//cdn.jsdelivr.net/chartist.js/latest/chartist.min.css">
     <script src="//cdn.jsdelivr.net/chartist.js/latest/chartist.min.js"></script>
 </head>
