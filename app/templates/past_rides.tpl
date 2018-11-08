@@ -102,6 +102,10 @@
 							  <td>${{ details.bid.price }}.00</td>
 						   </tr>
 						   {% endfor %}
+					   {% else %}
+							<tr>
+							  No past rides.
+						   </tr>
 					   {% endif %}
                         </tbody>
                      </table>
