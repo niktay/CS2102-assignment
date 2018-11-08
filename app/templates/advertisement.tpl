@@ -41,25 +41,19 @@
                 </a>
               </li>
               <li class="nav-item">
-                <a class="nav-link" href="#">
-                  <span data-feather="inbox"></span>
-                  	Notifications<span class="sr-only"></span>
-                </a>
-              </li>
-              <li class="nav-item">
-                <a class="nav-link active" href="{{ url_for('advertisement.bid') }}">
+                <a class="nav-link" href="{{ url_for('advertisement.bid') }}">
                   <span data-feather="map-pin"></span>
                   	Place Bids<span class="sr-only"></span>
                 </a>
               </li>
               <li class="nav-item">
-                <a class="nav-link" href="#">
+                <a class="nav-link" href="{{ url_for('ride.view_upcoming') }}">
                   <span data-feather="clock"></span>
                   	Scheduled Rides<span class="sr-only"></span>
                 </a>
               </li>
               <li class="nav-item">
-                <a class="nav-link" href="#">
+                <a class="nav-link" href="{{ url_for('ride.view_history') }}">
                   <span data-feather="archive"></span>
                   	Ride History<span class="sr-only"></span>
                 </a>
@@ -96,8 +90,7 @@
     <div class="form-row">
         <div class="col form-group">
             <label>Date and Time</label>
-                <input id="date" name="date" type="date" class="form-control" required>
-                <input id="time" name="time" type="time" class="form-control" required>
+                <input id="datetime" name="start-timestamp" type="datetime" class="form-control" style="background-color: #fff !important;" required>
         </div> <!-- form-group end.// -->
     </div> <!-- form-row end.// -->
     <div class="form-row">
@@ -138,12 +131,17 @@
     <script>window.jQuery || document.write('<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>')</script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.4/popper.min.js" integrity="sha384-zPwDDZkj9/CM2d74L+dd2WTHeYF/A9Ofy7JjxlVASlm7rwhH1lL5dfWqHwYALj/7" crossorigin="anonymous"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js" integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy" crossorigin="anonymous"></script>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/flatpickr/4.5.2/flatpickr.min.css" integrity="sha384-sr24+N5hvbO83z6WV4A9zRt0bXHxKxmHiE2MliCVO6ic+CIbnJsqndMaaM6kdShS" crossorigin="anonymous">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/flatpickr/4.5.2/flatpickr.min.js" integrity="sha384-OpRdsqyoNpMsxINrUErWMPDGYcDdgDXG+MefUFBy42yukJGecar+6uS4HBGGWb+e" crossorigin="anonymous"></script>
 
     <!-- Icons -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/feather-icons/4.7.3/feather.min.js" integrity="sha384-J9NDmNXQWiLtHyKfNbrfzB4OSGV7bvmYyJchj3hOqsiBgxrYNkRIeo5b+9ivqw0d" crossorigin="anonymous"></script>
     <script>
       feather.replace()
     </script>
+<script>
+flatpickr("#datetime", {enableTime: true, dateFormat: "Y-m-d H:i:S"});
+</script>
 
   </body>
 </html>
