@@ -43,12 +43,12 @@
     <div class="form-row">
         <div class="col form-group">
             <label style="font-weight: bold;">Full Name</label>
-              <input name="full-name" id="full-name" type="text" class="form-control" placeholder="" required>
+              <input name="full-name" id="full-name" type="text" class="form-control" maxlength="255" placeholder="" required>
         </div> <!-- form-group end.// -->
     </div> <!-- form-row end.// -->
     <div class="form-group">
         <label style="font-weight: bold;">Username</label>
-        <input name="username" id="username" class="form-control" type="text" required>
+        <input name="username" id="username" class="form-control" type="text" maxlength="64" required>
     </div> <!-- form-group end.// -->
     <div class="form-group">
         <label style="font-weight: bold;">Date of Birth</label>
@@ -67,11 +67,11 @@
     <div class="form-row">
         <div class="form-group col-md-6">
           <label style="font-weight: bold;">Password</label>
-          <input name="password" id="password" type="password" class="form-control" required>
+          <input name="password" id="password" type="password" class="form-control" maxlength="255" required>
         </div> <!-- form-group end.// -->
         <div class="form-group col-md-6">
           <label style="font-weight: bold;">Confirm Password</label>
-          <input name="confirm-password" id="confirm-password" type="password" class="form-control" required>
+          <input name="confirm-password" id="confirm-password" type="password" maxlength="255" class="form-control" required>
         </div> <!-- form-group end.// -->
     </div> <!-- form-row.// -->
     <div class="form-group">

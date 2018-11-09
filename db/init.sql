@@ -64,3 +64,24 @@ confirmed_timestamp TIMESTAMP NOT NULL,
 PRIMARY KEY (bid_id, confirmed_timestamp),
 FOREIGN KEY (bid_id) REFERENCES bid (bid_id)
 );
+
+CREATE OR REPLACE FUNCTION get_highest_bid(c_license_number VARCHAR(64), c_start_timestamp TIMESTAMP)
+RETURNS INTEGER AS
+$$
+DECLARE
+	highest_bid INTEGER;
+BEGIN
+	SELECT max(price) INTO highest_bid
+	FROM (
+		SELECT price
+		FROM bid
+		WHERE bid.license_number=c_license_number and bid.start_timestamp=c_start_timestamp
+	) AS advertisement_bids;
+	IF highest_bid IS NULL THEN
+		highest_bid := 0;
+	END IF;
+	RETURN highest_bid;
+END
+$$ LANGUAGE plpgsql;
+
+INSERT INTO account (username, is_admin, dob, email, contact, pass, name) VALUES ('admin', true, '1990-12-12', 'admin@zooom.com', '91234567', 'pbkdf2:sha256:50000$2H9J5Im2$e34488586e65fe584fd660eac998c06180d9f0ade7164071a3c50caeaf5c0c93', 'System Administratior');

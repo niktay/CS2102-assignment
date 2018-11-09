@@ -93,7 +93,7 @@
                     <div class="col form-group">
                         <label>License Number: </label>
                         {% if title in "Driver Registration" %}
-                            <input name="license-number" id="license-number" type="text" class="form-control" required>
+                            <input name="license-number" id="license-number" type="text" class="form-control" maxlength="64" required>
                         {% else %}
                             <input name="license-number" id="license-number" type="text" class="form-control" value="{{ driver.license_number }}"readonly>
                         {% endif %}
@@ -102,7 +102,7 @@
                 <div class="form-group">
                         <label>License Plate: </label>
                         {% if title in "Driver Registration" %}
-                        <input name="license-plate" id="license-plate" type="text" class="form-control" placeholder="SXX1234A" required>
+                        <input name="license-plate" id="license-plate" type="text" class="form-control" placeholder="SXX1234A" maxlength="10" required>
                         {% else %}
                         <input name="license-plate" id="license-plate" type="text" class="form-control" placeholder="SXX1234A" value="{{ car.license_plate }}" readonly>
                         {% endif %}
@@ -111,18 +111,18 @@
                     <div class="form-group col-md-6">
                           <label>Brand: </label>
                           {% if title in "Driver Registration" %}
-                                <input name="brand" id="brand" type="text" class="form-control" required>
+                                <input name="brand" id="brand" type="text" class="form-control" maxlength="64" required>
                           {% else %}
-                                <input name="brand" id="brand" type="text" value="{{ car.brand }}" class="form-control" required>
+                                <input name="brand" id="brand" type="text" value="{{ car.brand }}" maxlength="64" class="form-control" required>
                           {% endif %}
 
                     </div> <!-- form-group end.// -->
                     <div class="form-group col-md-6">
                           <label>Model: </label>
                           {% if title in "Driver Registration" %}
-                                <input name="model" id="model" type="text" class="form-control" required>
+                                <input name="model" id="model" type="text" class="form-control" maxlength="64" required>
                           {% else %}
-                                <input name="model" id="model" type="text" value="{{ car.model }}" class="form-control" required>
+                                <input name="model" id="model" type="text" value="{{ car.model }}" class="form-control" maxlength="64" required>
                           {% endif %}
 
                     </div> <!-- form-group end.// -->
@@ -131,9 +131,9 @@
                     <div class="form-group">
                         <label>(Optional) Bio: </label>
                         {% if title in "Driver Registration" %}
-                            <textarea name="optional-bio" id="optional-bio" class="form-control" type="text" rows="3"></textarea>
+                            <textarea name="optional-bio" id="optional-bio" class="form-control" type="text" maxlength="255" rows="3"></textarea>
                         {% else %}
-                            <textarea name="optional-bio" id="optional-bio" class="form-control" type="text" rows="3">{% if driver.optional_bio %}{{ driver.optional_bio }}{% endif %}</textarea>
+                            <textarea name="optional-bio" id="optional-bio" class="form-control" type="text" maxlength="255" rows="3">{% if driver.optional_bio %}{{ driver.optional_bio }}{% endif %}</textarea>
                         {% endif %}
                     </div>
                 </div>

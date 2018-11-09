@@ -8,6 +8,7 @@ from flask_login import login_required
 from model import Account
 from model import Advertisement
 from model import Bid
+from model import Driver
 from model import Ride
 
 admin_blueprint = Blueprint('admin', __name__, template_folder='templates')
@@ -27,6 +28,8 @@ def view_dashboard():
         active_count=Account.active_count(),
         inactive_count=Account.inactive_count(),
         bid_hourly_data=Bid.dump_hourly_jinja(),
+        top_drivers=Driver.get_top_drivers(),
+        _enumerate=enumerate,
     )
 
 

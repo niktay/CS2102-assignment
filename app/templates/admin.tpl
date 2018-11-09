@@ -9,7 +9,7 @@
     <link rel="icon" type="image/png" href="{{ url_for('static', filename='assets/favicon-32x32.png') }}" sizes="32x32" />
     <link rel="icon" type="image/png" href="{{ url_for('static', filename='assets/favicon-16x16.png') }}" sizes="16x16" />
 
-    <title>CS2102</title>
+    <title>Zoom Dashboard</title>
 
     <!-- Bootstrap core CSS -->
     <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO"
@@ -23,17 +23,16 @@
 </head>
 
 <body>
+
     <nav class="navbar navbar-dark fixed-top bg-dark flex-md-nowrap p-0 shadow">
-        <a class="navbar-brand col-sm-3 col-md-2 mr-0" href="#">CS2102</a>
-        <form action="/" method="POST" style="width: 100%">
-            <input class="form-control form-control-dark w-100" type="text" name="command" placeholder="Command"
-                aria-label="Command">
-        </form>
-        <ul class="navbar-nav px-3">
-            <li class="nav-item text-nowrap">
-                <a class="nav-link" href="{{ url_for('login.process_logout') }}">Sign out</a>
-            </li>
-        </ul>
+      <a class="navbar-brand col-sm-1 col-md-1 mr-0" style="padding-left: 5px; font-family: 'Nova Flat'!important" href="#">
+		<img src="{{ url_for('static', filename='assets/zooom-logo-white@3x.png') }}" style="max-height: 35px; max-width: 35px; padding-left: 10px; margin-top: -5px;"/>
+		ZOOOM</a>
+	<ul class="navbar-nav px-3">
+		<li class="nav-item text-nowrap">
+		  <a class="nav-link" href="{{ url_for('login.process_logout') }}">Log out</a>
+		</li>
+    </ul>
     </nav>
 
     <div class="container-fluid">
@@ -71,6 +70,12 @@
                             </a>
                         </li>
                         <li class="nav-item">
+                            <a class="nav-link" href="{{ url_for('admin.view_table', table_name='driver') }}">
+                                <span data-feather="truck"></span>
+                                Drivers
+                            </a>
+                        </li>
+                        <li class="nav-item">
                             <a class="nav-link" href="{{ url_for('admin.view_table', table_name='advertisement') }}">
                                 <span data-feather="tv"></span>
                                 Advertisements
@@ -94,11 +99,34 @@
 
             <main role="main" class="col-md-9 ml-sm-auto col-lg-10 px-4">
                 <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3">
-                    <div class="ride-bid-by-month-chart ct-octave col-lg-5"></div>
-                    <div class="inactive-active-chart ct-octave col-lg-5"></div>
+
+                    <div class="col-lg-5">
+					<div><h4>Advertisements-Confirmed Rides by Month</h4></div>
+                    <div class="ride-bid-by-month-chart ct-octave">
+					</div>
+					</div>
+
+                    <div class="col-lg-5">
+					<div><h4>Active vs Inactive Users</h4></div>
+                    <div class="inactive-active-chart ct-octave">
+					</div>
+					</div>
+
                 </div>
                 <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3">
-                    <div class="bid-price-chart ct-octave col-lg-5"></div>
+
+                    <div class="col-lg-5">
+					<div><h4>Ride prices by Time of Day</h4></div>
+                    <div class="bid-price-chart ct-octave">
+					</div>
+					</div>
+
+                    <div class="col-lg-5">
+						<h4> Top 3 Drivers (By Earning) </h4>
+						{% for index, driver in _enumerate(top_drivers) %}
+							<h6>{{ index+1 }}. {{ driver }}</h6>
+						{% endfor %}
+					</div>
                 </div>
             </main>
         </div>
