@@ -86,8 +86,6 @@ class Bid(object):
 
     @connection_required
     def save(self, conn=None):
-        from app.model.advertisement import Advertisement
-
         required_parameters = [
             self.price, self.username, self.start_timestamp,
             self.license_number,
@@ -99,32 +97,15 @@ class Bid(object):
             return False
 
         try:
-            advertisement = Advertisement(
-                license_number=self.license_number,
-                start_timestamp=self.start_timestamp,
-            )
-            if (
-                self.price <=
-                self.get_highest(advertisement=advertisement).price
-            ):
-                logger.warning('Bid price too low')
-                return False
-        except AttributeError:
-            """
-            if self.get_highest() is None, we infer that it is the only bid.
-            Therefore it self.price is the highest bid, so we accept it.
-            """
-            if self.price:  # Verify that self.price is not None
-                pass
-
-        try:
             cursor = conn.cursor()
 
             cursor.execute(
-                "INSERT INTO bid (bid_id, price, username, start_timestamp, "
-                f"license_number) VALUES (default, '{self.price}', "
+                "INSERT INTO bid (price, username, start_timestamp, "
+                f"license_number) SELECT '{self.price}', "
                 f"'{self.username}', '{self.start_timestamp}', "
-                f"'{self.license_number}');",
+                f"'{self.license_number}' "
+                f"WHERE {self.price} > get_highest_bid('{self.license_number}'"
+                f", '{self.start_timestamp}');",
             )
 
             conn.commit()
@@ -161,11 +142,10 @@ class Bid(object):
 
             cursor.execute(
                 "SELECT bid_id, price, username, start_timestamp, "
-                "license_number FROM bid WHERE price = (SELECT "
-                "max(price) FROM (SELECT price FROM bid WHERE "
-                f"license_number='{advertisement.license_number}' "
-                f"and start_timestamp='{advertisement.start_timestamp}') "
-                " AS advertisement_bids);",
+                "license_number FROM bid WHERE bid_id = (SELECT bid_id FROM "
+                f"bid WHERE license_number='{advertisement.license_number}' "
+                f"AND start_timestamp='{advertisement.start_timestamp}' "
+                "ORDER BY price DESC LIMIT 1);",
             )
             logger.debug(advertisement)
             bid_found = cursor.fetchone()

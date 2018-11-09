@@ -218,6 +218,43 @@ class Driver(object):
             logger.error('Unable to load driver, is database running?')
             raise
 
+    @classmethod
+    @connection_required
+    def get_top_drivers(cls, conn=None):
+        try:
+            cursor = conn.cursor()
+            cursor.execute(
+                'SELECT SUM(bid.price), driver.username FROM ride, bid, '
+                'driver WHERE ride.bid_id = bid.bid_id AND '
+                'bid.license_number = driver.license_number GROUP BY '
+                'driver.username ORDER BY SUM(bid.price) DESC LIMIT 3',
+            )
+
+            top_drivers = cursor.fetchall()
+
+            results = []
+            for driver in top_drivers:
+                results.append(driver[1])
+
+            return results
+
+        except AttributeError:
+            logger.error(
+                'Unable to load driver, did you pass in a '
+                'connection?',
+            )
+            logger.debug(conn)
+            raise
+
+        except psycopg2.InterfaceError:
+            logger.error('Unable to load driver, is connection open?')
+            logger.debug(conn)
+            raise
+
+        except psycopg2.OperationalError:
+            logger.error('Unable to load driver, is database running?')
+            raise
+
     def __str__(self):
         output = f"""
 --------------------------------------------------------------------------------

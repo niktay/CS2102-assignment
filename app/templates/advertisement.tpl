@@ -96,13 +96,13 @@
     <div class="form-row">
         <div class="col form-group">
             <label>Origin</label>
-                <input id="origin" name="origin" type="text" class="form-control" placeholder="" required>
+                <input id="origin" name="origin" type="text" class="form-control" placeholder="" maxlength="255" required>
         </div> <!-- form-group end.// -->
     </div> <!-- form-row end.// -->
         <div class="form-row">
             <div class="col form-group">
                 <label>Destination</label>
-                  <input id="destination" name="destination" type="text" class="form-control" placeholder="" required>
+                  <input id="destination" name="destination" type="text" class="form-control" placeholder="" maxlength="255" required>
             </div> <!-- form-group end.// -->
     </div> <!-- form-row end.// -->
 
