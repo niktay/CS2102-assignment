@@ -1,5 +1,6 @@
 import random
 from datetime import date
+from datetime import time
 from random import randint
 
 
@@ -107,10 +108,70 @@ def generate_car(drivers, brands, models):
     return cars
 
 
+def generate_advertisement(drivers, towns):
+    advertisement_queries = []
+    advertisements = []
+
+    for driver in drivers:
+        ad_date = date(
+            2018,
+            randint(1, 12),
+            randint(1, 28),
+        ).isoformat()
+        ad_time = time(
+            randint(0, 23),
+            randint(0, 59),
+            randint(0, 59),
+            0,
+        ).isoformat()
+        start_timestamp = f'{ad_date} {ad_time}'
+
+        license_number = driver.get('license_number', None)
+
+        origin_town = random.choice(towns)
+        destination_town = random.choice(towns)
+        while origin_town == destination_town:
+            destination_town = random.choice(towns)
+
+        origin = random_address(origin_town)
+        destination = random_address(destination_town)
+
+        advertisement_queries.append(
+            f"INSERT INTO advertisement(start_timestamp, license_number, "
+            f"origin, destination) VALUES('{start_timestamp}', "
+            f"'{license_number}', '{origin}', '{destination}');",
+        )
+        advertisement = {
+            'start_timestamp': start_timestamp,
+            'license_number': license_number,
+            'origin': origin,
+            'destination': destination,
+        }
+        advertisements.append(advertisement)
+
+    with open('output_ad_query.sql', 'w') as output_ad_query:
+        output_ad_query.write('\n'.join(advertisement_queries))
+
+    return advertisements
+
+
 def random_digits(number_of_digits):
     range_start = 10**(number_of_digits-1)
     range_end = 10**(number_of_digits)-1
     return randint(range_start, range_end)
+
+
+def random_address(town):
+    street_suffix = ['Street', 'Avenue', 'Drive']
+    random_3_digits = random_digits(3)
+    random_2_digits = random_digits(2)
+    random_street_suffix = random.choice(street_suffix)
+
+    address = (
+        f'Block {random_3_digits} {town} '
+        f'{random_street_suffix} {random_2_digits}'
+    )
+    return address
 
 
 def generate_data(**kwargs):
@@ -123,6 +184,9 @@ def generate_data(**kwargs):
     brands = kwargs.get('brands', None)
     models = kwargs.get('models', None)
     generate_car(drivers, brands, models)
+
+    towns = kwargs.get('towns', None)
+    generate_advertisement(drivers, towns)
 
 
 with open('name_input.txt', 'r') as name_inputfile:
@@ -137,6 +201,9 @@ with open('carbrand_input.txt', 'r') as carbrand_inputfile:
 with open('carmodel_input.txt', 'r') as carmodel_inputfile:
     models = carmodel_inputfile.read().splitlines()
 
+with open('town_input.txt', 'r') as town_inputfile:
+    towns = town_inputfile.read().splitlines()
+
 
 if __name__ == '__main__':
     kwargs = {
@@ -144,6 +211,7 @@ if __name__ == '__main__':
         'surnames': surnames,
         'brands': brands,
         'models': models,
+        'towns': towns,
     }
 
     generate_data(**kwargs)
