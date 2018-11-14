@@ -196,6 +196,30 @@ def generate_bid(accounts, advertisements):
     return bids
 
 
+def generate_ride(bids):
+    ride_queries = []
+    rides = []
+
+    for bid in bids:
+        bid_id = bid.get('bid_id', None)
+        confirmed_timestamp = bid.get('start_timestamp', None)
+
+        ride_queries.append(
+            f"INSERT INTO ride(bid_id, confirmed_timestamp) VALUES"
+            f"('{bid_id}', '{confirmed_timestamp}');",
+        )
+        ride = {
+            'bid_id': bid_id,
+            'confirmed_timestamp': confirmed_timestamp,
+        }
+        rides.append(ride)
+
+    with open('output_ride_query.sql', 'w') as output_ride_query:
+        output_ride_query.write('\n'.join(ride_queries))
+
+    return rides
+
+
 def random_digits(number_of_digits):
     range_start = 10**(number_of_digits-1)
     range_end = 10**(number_of_digits)-1
@@ -229,7 +253,9 @@ def generate_data(**kwargs):
     towns = kwargs.get('towns', None)
     advertisements = generate_advertisement(drivers, towns)
 
-    generate_bid(accounts, advertisements)
+    bids = generate_bid(accounts, advertisements)
+
+    generate_ride(bids)
 
 
 with open('name_input.txt', 'r') as name_inputfile:
