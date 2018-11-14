@@ -1,6 +1,7 @@
 import random
 from datetime import date
 from datetime import time
+from operator import itemgetter
 from random import randint
 
 
@@ -136,16 +137,19 @@ def generate_advertisement(drivers, towns):
         origin = random_address(origin_town)
         destination = random_address(destination_town)
 
+        active = random.choice(['True', 'False'])
+
         advertisement_queries.append(
             f"INSERT INTO advertisement(start_timestamp, license_number, "
-            f"origin, destination) VALUES('{start_timestamp}', "
-            f"'{license_number}', '{origin}', '{destination}');",
+            f"origin, destination, active) VALUES('{start_timestamp}', "
+            f"'{license_number}', '{origin}', '{destination}', '{active}');",
         )
         advertisement = {
             'start_timestamp': start_timestamp,
             'license_number': license_number,
             'origin': origin,
             'destination': destination,
+            'active': active,
         }
         advertisements.append(advertisement)
 
@@ -153,6 +157,67 @@ def generate_advertisement(drivers, towns):
         output_ad_query.write('\n'.join(advertisement_queries))
 
     return advertisements
+
+
+def generate_bid(accounts, advertisements):
+    bid_queries = []
+    bids = []
+    counter = 1
+
+    active_ad = [d for d in advertisements if d['active'] == 'True']
+
+    sorted_active_ad = sorted(active_ad, key=itemgetter('start_timestamp'))
+
+    for ad in sorted_active_ad:
+        price = random_digits(2)
+        account = random.choice(accounts)
+        username = account.get('username', None)
+        start_timestamp = ad.get('start_timestamp', None)
+        license_number = ad.get('license_number', None)
+
+        bid_queries.append(
+            f"INSERT INTO bid(bid_id, price, username, start_timestamp, "
+            f"license_number) VALUES('{counter}', '{price}', '{username}', "
+            f"'{start_timestamp}', '{license_number}');",
+        )
+        bid = {
+            'bid_id': counter,
+            'price': price,
+            'username': username,
+            'start_timestamp': start_timestamp,
+            'license_number': license_number,
+        }
+        bids.append(bid)
+        counter = counter + 1
+
+    with open('output_bid_query.sql', 'w') as output_bid_query:
+        output_bid_query.write('\n'.join(bid_queries))
+
+    return bids
+
+
+def generate_ride(bids):
+    ride_queries = []
+    rides = []
+
+    for bid in bids:
+        bid_id = bid.get('bid_id', None)
+        confirmed_timestamp = bid.get('start_timestamp', None)
+
+        ride_queries.append(
+            f"INSERT INTO ride(bid_id, confirmed_timestamp) VALUES"
+            f"('{bid_id}', '{confirmed_timestamp}');",
+        )
+        ride = {
+            'bid_id': bid_id,
+            'confirmed_timestamp': confirmed_timestamp,
+        }
+        rides.append(ride)
+
+    with open('output_ride_query.sql', 'w') as output_ride_query:
+        output_ride_query.write('\n'.join(ride_queries))
+
+    return rides
 
 
 def random_digits(number_of_digits):
@@ -186,7 +251,11 @@ def generate_data(**kwargs):
     generate_car(drivers, brands, models)
 
     towns = kwargs.get('towns', None)
-    generate_advertisement(drivers, towns)
+    advertisements = generate_advertisement(drivers, towns)
+
+    bids = generate_bid(accounts, advertisements)
+
+    generate_ride(bids)
 
 
 with open('name_input.txt', 'r') as name_inputfile:
