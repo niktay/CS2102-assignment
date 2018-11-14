@@ -1,6 +1,7 @@
 import random
 from datetime import date
 from datetime import time
+from operator import itemgetter
 from random import randint
 
 
@@ -158,6 +159,43 @@ def generate_advertisement(drivers, towns):
     return advertisements
 
 
+def generate_bid(accounts, advertisements):
+    bid_queries = []
+    bids = []
+    counter = 1
+
+    active_ad = [d for d in advertisements if d['active'] == 'True']
+
+    sorted_active_ad = sorted(active_ad, key=itemgetter('start_timestamp'))
+
+    for ad in sorted_active_ad:
+        price = random_digits(2)
+        account = random.choice(accounts)
+        username = account.get('username', None)
+        start_timestamp = ad.get('start_timestamp', None)
+        license_number = ad.get('license_number', None)
+
+        bid_queries.append(
+            f"INSERT INTO bid(bid_id, price, username, start_timestamp, "
+            f"license_number) VALUES('{counter}', '{price}', '{username}', "
+            f"'{start_timestamp}', '{license_number}');",
+        )
+        bid = {
+            'bid_id': counter,
+            'price': price,
+            'username': username,
+            'start_timestamp': start_timestamp,
+            'license_number': license_number,
+        }
+        bids.append(bid)
+        counter = counter + 1
+
+    with open('output_bid_query.sql', 'w') as output_bid_query:
+        output_bid_query.write('\n'.join(bid_queries))
+
+    return bids
+
+
 def random_digits(number_of_digits):
     range_start = 10**(number_of_digits-1)
     range_end = 10**(number_of_digits)-1
@@ -189,7 +227,9 @@ def generate_data(**kwargs):
     generate_car(drivers, brands, models)
 
     towns = kwargs.get('towns', None)
-    generate_advertisement(drivers, towns)
+    advertisements = generate_advertisement(drivers, towns)
+
+    generate_bid(accounts, advertisements)
 
 
 with open('name_input.txt', 'r') as name_inputfile:
