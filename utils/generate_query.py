@@ -136,16 +136,19 @@ def generate_advertisement(drivers, towns):
         origin = random_address(origin_town)
         destination = random_address(destination_town)
 
+        active = random.choice(['True', 'False'])
+
         advertisement_queries.append(
             f"INSERT INTO advertisement(start_timestamp, license_number, "
-            f"origin, destination) VALUES('{start_timestamp}', "
-            f"'{license_number}', '{origin}', '{destination}');",
+            f"origin, destination, active) VALUES('{start_timestamp}', "
+            f"'{license_number}', '{origin}', '{destination}', '{active}');",
         )
         advertisement = {
             'start_timestamp': start_timestamp,
             'license_number': license_number,
             'origin': origin,
             'destination': destination,
+            'active': active,
         }
         advertisements.append(advertisement)
 
